@@ -1,0 +1,130 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>BearApps</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.css" />
+    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+     <style type="text/css">
+	    .content {
+	      padding-top: 60px;
+	      padding-bottom: 40px;
+	      padding-right: 20px;
+	      padding-left: 20px;
+	    }
+	    .sort{
+	    	font-family: 'Ubuntu', sans-serif;
+	    	list-style: none;
+	    }
+	    .sort li {
+	    	display: inline;
+	    }
+	    .sort li:after {
+	    	content: " / ";
+	    }
+	    .sort li:last-child {
+	    	content: "";
+	    }
+    </style>
+</head> 
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+
+			<a class="brand" href="index.html">BearApps</a>
+
+			<div class="nav-collapse">
+				<ul class="nav">
+					<li><a href="my-apps.html">My Apps</a></li>
+					<li><a href="browse.html">Browse Apps</a></li>
+				</ul>
+			</div>
+
+			<div class="btn-group pull-right">
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i>
+					Username
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+					<li>
+						<a href="#">Edit Settings</a>
+					</li>
+					<li class="divider"></li>
+					<li>
+						<a href="#">Sign Out</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class="container-fluid content">
+	<div class="row-fluid">
+		<div class="span12">
+			<h1>MY APPS</h1>	
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="hero-unit well">
+				<ul class="sort">
+					<li>
+						<a href="http://www.google.com">ALL</a>
+					</li>
+					<li>
+						<a href="http://www.google.com">REQUESTED</a>
+					</li>
+					<li>
+						<a href="http://www.google.com">APPROVED</a>
+					</li>
+					<li>
+						<a href="http://www.google.com">INSTALLED</a>
+					</li>
+					<li class="last-child">
+						<a href="http://www.google.com">UPDATES</a>
+					</li>
+				</ul>	
+				<img border="0" src="../icons/matlab-icon.png" alt="Installed MatLab" width="250" height="250" />
+				<img border="0" src="../icons/matlab-icon-installed.png" alt="Installed MatLab" width="250" height="250" />
+				<img border="0" src="../icons/matlab-icon-download.png" alt="Installed MatLab" width="250" height="250" />
+				<img border="0" src="../icons/matlab-icon-update.png" alt="Installed MatLab" width="250" height="250" />
+				<img border="0" src="../icons/matlab-icon-requested.png" alt="Installed MatLab" width="250" height="250" />
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+
+<!-- Le javascript
+================================================== -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap-transition.js"></script>
+<script src="js/bootstrap-alert.js"></script>
+<script src="js/bootstrap-modal.js"></script>
+<script src="js/bootstrap-dropdown.js"></script>
+<script src="js/bootstrap-scrollspy.js"></script>
+<script src="js/bootstrap-tab.js"></script>
+<script src="js/bootstrap-tooltip.js"></script>
+<script src="js/bootstrap-popover.js"></script>
+<script src="js/bootstrap-button.js"></script>
+<script src="js/bootstrap-collapse.js"></script>
+<script src="js/bootstrap-carousel.js"></script>
+<script src="js/bootstrap-typeahead.js"></script>
+
+</html>
