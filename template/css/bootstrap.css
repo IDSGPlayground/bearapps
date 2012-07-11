@@ -7,9 +7,22 @@
  *
  * Designed and built with all the love in the world @twitter by @mdo and @fat.
  */
+.inline {
+  display:inline-block;
+}
+
+.request-btn {
+  width: 150px;
+  height: 40px;
+}
+
+.request-btn:hover {
+  opacity:0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+}
 
 a.app-btn {
-  display: block;
+  display: inline-block;
   width: 250px;
   height: 250px;
   background:url("../img/matlab-icon.png") 0 0 no-repeat;
@@ -30,8 +43,26 @@ a.app-btn:hover {
   text-decoration:none;
 }
 
-a.request-btn {
+a.requested-btn {
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background:url("../img/matlab-icon-requested.png") 0 0 no-repeat;
+}
 
+a.requested-btn:hover {
+  opacity:0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+}
+
+.requested-btn.h3 {
+  color:black;
+  text-decoration:none;
+}
+
+.requested-btn.h3:hover {
+  color:black;
+  text-decoration:none;
 }
 
 .modal-open .dropdown-menu {
@@ -172,6 +203,31 @@ a.request-btn {
 
 .modal-footer .btn-group .btn + .btn {
   margin-left: -1px;
+}
+
+.sort{
+  font-family: 'Ubuntu', sans-serif;
+  list-style: none;
+}
+.sort li {
+  display: inline;
+}
+.sort li:after {
+  content: " / ";
+}
+.sort li:last-child {
+  content: "";
+}
+
+.sort li:active {
+  font-weight:bold;
+}
+
+.content {
+  padding-top: 80px;
+  padding-bottom: 40px;
+  padding-right: 40px;
+  padding-left: 40px;
 }
 
 article,
