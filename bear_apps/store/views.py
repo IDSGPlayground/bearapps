@@ -22,11 +22,16 @@ def browse(request):
             app = form.cleaned_data['app']
             print user #prints name on command line output for debugging.
 
-            # write to database
-            #p = get_object_or_404(Apps, pk=1)
-            #try:
-            #   p.user_set.create(name=user, SID=uid, state='requested')
-            #except (KeyError, User.DoesNotExit):
+            try:
+                p=get_object_or_404(User, pk=User.objects.get(SID__startswith=int(uid)).id)
+                try:
+                    p.apps_set.get(name=app).change_state()
+                except (KeyError, Apps.DoesNotExist):
+                    p.apps_set.create(name=app, state="requested")
+            except (KeyError, User.DoesNotExist):
+                p = User(name=user, SID=uid)
+                p.save()
+                p.apps_set.create(name=app, state="requested")
 
     return render_to_response('browse.html', c)
 
