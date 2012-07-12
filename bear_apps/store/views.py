@@ -57,12 +57,18 @@ def browse(request):
     if request_status:
         button_value = 'ALREADY REQUESTED'
         form_value = 'DISABLED'
+        icon = 'requested-btn'
     else:
         button_value = 'REQUEST'
         form_value = ''
+        icon = 'app-btn'
 
     # Context and template set-up
-    c = Context({'button_value' : button_value, 'form_value' : form_value,})
+    c = Context({
+            'button_value' : button_value, 
+            'form_value' : form_value,
+            'icon_state' : icon,
+            })
     t = loader.get_template('browse.html')    
 
     # Update context with Security token for html form
