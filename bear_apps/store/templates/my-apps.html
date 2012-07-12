@@ -1,102 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>BearApps</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-responsive.css" />
-    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block nav %}
+<li class="active"><a href="../my-apps/">My Apps</a></li>
+<li><a href="../browse/">Browse Apps</a></li>
+{% endblock %}
 
-<div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-		<div class="container-fluid">
-			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</a>
+{% block title %}
+MY APPS
+{% endblock %}
 
-			<a class="brand" href="index.html">BearApps</a>
+{% block search %}
+{% endblock %}
 
-			<div class="nav-collapse">
-				<ul class="nav">
-					<li class="active"><a href="../my-apps/">My Apps</a></li>
-					<li><a href="../browse/">Browse Apps</a></li>
-				</ul>
-			</div>
+{% block apps %}
+<ul class="sort">
+	<li class="active"><a href="#">ALL</a></li>
+	<li><a href="#">REQUESTED</a></li>
+	<li><a href="#">APPROVED</a></li>
+	<li><a href="#">INSTALLED</a></li>
+	<li><a href="#">UPDATES</a></li>
+</ul>
+<div class="row-fluid">
+	<a href="#matlab" data-toggle="modal" class="requested-btn"></a>
+</div>
+{% endblock %}
 
-			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-					<i class="icon-user"></i>
-					Username
-					<span class="caret"></span>
-				</a>
-				<ul class="dropdown-menu">
-					<li><a href="#">Edit Settings</a></li>
-					<li class="divider"></li>
-					<li><a href="#">Sign Out</a></li>
-				</ul>
-			</div>
+{% block content %}
 
-			<div class="btn-group pull-right">
-				<div class="btn btn-danger">
-					<i class="icon-bell icon-white"></i> 0
-				</div>
-			</div>
+<div class="modal fade hide" id="matlab">
+	<div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+	    	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>						
+			<button type="button" class="request-btn">REQUEST</button>
+	</div>
 
-		</div>
+  	<div class="modal-body">
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis nulla id justo blandit tristique. Ut quis ornare lorem. Nam non accumsan libero. Nulla at lacus leo, quis posuere turpis. Donec non est vitae lorem consequat sagittis eget et dui. Sed ac enim neque, vitae tempus nibh. In lacus sem, mollis a pulvinar vel, tincidunt sit amet elit. Vestibulum ac augue eros, sed auctor felis. In condimentum pharetra ultrices. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis adipiscing pellentesque adipiscing. Donec suscipit, arcu vel bibendum congue, ligula est malesuada arcu, consectetur mattis diam libero a erat. Pellentesque vehicula tincidunt ante ac rutrum. Nulla facilisi. Vivamus fringilla, nisl et vulputate dignissim, metus erat pulvinar odio, vitae pharetra enim magna eu sapien. Ut non risus metus.</p>
     </div>
 </div>
 
-<div class="container-fluid content">
-	<div class="row-fluid">
-		<h1>MY APPS</h1>
-				<div class="pull-right">
-			<form class="form-search">
-				<input type="text" class="input-medium search-query">
-				<button type="submit" class="btn">Search</button>
-			</form>
-		</div>
-	</div>
+{% endblock %}
 
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="hero-unit well">
-				<ul class="sort">
-					<li class="active"><a href="#">ALL</a></li>
-					<li><a href="#">REQUESTED</a></li>
-					<li><a href="#">APPROVED</a></li>
-					<li><a href="#">INSTALLED</a></li>
-					<li><a href="#">UPDATES</a></li>
-				</ul>
-				<div class="row-fluid">
-					<a href="#matlab" data-toggle="modal" class="requested-btn"></a>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-</body>
-
-<!-- Le javascript
-================================================== -->
-<script src="../static/js/jquery.js"></script>
-<script src="../static/js/bootstrap-transition.js"></script>
-<script src="../static/js/bootstrap-alert.js"></script>
-<script src="../static/js/bootstrap-modal.js"></script>
-<script src="../static/js/bootstrap-dropdown.js"></script>
-<script src="../static/js/bootstrap-scrollspy.js"></script>
-<script src="../static/js/bootstrap-tab.js"></script>
-<script src="../static/js/bootstrap-tooltip.js"></script>
-<script src="../static/js/bootstrap-popover.js"></script>
-<script src="../static/js/bootstrap-button.js"></script>
-<script src="../static/js/bootstrap-collapse.js"></script>
-<script src="../static/js/bootstrap-carousel.js"></script>
-<script src="../static/js/bootstrap-typeahead.js"></script>
-
-</html>
