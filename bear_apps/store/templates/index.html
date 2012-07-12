@@ -4,10 +4,6 @@
     <title>BearApps</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
-    <style type="text/css" media="screen">
-      body{padding:15%;}
-      .hero-unit{opacity:50%;}
-    </style>
 </head>
 
 <div class="navbar navbar-fixed-top">
@@ -28,11 +24,19 @@
   </div>
 </div>
 
-<div class="container">
-  <div class="hero-unit">
-    <h1>Log in to BearApps</h1>
+<div class="container-fluid content">
+  <div class="well hero-unit">
+    <h1 style="line-height: 100px">LOG IN TO BEARAPPS</h1>
     <p>Use your CalNet ID and password to authenticate.</p>
-    <p><a href="my-apps/" class="btn btn-primary btn-large">Authenticate</a></p>
+    <form class="well form">
+      <label>Username</label>
+      <input type="text" class="input-medium"></input>
+      <label>Password</label>
+      <input type="password" class="input-medium"></input>
+      <p>
+        <a class="btn btn-primary" href="browse/">Authenticate</a>
+      </p>
+    </form>
   </div>
 </div>
 
