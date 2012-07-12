@@ -10,8 +10,6 @@ def home(request):
     return render_to_response('index.html')
 
 def browse(request):
-    c = {}
-    c.update(csrf(request))
 
     #Form handling
     if request.method == 'POST':
@@ -22,6 +20,7 @@ def browse(request):
             app = form.cleaned_data['app']
             print user #prints name on command line output for debugging.
 
+            # Write change to database.
             try:
                 p=get_object_or_404(User, pk=User.objects.get(SID__startswith=int(uid)).id)
                 try:
@@ -33,7 +32,45 @@ def browse(request):
                 p.save()
                 p.apps_set.create(name=app, state="requested")
 
-    return render_to_response('browse.html', c)
+    # Access db and check if app is already requested.
+    uid = 12345678 # hardcoded because minimum viable product and stuff
+
+    # Initial access to database, which allows us to check for a request.
+    try:
+        p=get_object_or_404(User, pk=User.objects.get(SID__startswith=(uid)).id)
+    except (KeyError, User.DoesNotExist):
+        p = None 
+
+    request_status = False
+
+    # Check if the app has been requested
+    # In this case, it check specifically for one user, Elvis.
+    try:
+        p.apps_set.get(name='Matlab')
+        request_status = True
+    except (KeyError, Apps.DoesNotExist):
+        request_status = False
+    except AttributeError:
+        request_status = False
+
+    # control flow for disabling the html form in browse.html
+    if request_status:
+        button_value = 'ALREADY REQUESTED'
+        form_value = 'DISABLED'
+    else:
+        button_value = 'REQUEST'
+        form_value = ''
+
+    # Context and template set-up
+    c = Context({'button_value' : button_value, 'form_value' : form_value,})
+    t = loader.get_template('browse.html')    
+
+    # Update context with Security token for html form
+    c.update(csrf(request))
+
+    return HttpResponse(t.render(c))
+
+    #return render_to_response('browse.html', c)
 
 def myapps(request):
     return render_to_response('my-apps.html')
