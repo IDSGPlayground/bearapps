@@ -17,10 +17,16 @@ BROWSE APPS
 {% block content %}
 
 <div class="modal fade hide" id="matlab">
-	<div class="modal-header">
+  <div class="modal-header">
+        <form method="post" action="/browse/">
+         {% csrf_token %}
+         <input type="hidden" name="user" value="Elvis Q. Plutonium">
+         <input type="hidden" name="uid" value="12345678">
+         <input type="hidden" name="app" value="Matlab">
+         <input type="submit" value="REQUEST" class="request-btn">
+        </form>
     	<button type="button" class="close" data-dismiss="modal">×</button>
-    	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>						
-		<button type="button" class="request-btn">REQUEST</button>
+    	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
 	</div>
 
   	<div class="modal-body">
