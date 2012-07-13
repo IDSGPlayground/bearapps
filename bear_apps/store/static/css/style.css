@@ -49,6 +49,13 @@
   width: 150px;
   height: 40px;
 }
+.request-btn:disabled {
+  position: absolute;
+  top: 38px;
+  right: 45px;
+  width: 150px;
+  height: 40px;
+}
 .request-btn:hover {
   text-decoration: none;
   opacity: 0.7;
@@ -117,7 +124,7 @@
 }
 
 .modal.fade {
-  opacity: 1.0; 
+  opacity: 1.0;
   top: -500px;
   -webkit-transition: opacity 0.4s linear, top 0.3s ease-out;
      -moz-transition: opacity 0.4s linear, top 0.3s ease-out;
