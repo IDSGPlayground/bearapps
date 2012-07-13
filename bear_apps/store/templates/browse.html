@@ -11,7 +11,10 @@ BROWSE APPS
 
 {% block apps %}
 <a href="#matlab" data-toggle="modal" class="{{ icon_state }}">MatLab</a>
-<a href="#matlab" data-toggle="modal" class="app-btn">MatLab + Toolbox</a>
+<a href="#matlabtoolbox" data-toggle="modal" class="app-btn-matlab">MatLab + Toolbox</a>
+<a href="#maya" data-toggle="modal" class="app-btn-maya">Maya</a>
+<a href="#creative" data-toggle="modal" class="app-btn-cs">Adobe Creative Suite</a>
+<a href="#msoffice" data-toggle="modal" class="app-btn-office">Microsoft Office</a>
 {% endblock %}
 
 {% block content %}
@@ -45,15 +48,232 @@ BROWSE APPS
   		<div class="tab-content" id="matlab-tabs-content">
 			<div class="tab-pane fade active in" id="descrip">
 		  		<h2>Description</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis nulla id justo blandit tristique. Ut quis ornare lorem. Nam non accumsan libero. Nulla at lacus leo, quis posuere turpis. Donec non est vitae lorem consequat sagittis eget et dui. Sed ac enim neque, vitae tempus nibh. In lacus sem, mollis a pulvinar vel, tincidunt sit amet elit. Vestibulum ac augue eros, sed auctor felis. In condimentum pharetra ultrices. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis adipiscing pellentesque adipiscing. Donec suscipit, arcu vel bibendum congue, ligula est malesuada arcu, consectetur mattis diam libero a erat. Pellentesque vehicula tincidunt ante ac rutrum. Nulla facilisi. Vivamus fringilla, nisl et vulputate dignissim, metus erat pulvinar odio, vitae pharetra enim magna eu sapien. Ut non risus metus.</p>
+				<p>MATLAB is a programming environment for algorithm development, data analysis, visualization, and numerical computation. Using MATLAB, you can solve technical computing problems faster than with traditional programming languages, such as C, C++, and Fortran.You can use MATLAB in a wide range of applications, including signal and image processing, communications, control design, test and measurement, financial modeling and analysis, and computational biology. For a million engineers and scientists in industry and academia, MATLAB is the language of technical computing.</p>
 			</div>
 			<div class="tab-pane fade" id="requirements">
 		  		<h2>System Requirements</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis nulla id justo blandit tristique. Ut quis ornare lorem. Nam non accumsan libero. Nulla at lacus leo, quis posuere turpis. Donec non est vitae lorem consequat sagittis eget et dui. Sed ac enim neque, vitae tempus nibh. In lacus sem, mollis a pulvinar vel, tincidunt sit amet elit. Vestibulum ac augue eros, sed auctor felis. In condimentum pharetra ultrices. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis adipiscing pellentesque adipiscing. Donec suscipit, arcu vel bibendum congue, ligula est malesuada arcu, consectetur mattis diam libero a erat. Pellentesque vehicula tincidunt ante ac rutrum. Nulla facilisi. Vivamus fringilla, nisl et vulputate dignissim, metus erat pulvinar odio, vitae pharetra enim magna eu sapien. Ut non risus metus.</p>
+				<p>Windows: Windows 7 SP1, Vista SP 2, XP SP3, XP x64 Edition
+				SP2, Server 2008 SP2 or R2, Server 2003 R2 SP2. Any Intel or
+				AMD x86 processor supporting SSE2 instruction set. 1 GB for
+				MATLAB only, 3-4 GB for typical installations. At least 1 GB RAM.<br /><br />
+
+                Linux: Qualified Distributions: Ubuntu 10.4 LTS, 11.04,
+                11.10. Red Hat Enterprise Linux 5.x and 6.x. SUSE Linux
+                Enterprise Desktop 11.x. Debian 6.x. Any Intel or AMD x86
+                processor supporting SSE2 instruction set. 1 GB for MATLAB
+                  only, 3-4 GB for a typical installation. At least 1 GB RAM.<br /><br />
+
+                Mac: Mac OS X 10.7 (Lion) or 10.6.4+ (Snow leopard). All
+                Intel-based Macs with an Intel Core 2 or later. 1 GB for
+                MATLAB only, 3-4 GB for a typical installation. At least 1 GB RAM.</p>
 			</div>
 			<div class="tab-pane fade" id="obtain">
 		  		<h2>How to Obtain MatLab</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis nulla id justo blandit tristique. Ut quis ornare lorem. Nam non accumsan libero. Nulla at lacus leo, quis posuere turpis. Donec non est vitae lorem consequat sagittis eget et dui. Sed ac enim neque, vitae tempus nibh. In lacus sem, mollis a pulvinar vel, tincidunt sit amet elit. Vestibulum ac augue eros, sed auctor felis. In condimentum pharetra ultrices. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis adipiscing pellentesque adipiscing. Donec suscipit, arcu vel bibendum congue, ligula est malesuada arcu, consectetur mattis diam libero a erat. Pellentesque vehicula tincidunt ante ac rutrum. Nulla facilisi. Vivamus fringilla, nisl et vulputate dignissim, metus erat pulvinar odio, vitae pharetra enim magna eu sapien. Ut non risus metus.</p>
+				<p>Currently available by chart string owner only. Use the
+				request button above to request a copy. Purchasing options
+				are available direct from vendor.</p>
+			</div>
+		</div>
+    </div>
+</div>
+
+
+<div class="modal fade hide" id="matlabtoolbox">
+  <div class="modal-header">
+        <button type="button" class="request-btn">REQUEST</button>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+    	<h3><img src="../static/img/matlab-icon-small.png" />MatLab + Symbolic
+    	Math Toolbox</h3>
+	</div>
+
+  	<div class="modal-body">
+  		<ul id="matlab-tabs" class="nav nav-tabs">
+  			<li class="active">
+  				<a href="#descrip" data-toggle="tab">Description</a>
+  			</li>
+  			<li>
+  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  			</li>
+  			<li>
+  				<a href="#obtain" data-toggle="tab">How to Obtain MatLab + Toolbox</a>
+  			</li>
+  		</ul>
+
+  		<div class="tab-content" id="matlab-tabs-content">
+			<div class="tab-pane fade active in" id="descrip">
+		  		<h2>Description</h2>
+				<p>MATLAB is a programming environment for algorithm
+				development, data analysis, visualization, and numerical
+				computation. Using MATLAB, you can solve technical computing
+				problems faster than with traditional programming languages,
+				such as C, C++, and Fortran.You can use MATLAB in a wide range
+				of applications, including signal and image processing,
+				communications, control design, test and measurement,
+				financial modeling and analysis, and computational biology.
+				For a million engineers and scientists in industry and
+				  academia, MATLAB is the language of technical computing.
+                  <br /><br />
+                  Symbolic Math Toolbox™ provides tools for solving and
+				manipulating symbolic math expressions and performing
+				variable-precision arithmetic. The toolbox contains hundreds
+				of MATLAB® symbolic functions that leverage the MuPAD® engine
+				for tasks such as differentiation, integration,
+				  simplification, transforms, and equation solving.Symbolic
+				Math Toolbox also includes the MuPAD language, which is
+				optimized for handling and operating on symbolic math
+				expressions. It provides libraries of MuPAD functions in
+				common mathematical areas, such as calculus and linear
+				algebra, as well as specialized areas, such as number theory
+				and combinatorics. You can extend the built-in functionality
+				by writing custom symbolic functions and libraries in the
+				MuPAD language. All functions can be accessed from the MATLAB
+				command line or from the MuPAD notebook interface, where you
+				  can manage and document your symbolic computations.
+                </p>
+			</div>
+			<div class="tab-pane fade" id="requirements">
+		  		<h2>System Requirements</h2>
+				<p>Windows: Windows 7 SP1, Vista SP 2, XP SP3, XP x64 Edition
+				SP2, Server 2008 SP2 or R2, Server 2003 R2 SP2. Any Intel or
+				AMD x86 processor supporting SSE2 instruction set. 1 GB for
+				MATLAB only, 3-4 GB for typical installations. At least 1 GB RAM.<br /><br />
+
+                Linux: Qualified Distributions: Ubuntu 10.4 LTS, 11.04,
+                11.10. Red Hat Enterprise Linux 5.x and 6.x. SUSE Linux
+                Enterprise Desktop 11.x. Debian 6.x. Any Intel or AMD x86
+                processor supporting SSE2 instruction set. 1 GB for MATLAB
+                  only, 3-4 GB for a typical installation. At least 1 GB RAM.<br /><br />
+
+                Mac: Mac OS X 10.7 (Lion) or 10.6.4+ (Snow leopard). All
+                Intel-based Macs with an Intel Core 2 or later. 1 GB for
+                MATLAB only, 3-4 GB for a typical installation. At least 1 GB RAM.</p>
+			</div>
+			<div class="tab-pane fade" id="obtain">
+		  		<h2>How to Obtain MatLab + Toolbox</h2>
+				<p>Currently available by chart string owner only. Use the
+				request button above to request a copy. Purchasing options
+				are available direct from vendor.</p>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class="modal fade hide" id="maya">
+  <div class="modal-header">
+        <button type="button" class="request-btn">REQUEST</button>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+    	<h3><img src="../static/img/matlab-icon-small.png" />Autodesk Maya</h3>
+	</div>
+
+  	<div class="modal-body">
+  		<ul id="matlab-tabs" class="nav nav-tabs">
+  			<li class="active">
+  				<a href="#descrip" data-toggle="tab">Description</a>
+  			</li>
+  			<li>
+  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  			</li>
+  			<li>
+  				<a href="#obtain" data-toggle="tab">How to Obtain Maya</a>
+  			</li>
+  		</ul>
+
+  		<div class="tab-content" id="matlab-tabs-content">
+			<div class="tab-pane fade active in" id="descrip">
+		  		<h2>Description</h2>
+				<p>Autodesk Maya.
+                </p>
+			</div>
+			<div class="tab-pane fade" id="requirements">
+		  		<h2>System Requirements</h2>
+				<p>System requirements.</p>
+			</div>
+			<div class="tab-pane fade" id="obtain">
+		  		<h2>How to Obtain Maya</h2>
+				<p>Currently available by chart string owner only. Use the
+				request button above to request a copy. Purchasing options
+				are available direct from vendor.</p>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class="modal fade hide" id="creative">
+  <div class="modal-header">
+        <button type="button" class="request-btn">REQUEST</button>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+    	<h3><img src="../static/img/matlab-icon-small.png" />Adobe Creative
+    	Suite 6</h3>
+	</div>
+
+  	<div class="modal-body">
+  		<ul id="matlab-tabs" class="nav nav-tabs">
+  			<li class="active">
+  				<a href="#descrip" data-toggle="tab">Description</a>
+  			</li>
+  			<li>
+  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  			</li>
+  			<li>
+  				<a href="#obtain" data-toggle="tab">How to Obtain Adobe CS6</a>
+  			</li>
+  		</ul>
+
+  		<div class="tab-content" id="matlab-tabs-content">
+			<div class="tab-pane fade active in" id="descrip">
+		  		<h2>Description</h2>
+				<p>Adobe CS6
+                </p>
+			</div>
+			<div class="tab-pane fade" id="requirements">
+		  		<h2>System Requirements</h2>
+				<p>System requirements.</p>
+			</div>
+			<div class="tab-pane fade" id="obtain">
+		  		<h2>How to Obtain Adobe CS6</h2>
+				<p>Currently available by chart string owner only. Use the
+				request button above to request a copy. Purchasing options
+				are available direct from vendor.</p>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class="modal fade hide" id="msoffice">
+  <div class="modal-header">
+        <button type="button" class="request-btn">REQUEST</button>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+    	<h3><img src="../static/img/matlab-icon-small.png" />Microsoft Office</h3>
+	</div>
+
+  	<div class="modal-body">
+  		<ul id="matlab-tabs" class="nav nav-tabs">
+  			<li class="active">
+  				<a href="#descrip" data-toggle="tab">Description</a>
+  			</li>
+  			<li>
+  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  			</li>
+  			<li>
+  				<a href="#obtain" data-toggle="tab">How to Obtain Microsoft Office</a>
+  			</li>
+  		</ul>
+
+  		<div class="tab-content" id="matlab-tabs-content">
+			<div class="tab-pane fade active in" id="descrip">
+		  		<h2>Description</h2>
+				<p>Microsoft Office
+                </p>
+			</div>
+			<div class="tab-pane fade" id="requirements">
+		  		<h2>System Requirements</h2>
+				<p>System requirements.</p>
+			</div>
+			<div class="tab-pane fade" id="obtain">
+		  		<h2>How to Obtain Office</h2>
+				<p>Currently available by chart string owner only. Use the
+				request button above to request a copy. Purchasing options
+				are available direct from vendor.</p>
 			</div>
 		</div>
     </div>

@@ -55,11 +55,11 @@ def browse(request):
     if request_status:
         button_value = 'ALREADY REQUESTED'
         form_value = 'DISABLED'
-        icon = 'requested-btn'
+        icon = 'requested-btn-matlab'
     else:
         button_value = 'REQUEST'
         form_value = ''
-        icon = 'app-btn'
+        icon = 'app-btn-matlab'
 
     # Context and set-up
     c = Context({

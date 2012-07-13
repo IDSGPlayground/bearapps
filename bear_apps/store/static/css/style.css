@@ -5,7 +5,7 @@
 
 /* Button Styles */
 
-.app-btn {
+.app-btn-matlab {
   text-align: center;
   font-family: "Ubuntu", Helvetica, sans-serif;
   font-size: 20px;
@@ -17,13 +17,49 @@
   background:url("../img/matlab-icon.png") 0 0 no-repeat;
 }
 
+.app-btn-maya {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width:250px;
+  height:250px;
+  background:url("../img/maya-icon.png") 0 0 no-repeat;
+}
+
+.app-btn-cs {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width:250px;
+  height:250px;
+  background:url("../img/adobecs-icon.png") 0 0 no-repeat;
+}
+
+.app-btn-office {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width:250px;
+  height:250px;
+  background:url("../img/msoffice-icon.png") 0 0 no-repeat;
+}
+
 .app-btn:hover {
   text-decoration: none;
   opacity:0.7;
   filter:alpha(opacity=70); /* For IE8 and earlier */
 }
 
-.requested-btn {
+.requested-btn-matlab {
   text-align: center;
   font-family: "Ubuntu", Helvetica, sans-serif;
   font-size: 20px;
