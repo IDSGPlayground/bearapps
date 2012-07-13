@@ -11,7 +11,7 @@ def home(request):
 
 def browse(request):
 
-    #Form handling
+    #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
         if form.is_valid():
@@ -34,17 +34,15 @@ def browse(request):
 
     # Access db and check if app is already requested.
     uid = 12345678 # hardcoded because minimum viable product and stuff
-
     # Initial access to database, which allows us to check for a request.
     try:
         p=get_object_or_404(User, pk=User.objects.get(SID__startswith=(uid)).id)
     except (KeyError, User.DoesNotExist):
         p = None
 
-    request_status = False
-
     # Check if the app has been requested
     # In this case, it check specifically for one user, Elvis.
+    request_status = False # default value
     try:
         p.apps_set.get(name='Matlab')
         request_status = True
@@ -63,7 +61,7 @@ def browse(request):
         form_value = ''
         icon = 'app-btn'
 
-    # Context and template set-up
+    # Context and set-up
     c = Context({
             'button_value' : button_value,
             'form_value' : form_value,
