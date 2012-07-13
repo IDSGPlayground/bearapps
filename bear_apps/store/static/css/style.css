@@ -46,14 +46,12 @@
   position: absolute;
   top: 38px;
   right: 45px;
-  width: 150px;
   height: 40px;
 }
 .request-btn:disabled {
   position: absolute;
   top: 38px;
   right: 45px;
-  width: 150px;
   height: 40px;
 }
 .request-btn:hover {
