@@ -39,7 +39,7 @@ def browse(request):
     try:
         p=get_object_or_404(User, pk=User.objects.get(SID__startswith=(uid)).id)
     except (KeyError, User.DoesNotExist):
-        p = None 
+        p = None
 
     request_status = False
 
@@ -65,21 +65,19 @@ def browse(request):
 
     # Context and template set-up
     c = Context({
-            'button_value' : button_value, 
+            'button_value' : button_value,
             'form_value' : form_value,
             'icon_state' : icon,
+            'username' : 'Elvis'
             })
-    t = loader.get_template('browse.html')    
 
     # Update context with Security token for html form
     c.update(csrf(request))
 
-    return HttpResponse(t.render(c))
-
-    #return render_to_response('browse.html', c)
+    return render_to_response('browse.html', c)
 
 def myapps(request):
-    return render_to_response('my-apps.html')
+    return render_to_response('my-apps.html', {'username' : 'Elvis'})
 
 
 # Class to hold form data in browse()
