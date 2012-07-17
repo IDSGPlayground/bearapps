@@ -10,7 +10,6 @@ def home(request):
     return render_to_response('index.html')
 
 def browse(request):
-
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
@@ -60,12 +59,33 @@ def browse(request):
         button_value = 'REQUEST'
         form_value = ''
         icon = 'app-btn-matlab'
+    
+    try:
+        p.apps_set.get(name='Matlab + Toolbox')
+        request_status = True
+    except (KeyError, Apps.DoesNotExist):
+        request_status = False
+    except AttributeError:
+        request_status = False
+
+    # control flow for disabling the html form in browse.html
+    if request_status:
+        button_value4 = 'ALREADY REQUESTED'
+        form_value4 = 'DISABLED'
+        icon2 = 'requested-btn-matlab'
+    else:
+        button_value4 = 'REQUEST'
+        form_value4 = ''
+        icon2 = 'app-btn-matlab'
 
     # Context and set-up
     c = Context({
             'button_value' : button_value,
+            'button_value4': button_value4,
             'form_value' : form_value,
+            'form_value4': form_value4,
             'icon_state' : icon,
+            'icon_state2': icon2,
             'username' : 'Elvis'
             })
 

@@ -20,6 +20,8 @@ from django.db import models
 class User(models.Model):
 	name=models.CharField(max_length=200)
 	SID=models.IntegerField()
+	# groups=models.ForeignKey('AdminUser')
+	# PI=models.CharField(max_length=200)
 	# accepted_user=models.ForeignKey('Apps')
 	
 	def __unicode__(self):
@@ -36,3 +38,9 @@ class Apps(models.Model):
 			self.state="downloadable"
 		elif self.state.upper()=="UNAVAILABLE":
 			self.state="requested"
+#This will be implemented when we get the PI part done
+# class AdminUser(models.Model):
+# 	name=models.charField(max_length=200)
+# 	ID=models.IntegerField()
+# 	def __unicode__(self):
+# 		return self.name+", "+str(self.ID)

@@ -11,7 +11,7 @@ BROWSE APPS
 
 {% block apps %}
 <a href="#matlab" data-toggle="modal" class="{{ icon_state }}">MatLab</a>
-<a href="#matlabtoolbox" data-toggle="modal" class="app-btn-matlab">MatLab + Toolbox</a>
+<a href="#matlabtoolbox" data-toggle="modal" class="{{ icon_state2 }}">MatLab + Toolbox</a>
 <a href="#maya" data-toggle="modal" class="app-btn-maya">Maya</a>
 <a href="#creative" data-toggle="modal" class="app-btn-cs">Adobe Creative Suite</a>
 <a href="#msoffice" data-toggle="modal" class="app-btn-office">Microsoft Office</a>
@@ -80,7 +80,14 @@ BROWSE APPS
 
 <div class="modal fade hide" id="matlabtoolbox">
   <div class="modal-header">
-        <button type="button" class="request-btn">REQUEST</button>
+        <!-- <button type="button" class="request-btn">REQUEST</button> -->
+        <form method="post" action="/browse/">
+         {% csrf_token %}
+         <input type="hidden" name="user" value="Elvis Q. Plutonium">
+         <input type="hidden" name="uid" value="12345678">
+         <input type="hidden" name="app" value="Matlab + Toolbox">
+         <input type="submit" value="{{ button_value4 }}" class="request-btn" {{ form_value4 }}>
+        </form>
     	<button type="button" class="close" data-dismiss="modal">×</button>
     	<h3><img src="../static/img/matlab-icon-small.png" />MatLab + Symbolic
     	Math Toolbox</h3>
