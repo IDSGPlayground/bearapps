@@ -85,6 +85,9 @@ BROWSE APPS
          {% csrf_token %}
          <input type="hidden" name="user" value="Elvis Q. Plutonium">
          <input type="hidden" name="uid" value="12345678">
+         <select name="toolbox">
+           <option value="">Symbolic Math Toolbox</option>
+         </select>
          <input type="hidden" name="app" value="Matlab + Toolbox">
          <input type="submit" value="{{ button_value4 }}" class="request-btn" {{ form_value4 }}>
         </form>
@@ -119,23 +122,6 @@ BROWSE APPS
 				financial modeling and analysis, and computational biology.
 				For a million engineers and scientists in industry and
 				  academia, MATLAB is the language of technical computing.
-                  <br /><br />
-                  Symbolic Math Toolbox™ provides tools for solving and
-				manipulating symbolic math expressions and performing
-				variable-precision arithmetic. The toolbox contains hundreds
-				of MATLAB® symbolic functions that leverage the MuPAD® engine
-				for tasks such as differentiation, integration,
-				  simplification, transforms, and equation solving.Symbolic
-				Math Toolbox also includes the MuPAD language, which is
-				optimized for handling and operating on symbolic math
-				expressions. It provides libraries of MuPAD functions in
-				common mathematical areas, such as calculus and linear
-				algebra, as well as specialized areas, such as number theory
-				and combinatorics. You can extend the built-in functionality
-				by writing custom symbolic functions and libraries in the
-				MuPAD language. All functions can be accessed from the MATLAB
-				command line or from the MuPAD notebook interface, where you
-				  can manage and document your symbolic computations.
                 </p>
 			</div>
 			<div class="tab-pane fade" id="requirements2">
