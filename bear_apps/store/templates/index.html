@@ -28,14 +28,18 @@
   <div class="well hero-unit">
     <h1 style="line-height: 100px">LOG IN TO BEARAPPS</h1>
     <p>Use your CalNet ID and password to authenticate.</p>
-    <form class="well form">
+    <form method="POST" class="well form" action="/browse/">
+      
+      {% csrf_token %}
       <label>Username</label>
-      <input type="text" class="input-medium"></input>
+      <input type="text" name="user" class="input-medium"></input>
       <label>Password</label>
-      <input type="password" class="input-medium"></input>
+      <input type="password" name="password" class="input-medium"></input>
+
       <p>
-        <a class="btn btn-primary" href="browse/">Authenticate</a>
+        <input type="submit" value="Authenticate" class="btn btn-primary" href="browse/"></input>
       </p>
+
     </form>
   </div>
 </div>
