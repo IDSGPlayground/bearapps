@@ -1,41 +1,39 @@
 # Create your views here.
 from django.template import Context, loader
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django import forms
 from store.models import User, User_Apps, App
 
 def home(request):
-    if request.method == 'POST':
-        form = LogInForm(request.POST)
-        # request.session['user'] = form.user
-        if form.is_valid():
-        #     # request.session['user'] = request.POST['user']
-            request.session['user'] = form.user
-        #     request.Update()
-        #     # print request.session['user']
-        #     c = Context({'user':form.user})
-        #     c.update(csrf(request))
-        #     return render_to_response('index.html', c)
     c = Context({})
     c.update(csrf(request))
-    # print request.session['user']
-    return render_to_response('index.html', c)  
+    if request.method == 'POST':
+        form = LogInForm(request.POST)
+        #if form.is_valid():
+        try: 
+            user = request.POST['user']
+            if User.objects.get(name=user) != None:
+                request.session['user'] = user
+                uid = User.objects.get(name=user).SID
+                request.session['uid'] = uid
+                return HttpResponseRedirect('/browse/')
+        except: 
+            return render_to_response('index.html', c)
+    else:
+        return render_to_response('index.html', c)
 
 def browse(request):
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
         if form.is_valid():
-            user = form.cleaned_data['user']
-            uid = form.cleaned_data['uid']
             app = form.cleaned_data['app']
-            print user #prints name on command line output for debugging.
 
             # Write change to database.
             try:
-                p=get_object_or_404(User, pk=User.objects.get(SID__startswith=int(uid)).id)
+                p = User.objects.get(name=request.session['user'])
                 try:
                     p.user_apps_set.get(name=app).change_state()
                 except (KeyError, User_Apps.DoesNotExist):
@@ -46,18 +44,9 @@ def browse(request):
                 p.user_apps_set.create(name=app, state="requested")
 
     # Access db and check if app is already requested.
-    uid = 12345678 # hardcoded because minimum viable product and stuff
-    # Initial access to database, which allows us to check for a request.
-    Matlab_obj=get_object_or_404(App, pk=App.objects.get(app_name='MatLab').id)
-    Matlab_decrip=Matlab_obj.description
-    Matlab_sysreq=Matlab_obj.Sysreq_windows+"\n\n"+Matlab_obj.Sysreq_linux+"\n\n"+Matlab_obj.Sysreq_mac
-    Matlab_obtain=Matlab_obj.obtain
-    Toolbox_obj=get_object_or_404(App, pk=App.objects.get(app_name='MatLab + Toolboxes').id)
-    Toolbox_decrip=Toolbox_obj.description
-    Toolbox_sysreq=Toolbox_obj.Sysreq_windows+"\n\n"+Matlab_obj.Sysreq_linux+"\n\n"+Matlab_obj.Sysreq_mac
-    Toolbox_obtain=Toolbox_obj.obtain
+
     try:
-        p=get_object_or_404(User, pk=User.objects.get(SID__startswith=(uid)).id)
+        p = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
         p = None
 
@@ -100,21 +89,22 @@ def browse(request):
         form_value4 = ''
         icon2 = 'app-btn-matlab'
 
+    if 'uid' not in request.session:
+        request.session['uid'] = "Not set"
+
+    apps = App.objects.all()
+
     # Context and set-up
     c = Context({
-            'Matlab_decrip': Matlab_decrip,
-            'Matlab_sysreq': Matlab_sysreq,
-            'Matlab_obtain': Matlab_obtain,
-            'Toolbox_decrip': Toolbox_decrip,
-            'Toolbox_sysreq': Toolbox_sysreq,
-            'Toolbox_obtain': Toolbox_obtain,
             'button_value' : button_value,
             'button_value4': button_value4,
             'form_value' : form_value,
             'form_value4': form_value4,
             'icon_state' : icon,
             'icon_state2': icon2,
-            'username' : request.POST['user']
+            'username' : request.session['user'],
+            'uid' : request.session['uid'],
+            'apps' : apps,
             })
 
     # Update context with Security token for html form
@@ -123,7 +113,7 @@ def browse(request):
     return render_to_response('browse.html', c)
 
 def myapps(request):
-    return render_to_response('my-apps.html', {'username' : request.session['user']})
+    return render_to_response('my-apps.html', {'username' : request.session['user'],})
 
 
 # Class to hold form data in browse()

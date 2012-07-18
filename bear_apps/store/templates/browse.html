@@ -23,8 +23,6 @@ BROWSE APPS
   <div class="modal-header">
         <form method="post" action="/browse/">
          {% csrf_token %}
-         <input type="hidden" name="user" value="Elvis Q. Plutonium">
-         <input type="hidden" name="uid" value="12345678">
          <input type="hidden" name="app" value="Matlab">
          <input type="submit" value="{{ button_value }}" class="request-btn" {{ form_value }}>
         </form>
@@ -80,11 +78,8 @@ BROWSE APPS
 
 <div class="modal fade hide" id="matlabtoolbox">
   <div class="modal-header">
-        <!-- <button type="button" class="request-btn">REQUEST</button> -->
         <form method="post" action="/browse/">
          {% csrf_token %}
-         <input type="hidden" name="user" value="Elvis Q. Plutonium">
-         <input type="hidden" name="uid" value="12345678">
          <select name="toolbox">
            <option value="">Symbolic Math Toolbox</option>
          </select>
