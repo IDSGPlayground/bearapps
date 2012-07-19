@@ -6,10 +6,8 @@ from django import forms
 from store.models import User, User_Apps, App
 
 def home(request):
-
     not_user = False
     logout = False
-
     # Deletes session if logged in previously.
     try:
         del request.session['user']
@@ -18,8 +16,6 @@ def home(request):
         pass
 
     if request.method == 'POST':
-        form = LogInForm(request.POST)
-        #if form.is_valid():
         try: 
             user = request.POST['user']
             if User.objects.get(name=user) != None:
@@ -28,36 +24,36 @@ def home(request):
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
         except: 
+            # Errors if user does not exist.
             not_user = True
 
     c = Context({
         'not_user': not_user,
         'logout': logout,
     })
-
     c.update(csrf(request))
     return render_to_response('index.html', c)
 
 def browse(request):
+    #If user is not logged in redirects to log in page.
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
+
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
         app = request.POST['app']
+
         # Write change to database.
         try:
             user = User.objects.get(name=request.session['user'])
-            app = User_Apps.objects.get(pk=1)
+            app = User_Apps.objects.get(user=user, href_name=app)
             app.state = "REQUESTED"
-            app.user = user
             app.save()
         except (KeyError, User.DoesNotExist):
             user.user_apps_set.create(href_name=app, state="REQUESTED")
 
-
-    try:
-        user = User.objects.get(name=request.session['user'])
-    except (KeyError, User.DoesNotExist):
-        user = None
+    user = User.objects.get(name=request.session['user'])
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
@@ -80,9 +76,7 @@ def browse(request):
 
     # Context and set-up
     c = Context({
-            # 'button_value' : button_value,
             'form_value' : '',
-            # 'icon_state' : icon,
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
