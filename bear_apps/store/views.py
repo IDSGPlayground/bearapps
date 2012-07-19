@@ -18,6 +18,10 @@ def home(request):
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
+            else:
+                user = User(name=user, SID=uid)
+                user.save()
+                user.user_apps_set.create(name=app, state="requested")
         except: 
             return render_to_response('index.html', c)
     else:
@@ -31,29 +35,18 @@ def browse(request):
         # Write change to database.
         try:
             user = User.objects.get(name=request.session['user'])
-            try:
-                user.user_apps_set.get(href_name=app).change_state()
-            except (KeyError, User_Apps.DoesNotExist):
-                user.user_apps_set.create(href_name=app, state="requested")
+            app = User_Apps.objects.get(pk=1)
+            app.state = "requested"
+            app.user = user
+            app.save()
         except (KeyError, User.DoesNotExist):
-            user = User(name=user, SID=uid)
-            user.save()
-            user.user_apps_set.create(name=app, state="requested")
+            user.user_apps_set.create(href_name=app, state="requested")
+
 
     try:
         user = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
         user = None
-
-    # control flow for disabling the html form in browse.html
-    # if request_status:
-    #     button_value = 'ALREADY REQUESTED'
-    #     form_value = 'DISABLED'
-    #     icon = 'requested-btn-matlab'
-    # else:
-    #     button_value = 'REQUEST'
-    #     form_value = ''
-    #     icon = 'app-btn-matlab'
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
@@ -94,8 +87,6 @@ def myapps(request):
 
 # Class to hold form data in browse()
 class RequestForm(forms.Form):
-    user = forms.CharField()
-    uid = forms.CharField()
     app = forms.CharField()
 
 # Log In Form

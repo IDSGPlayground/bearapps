@@ -18,7 +18,7 @@ class User_Apps(models.Model):
 	state = models.CharField(max_length=200, default="available")
 
 	def change_state(self):
-		if self.state.upper() == "AVAILABLE":
+		if self.state == "available":
 			self.state = "requested"
 
 	def __unicode__(self):
