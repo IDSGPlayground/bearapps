@@ -19,14 +19,10 @@ class User_Apps(models.Model):
 	user = models.ForeignKey('User')
 	app_name = models.CharField(max_length=200)
 	href_name = models.CharField(max_length=200)
-<<<<<<< HEAD
 	available=models.BooleanField()
 	requested=models.BooleanField()
 	downloadable=models.BooleanField()
 	
-=======
-
->>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
 	def __unicode__(self):
 		return self.app_name
 

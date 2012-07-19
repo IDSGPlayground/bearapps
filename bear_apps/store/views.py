@@ -24,11 +24,8 @@ def home(request):
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
-<<<<<<< HEAD
             else:
                 return render_to_response('index.html', c)
-=======
->>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
         except: 
             # Errors if user does not exist.
             not_user = True
@@ -51,7 +48,6 @@ def browse(request):
         app = request.POST['app']
 
         # Write change to database.
-<<<<<<< HEAD
         user = User.objects.get(name=request.session['user'])
         app = User_Apps.objects.get(pk=1)
         app.requested=True
@@ -59,9 +55,7 @@ def browse(request):
         app.downloadable=False
         app.user = user
         app.save()
-=======
     user = User.objects.get(name=request.session['user'])
->>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
@@ -72,13 +66,10 @@ def browse(request):
     for app in apps:
         href_name = app.href_name
         try:
-<<<<<<< HEAD
             state = user.user_apps_set.get(href_name=href_name)
             if state.available:
                 app_states.append("app-btn-" + href_name)
             elif state.requested:
-=======
->>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
                 app_states.append("requested-btn-" + href_name)
         except:
             app_states.append("app-btn" + href_name)
