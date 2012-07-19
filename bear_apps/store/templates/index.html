@@ -31,6 +31,7 @@
     <form method="POST" class="well form" action="/">
       
       {% csrf_token %}
+      {% if logout %} You are now logged out {% endif %}
       <label>Username</label>
       <input type="text" name="user" class="input-medium"></input>
       <label>Password</label>

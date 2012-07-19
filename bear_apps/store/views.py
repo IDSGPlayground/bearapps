@@ -6,15 +6,21 @@ from django import forms
 from store.models import User, User_Apps, App
 
 def home(request):
-    c = Context({})
+    c = Context({
+        'logout': False,
+        })
     c.update(csrf(request))
 
     # Deletes session if logged in previously.
     try:
         del request.session['user']
+        c = Context({
+            'logout': True,
+            })
+        return render_to_response('index.html', c)
     except:
         pass
-        
+
     if request.method == 'POST':
         form = LogInForm(request.POST)
         #if form.is_valid():
