@@ -1,5 +1,6 @@
-from store.models import User_Apps, User, App
+from store.models import User_Apps, User, App, Group
 from django.contrib import admin
+
 class AppsInline(admin.TabularInline):
 	model = User_Apps
 	extra = 3
@@ -9,4 +10,5 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(App)
+admin.site.register(Group)
 # admin.site.register(User)

@@ -27,86 +27,60 @@ def browse(request):
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
-        if form.is_valid():
-            app = form.cleaned_data['app']
-
-            # Write change to database.
+        app = request.POST['app']
+        # Write change to database.
+        try:
+            user = User.objects.get(name=request.session['user'])
             try:
-                user = User.objects.get(name=request.session['user'])
-                try:
-                    user.user_apps_set.get(name=app).change_state()
-                except (KeyError, User_Apps.DoesNotExist):
-                    user.user_apps_set.create(name=app, state="requested")
-            except (KeyError, User.DoesNotExist):
-                user = User(name=user, SID=uid)
-                user.save()
-                user.user_apps_set.create(name=app, state="requested")
-
-    # Access db and check if app is already requested.
+                user.user_apps_set.get(href_name=app).change_state()
+            except (KeyError, User_Apps.DoesNotExist):
+                user.user_apps_set.create(href_name=app, state="requested")
+        except (KeyError, User.DoesNotExist):
+            user = User(name=user, SID=uid)
+            user.save()
+            user.user_apps_set.create(name=app, state="requested")
 
     try:
         user = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
         user = None
 
-    # Check if the app has been requested
-    # In this case, it check specifically for one user, Elvis.
-    request_status = False # default value
-    try:
-        user.user_apps_set.get(name='Matlab')
-        request_status = True
-    except (KeyError, User_Apps.DoesNotExist):
-        request_status = False
-    except AttributeError:
-        request_status = False
-
     # control flow for disabling the html form in browse.html
-    if request_status:
-        button_value = 'ALREADY REQUESTED'
-        form_value = 'DISABLED'
-        icon = 'requested-btn-matlab'
-    else:
-        button_value = 'REQUEST'
-        form_value = ''
-        icon = 'app-btn-matlab'
-    
-    try:
-        user.user_apps_set.get(name='Matlab + Toolbox')
-        request_status = True
-    except (KeyError, User_Apps.DoesNotExist):
-        request_status = False
-    except AttributeError:
-        request_status = False
-
-    # control flow for disabling the html form in browse.html
-    if request_status:
-        button_value4 = 'ALREADY REQUESTED'
-        form_value4 = 'DISABLED'
-        icon2 = 'requested-btn-matlab'
-    else:
-        button_value4 = 'REQUEST'
-        form_value4 = ''
-        icon2 = 'app-btn-matlab'
+    # if request_status:
+    #     button_value = 'ALREADY REQUESTED'
+    #     form_value = 'DISABLED'
+    #     icon = 'requested-btn-matlab'
+    # else:
+    #     button_value = 'REQUEST'
+    #     form_value = ''
+    #     icon = 'app-btn-matlab'
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
 
     apps = App.objects.all()
+
+    app_states = []
     for app in apps:
-        name = app.app_name
-    #user_apps =  p.user_apps_set.get(name='Matlab')
+        href_name = app.href_name
+        try:
+            state = user.user_apps_set.get(href_name=href_name).state
+            if state == "available":
+                app_states.append("app-btn-" + href_name)
+            elif state == "requested":
+                app_states.append("requested-btn-" + href_name)
+        except:
+            app_states.append('none')
 
     # Context and set-up
     c = Context({
-            'button_value' : button_value,
-            'button_value4': button_value4,
-            'form_value' : form_value,
-            'form_value4': form_value4,
-            'icon_state' : icon,
-            'icon_state2': icon2,
+            # 'button_value' : button_value,
+            'form_value' : '',
+            # 'icon_state' : icon,
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
+            'app_states' : app_states,
             })
 
     # Update context with Security token for html form
