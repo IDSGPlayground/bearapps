@@ -34,6 +34,7 @@ class User_Apps(models.Model):
 
 class App(models.Model):
 	app_name = models.CharField(max_length=200)
+	href_name = models.CharField(max_length=200)
 	description = models.TextField(max_length=1000)
 	Sysreq_windows = models.TextField(max_length=1000)
 	Sysreq_linux = models.TextField(max_length=1000)
