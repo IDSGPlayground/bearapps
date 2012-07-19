@@ -11,16 +11,11 @@ MY APPS
 {% endblock %}
 
 {% block apps %}
-<ul class="sort">
-	<li class="active"><a href="#">ALL</a></li>
-	<li><a href="#">REQUESTED</a></li>
-	<li><a href="#">APPROVED</a></li>
-	<li><a href="#">INSTALLED</a></li>
-	<li><a href="#">UPDATES</a></li>
-</ul>
-<div class="row-fluid">
-	<a href="#matlab" data-toggle="modal" class="requested-btn"></a>
-</div>
+{% for app in apps %}
+    {% for state in app_states %}
+        <a href="#{{ app.href_name}}" data-toggle="modal" class="{{ state }}">{{ app.app_name }}</a>
+    {% endfor %}
+{% endfor %}
 {% endblock %}
 
 {% block content %}

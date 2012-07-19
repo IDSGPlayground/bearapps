@@ -4,6 +4,7 @@ app_status=(('AVAILABLE', 'AVAILABLE'),
 	('REQUESTED','REQUESTED'), 
 	('DOWNLOADABLE' , 'DOWNLOADABLE'), 
 	('UPDATES AVAILABLE', 'UPDATES AVAILABLE'))
+
 class User(models.Model):
 	name = models.CharField(max_length=200)
 	password = models.CharField(max_length=200)
@@ -18,8 +19,8 @@ class User_Apps(models.Model):
 	user = models.ForeignKey('User')
 	app_name = models.CharField(max_length=200)
 	href_name = models.CharField(max_length=200)
-	# state = models.CharField(max_length=200, default="available")
-	state = models.CharField(max_length=20, choices=app_status)
+	state = models.CharField(max_length=200, default="AVAILABLE")
+	#state = models.CharField(max_length=20, choices=app_status, default="AVAILABLE")
 
 	def __unicode__(self):
 		return self.app_name + ", " + self.state

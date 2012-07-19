@@ -21,7 +21,7 @@ def home(request):
             else:
                 user = User(name=user, SID=uid)
                 user.save()
-                user.user_apps_set.create(name=app, state="requested")
+                user.user_apps_set.create(name=app, state="REQUESTED")
         except: 
             return render_to_response('index.html', c)
     else:
@@ -36,11 +36,11 @@ def browse(request):
         try:
             user = User.objects.get(name=request.session['user'])
             app = User_Apps.objects.get(pk=1)
-            app.state = "requested"
+            app.state = "REQUESTED"
             app.user = user
             app.save()
         except (KeyError, User.DoesNotExist):
-            user.user_apps_set.create(href_name=app, state="requested")
+            user.user_apps_set.create(href_name=app, state="REQUESTED")
 
 
     try:
@@ -58,12 +58,12 @@ def browse(request):
         href_name = app.href_name
         try:
             state = user.user_apps_set.get(href_name=href_name).state
-            if state == "available":
+            if state == "AVAILABLE":
                 app_states.append("app-btn-" + href_name)
-            elif state == "requested":
+            elif state == "REQUESTED":
                 app_states.append("requested-btn-" + href_name)
         except:
-            app_states.append('none')
+            app_states.append("app-btn" + href_name)
 
 
 
@@ -84,8 +84,29 @@ def browse(request):
     return render_to_response('browse.html', c)
 
 def myapps(request):
-    
-    return render_to_response('my-apps.html', {'username' : request.session['user'],})
+    try:
+        user = User.objects.get(name=request.session['user'])
+    except (KeyError, User.DoesNotExist):
+        user = None
+
+    apps = App.objects.all()
+    app_states = []
+    for app in apps:
+        href_name = app.href_name
+        try:
+            state = user.user_apps_set.get(href_name=href_name).state
+            if state == "REQUESTED":
+                app_states.append("requested-btn-" + href_name)
+        except:
+            app_states.append('none')
+
+    c = Context({
+        'username' : request.session['user'],
+        'apps' : apps,
+        'app_states' : app_states,
+        })
+
+    return render_to_response('my-apps.html', c)
 
 def manage(request):
     return render_to_response('manage.html', {'username' : request.session['user'],})
