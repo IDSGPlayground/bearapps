@@ -10,11 +10,11 @@ BROWSE APPS
 {% endblock %}
 
 {% block apps %}
-<a href="#matlab" data-toggle="modal" class="{{ icon_state }}">MatLab</a>
-<a href="#matlabtoolbox" data-toggle="modal" class="{{ icon_state2 }}">MatLab + Toolbox</a>
-<a href="#maya" data-toggle="modal" class="app-btn-maya">Maya</a>
-<a href="#creative" data-toggle="modal" class="app-btn-cs">Adobe Creative Suite</a>
-<a href="#msoffice" data-toggle="modal" class="app-btn-office">Microsoft Office</a>
+
+{% for app in apps %}
+<a href="#{{ app.app_name }}" data-toggle="modal" class="{{ icon_state }}">{{ app.app_name }}</a>
+{% endfor %}
+
 {% endblock %}
 
 {% block content %}

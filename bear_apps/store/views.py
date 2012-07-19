@@ -93,6 +93,9 @@ def browse(request):
         request.session['uid'] = "Not set"
 
     apps = App.objects.all()
+    for app in apps:
+        name = app.app_name
+    #user_apps =  p.user_apps_set.get(name='Matlab')
 
     # Context and set-up
     c = Context({
@@ -105,6 +108,7 @@ def browse(request):
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
+            
             })
 
     # Update context with Security token for html form
