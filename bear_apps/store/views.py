@@ -13,15 +13,18 @@ def home(request):
         #if form.is_valid():
         try: 
             user = request.POST['user']
-            if User.objects.get(name=user) != None:
+            if User.objects.get(name=user).password==request.POST['password']:
+            # User.objects.get(name=user)
                 request.session['user'] = user
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
             else:
-                user = User(name=user, SID=uid)
-                user.save()
-                user.user_apps_set.create(name=app, state="requested")
+            #     user = User(name=user, SID=uid)
+            #     user.save()
+            #     # user.user_apps_set.create(name=app, state="requested")
+            #     user.user_apps_set.create(app_name=app, )
+                return render_to_response('index.html', c)
         except: 
             return render_to_response('index.html', c)
     else:
@@ -33,16 +36,17 @@ def browse(request):
         form = RequestForm(request.POST)
         app = request.POST['app']
         # Write change to database.
-        try:
-            user = User.objects.get(name=request.session['user'])
-            app = User_Apps.objects.get(pk=1)
-            app.state = "requested"
-            app.user = user
-            app.save()
-        except (KeyError, User.DoesNotExist):
-            user.user_apps_set.create(href_name=app, state="requested")
-
-
+        # try:
+        user = User.objects.get(name=request.session['user'])
+        app = User_Apps.objects.get(pk=1)
+        # app.state = "requested"
+        app.requested=True
+        app.available=False
+        app.downloadable=False
+        app.user = user
+        app.save()
+        # except (KeyError, User.DoesNotExist):
+        #     user.user_apps_set.create(href_name=app, state="requested")
     try:
         user = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
@@ -57,10 +61,12 @@ def browse(request):
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name).state
-            if state == "available":
+            state = user.user_apps_set.get(href_name=href_name)
+            # if state == "available":
+            if state.available:
                 app_states.append("app-btn-" + href_name)
-            elif state == "requested":
+            # elif state == "requested":
+            elif state.requested:
                 app_states.append("requested-btn-" + href_name)
         except:
             app_states.append('none')
@@ -99,3 +105,4 @@ class RequestForm(forms.Form):
 class LogInForm(forms.Form):
     user = forms.CharField()
     password = forms.CharField()
+

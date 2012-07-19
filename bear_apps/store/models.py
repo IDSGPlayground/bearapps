@@ -19,10 +19,13 @@ class User_Apps(models.Model):
 	app_name = models.CharField(max_length=200)
 	href_name = models.CharField(max_length=200)
 	# state = models.CharField(max_length=200, default="available")
-	state = models.CharField(max_length=20, choices=app_status)
-
+	# state = models.CharField(max_length=20, choices=app_status)
+	available=models.BooleanField()
+	requested=models.BooleanField()
+	downloadable=models.BooleanField()
+	
 	def __unicode__(self):
-		return self.app_name + ", " + self.state
+		return self.app_name
 
 class App(models.Model):
 	app_name = models.CharField(max_length=200)
@@ -32,7 +35,7 @@ class App(models.Model):
 	Sysreq_linux = models.TextField(max_length=1000)
 	Sysreq_mac = models.TextField(max_length=1000)
 	obtain = models.TextField(max_length=1000)
-
+	
 	def __unicode__(self):
 		return self.app_name
 
