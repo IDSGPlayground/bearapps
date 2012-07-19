@@ -16,4 +16,5 @@ urlpatterns = patterns('',
       url(r'^admin/', include(admin.site.urls)),
       url(r'^browse/', 'store.views.browse', name='browse' ),
       url(r'^my-apps/', 'store.views.myapps', name='my-apps'),
+      url(r'^manage/', 'store.views.manage', name='manage'),
 )

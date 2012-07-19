@@ -1,41 +1,18 @@
 {% extends "base.html" %}
 
 {% block nav %}
-<li class="active"><a href="../my-apps/">My Apps</a></li>
+<li><a href="../my-apps/">My Apps</a></li>
 <li><a href="../browse/">Browse Apps</a></li>
 <li class="active"><a href="../manage/">Manage</a></li>
 {% endblock %}
 
 {% block title %}
-MY APPS
+MANAGE
 {% endblock %}
 
 {% block apps %}
-<ul class="sort">
-    <li class="active"><a href="#">ALL</a></li>
-    <li><a href="#">REQUESTED</a></li>
-    <li><a href="#">APPROVED</a></li>
-    <li><a href="#">INSTALLED</a></li>
-    <li><a href="#">UPDATES</a></li>
-</ul>
-<div class="row-fluid">
-    <a href="#matlab" data-toggle="modal" class="requested-btn"></a>
-</div>
 {% endblock %}
 
 {% block content %}
-
-<div class="modal fade hide" id="matlab">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>                        
-            <button type="button" class="request-btn">INSTALL</button>
-    </div>
-
-    <div class="modal-body">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam quis nulla id justo blandit tristique. Ut quis ornare lorem. Nam non accumsan libero. Nulla at lacus leo, quis posuere turpis. Donec non est vitae lorem consequat sagittis eget et dui. Sed ac enim neque, vitae tempus nibh. In lacus sem, mollis a pulvinar vel, tincidunt sit amet elit. Vestibulum ac augue eros, sed auctor felis. In condimentum pharetra ultrices. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis adipiscing pellentesque adipiscing. Donec suscipit, arcu vel bibendum congue, ligula est malesuada arcu, consectetur mattis diam libero a erat. Pellentesque vehicula tincidunt ante ac rutrum. Nulla facilisi. Vivamus fringilla, nisl et vulputate dignissim, metus erat pulvinar odio, vitae pharetra enim magna eu sapien. Ut non risus metus.</p>
-    </div>
-</div>
-
 {% endblock %}
 

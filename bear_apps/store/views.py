@@ -65,6 +65,8 @@ def browse(request):
         except:
             app_states.append('none')
 
+
+
     # Context and set-up
     c = Context({
             # 'button_value' : button_value,
@@ -82,7 +84,11 @@ def browse(request):
     return render_to_response('browse.html', c)
 
 def myapps(request):
+    
     return render_to_response('my-apps.html', {'username' : request.session['user'],})
+
+def manage(request):
+    return render_to_response('manage.html', {'username' : request.session['user'],})
 
 
 # Class to hold form data in browse()
