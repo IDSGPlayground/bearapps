@@ -12,7 +12,9 @@ BROWSE APPS
 {% block apps %}
 
 {% for app in apps %}
-<a href="#{{ app.href_name}}" data-toggle="modal" class="{{ icon_state }}">{{ app.app_name }}</a>
+    {% for state in app_states %}
+        <a href="#{{ app.href_name}}" data-toggle="modal" class="{{ state }}">{{ app.app_name }}</a>
+    {% endfor %}
 {% endfor %}
 
 {% endblock %}
@@ -25,8 +27,8 @@ BROWSE APPS
   <div class="modal-header">
     <form method="post" action="/browse/">
       {% csrf_token %}
-      <input type="hidden" name="app" value="Matlab">
-      <input type="submit" value="{{ button_value }}" class="request-btn" {{ form_value }}>
+      <input type="hidden" name="app" value="{{ app.href_name }}">
+      <input type="submit" value="REQUEST" class="request-btn">
     </form>
     	<button type="button" class="close" data-dismiss="modal">×</button>
     	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
@@ -54,8 +56,8 @@ BROWSE APPS
 			<div class="tab-pane fade" id="requirements">
 		  		<h2>System Requirements</h2>
     				<p>Windows: {{ app.Sysreq_windows }}</p>
-            <p>Linux: {{ app.Syreq_linux }}</p>
-            <p>Mac: {{ app.Syreq_mac }}</p>
+            <p>Linux: {{ app.Sysreq_linux }}</p>
+            <p>Mac: {{ app.Sysreq_mac }}</p>
 			</div>
 
   		<div class="tab-pane fade" id="obtain">
