@@ -32,6 +32,8 @@
       
       {% csrf_token %}
       {% if logout %} You are now logged out {% endif %}
+      {% if not_user %} This username does not exist. {% endif %}
+      
       <label>Username</label>
       <input type="text" name="user" class="input-medium"></input>
       <label>Password</label>

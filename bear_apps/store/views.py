@@ -6,18 +6,14 @@ from django import forms
 from store.models import User, User_Apps, App
 
 def home(request):
-    c = Context({
-        'logout': False,
-        })
-    c.update(csrf(request))
+
+    not_user = False
+    logout = False
 
     # Deletes session if logged in previously.
     try:
         del request.session['user']
-        c = Context({
-            'logout': True,
-            })
-        return render_to_response('index.html', c)
+        logout = True
     except:
         pass
 
@@ -32,9 +28,15 @@ def home(request):
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
         except: 
-            return render_to_response('index.html', c)
-    else:
-        return render_to_response('index.html', c)
+            not_user = True
+
+    c = Context({
+        'not_user': not_user,
+        'logout': logout,
+    })
+
+    c.update(csrf(request))
+    return render_to_response('index.html', c)
 
 def browse(request):
     #Form handling; for POST requests to this view.
