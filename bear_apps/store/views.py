@@ -1,4 +1,3 @@
-# Create your views here.
 from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -33,28 +32,28 @@ def browse(request):
 
             # Write change to database.
             try:
-                p = User.objects.get(name=request.session['user'])
+                user = User.objects.get(name=request.session['user'])
                 try:
-                    p.user_apps_set.get(name=app).change_state()
+                    user.user_apps_set.get(name=app).change_state()
                 except (KeyError, User_Apps.DoesNotExist):
-                    p.user_apps_set.create(name=app, state="requested")
+                    user.user_apps_set.create(name=app, state="requested")
             except (KeyError, User.DoesNotExist):
-                p = User(name=user, SID=uid)
-                p.save()
-                p.user_apps_set.create(name=app, state="requested")
+                user = User(name=user, SID=uid)
+                user.save()
+                user.user_apps_set.create(name=app, state="requested")
 
     # Access db and check if app is already requested.
 
     try:
-        p = User.objects.get(name=request.session['user'])
+        user = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
-        p = None
+        user = None
 
     # Check if the app has been requested
     # In this case, it check specifically for one user, Elvis.
     request_status = False # default value
     try:
-        p.user_apps_set.get(name='Matlab')
+        user.user_apps_set.get(name='Matlab')
         request_status = True
     except (KeyError, User_Apps.DoesNotExist):
         request_status = False
@@ -72,7 +71,7 @@ def browse(request):
         icon = 'app-btn-matlab'
     
     try:
-        p.user_apps_set.get(name='Matlab + Toolbox')
+        user.user_apps_set.get(name='Matlab + Toolbox')
         request_status = True
     except (KeyError, User_Apps.DoesNotExist):
         request_status = False
@@ -90,7 +89,7 @@ def browse(request):
         icon2 = 'app-btn-matlab'
 
     if 'uid' not in request.session:
-        request.session['uid'] = "Not set"
+        request.session['uid'] = 000000
 
     apps = App.objects.all()
     for app in apps:
@@ -108,7 +107,6 @@ def browse(request):
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
-            
             })
 
     # Update context with Security token for html form
