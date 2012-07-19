@@ -31,6 +31,12 @@
     <form method="POST" class="well form" action="/">
       
       {% csrf_token %}
+
+      <div class="red">
+      {% if logout %} You are now logged out {% endif %}
+      {% if not_user %} This username does not exist. {% endif %}
+      </div>
+
       <label>Username</label>
       <input type="text" name="user" class="input-medium"></input>
       <label>Password</label>

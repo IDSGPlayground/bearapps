@@ -6,11 +6,16 @@ from django import forms
 from store.models import User, User_Apps, App
 
 def home(request):
-    c = Context({})
-    c.update(csrf(request))
+    not_user = False
+    logout = False
+    # Deletes session if logged in previously.
+    try:
+        del request.session['user']
+        logout = True
+    except:
+        pass
+
     if request.method == 'POST':
-        form = LogInForm(request.POST)
-        #if form.is_valid():
         try: 
             user = request.POST['user']
             if User.objects.get(name=user).password==request.POST['password']:
@@ -19,38 +24,44 @@ def home(request):
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
+<<<<<<< HEAD
             else:
-            #     user = User(name=user, SID=uid)
-            #     user.save()
-            #     # user.user_apps_set.create(name=app, state="requested")
-            #     user.user_apps_set.create(app_name=app, )
                 return render_to_response('index.html', c)
+=======
+>>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
         except: 
-            return render_to_response('index.html', c)
-    else:
-        return render_to_response('index.html', c)
+            # Errors if user does not exist.
+            not_user = True
+
+    c = Context({
+        'not_user': not_user,
+        'logout': logout,
+    })
+    c.update(csrf(request))
+    return render_to_response('index.html', c)
 
 def browse(request):
+    #If user is not logged in redirects to log in page.
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
+
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
         app = request.POST['app']
+
         # Write change to database.
-        # try:
+<<<<<<< HEAD
         user = User.objects.get(name=request.session['user'])
         app = User_Apps.objects.get(pk=1)
-        # app.state = "requested"
         app.requested=True
         app.available=False
         app.downloadable=False
         app.user = user
         app.save()
-        # except (KeyError, User.DoesNotExist):
-        #     user.user_apps_set.create(href_name=app, state="requested")
-    try:
-        user = User.objects.get(name=request.session['user'])
-    except (KeyError, User.DoesNotExist):
-        user = None
+=======
+    user = User.objects.get(name=request.session['user'])
+>>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
@@ -61,23 +72,22 @@ def browse(request):
     for app in apps:
         href_name = app.href_name
         try:
+<<<<<<< HEAD
             state = user.user_apps_set.get(href_name=href_name)
-            # if state == "available":
             if state.available:
                 app_states.append("app-btn-" + href_name)
-            # elif state == "requested":
             elif state.requested:
+=======
+>>>>>>> dbada2de835526784d490a53b9e048afaa04b1e1
                 app_states.append("requested-btn-" + href_name)
         except:
-            app_states.append('none')
+            app_states.append("app-btn" + href_name)
 
 
 
     # Context and set-up
     c = Context({
-            # 'button_value' : button_value,
             'form_value' : '',
-            # 'icon_state' : icon,
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
@@ -90,8 +100,29 @@ def browse(request):
     return render_to_response('browse.html', c)
 
 def myapps(request):
-    
-    return render_to_response('my-apps.html', {'username' : request.session['user'],})
+    try:
+        user = User.objects.get(name=request.session['user'])
+    except (KeyError, User.DoesNotExist):
+        user = None
+
+    apps = App.objects.all()
+    app_states = []
+    for app in apps:
+        href_name = app.href_name
+        try:
+            state = user.user_apps_set.get(href_name=href_name).state
+            if state == "REQUESTED":
+                app_states.append("requested-btn-" + href_name)
+        except:
+            app_states.append('none')
+
+    c = Context({
+        'username' : request.session['user'],
+        'apps' : apps,
+        'app_states' : app_states,
+        })
+
+    return render_to_response('my-apps.html', c)
 
 def manage(request):
     return render_to_response('manage.html', {'username' : request.session['user'],})
