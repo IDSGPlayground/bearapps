@@ -8,6 +8,13 @@ from store.models import User, User_Apps, App
 def home(request):
     c = Context({})
     c.update(csrf(request))
+
+    # Deletes session if logged in previously.
+    try:
+        del request.session['user']
+    except:
+        pass
+        
     if request.method == 'POST':
         form = LogInForm(request.POST)
         #if form.is_valid():
@@ -18,10 +25,6 @@ def home(request):
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
                 return HttpResponseRedirect('/browse/')
-            else:
-                user = User(name=user, SID=uid)
-                user.save()
-                user.user_apps_set.create(name=app, state="REQUESTED")
         except: 
             return render_to_response('index.html', c)
     else:
