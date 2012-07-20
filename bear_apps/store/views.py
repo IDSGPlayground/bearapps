@@ -56,17 +56,24 @@ def browse(request):
 
     apps = App.objects.all()
 
-    app_states = []
+    app_states = {}
+    # app_state_texts = []
     for app in apps:
         href_name = app.href_name
         try:
             state = user.user_apps_set.get(href_name=href_name).state
             if state == "AVAILABLE":
-                app_states.append("app-btn-" + href_name)
+                app_states["app-btn-" + href_name] = "is available to be requested"
+                # app_state_texts.append("is available to be requested")
+                # app_states.append("app-btn-" + href_name)
             elif state == "REQUESTED":
-                app_states.append("requested-btn-" + href_name)
+                app_states["requested-btn-" + href_name] = "is being requested"
+                # app_state_text.append("is being requested")
+                # app_states.append("requested-btn-" + href_name)
         except:
-            app_states.append("app-btn" + href_name)
+            app_states["app-btn-" + href_name] = "is available to be requested"
+            # state_text = "is available to be requested"
+            # app_state_texts.append("is available to be requested")
 
 
 
