@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django import forms
-from store.models import User, User_Apps, App, Notification
+from store.models import User, User_Apps, App, Notification, Chartstring
 
 def home(request):
     not_user = False
@@ -45,35 +45,37 @@ def browse(request):
     if User.objects.get(name=request.session['user']).owner:
         return HttpResponseRedirect('/manage/')
 
+    user = User.objects.get(name=request.session['user'])
+    notifications = user.notifications
+
     #Form handling; for POST requests to this view.
+    apps = App.objects.all()
     if request.method == 'POST':
+        for temp_app in apps:
+            try:
+                user.user_apps_set.get(href_name=temp_app.href_name)
+            except:
+                temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
+                chartstring = Chartstring()
+                chartstring.group = user.groups
+                chartstring.save()
+                temp_app.chartstring = chartstring
+                temp_app.user = user
+                temp_app.save()
+
         form = RequestForm(request.POST)
         app = request.POST['app']
 
         # Write change to database.
-        user = User.objects.get(name=request.session['user'])
         app = User_Apps.objects.get(href_name=app, user=user)
         app.requested = True
         app.available = False
         app.save()
 
     # Browse page for viewing (non-POST requests)
-    user = User.objects.get(name=request.session['user'])
-    notifications = user.notifications
-
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
-
-    apps = App.objects.all()
-
-    for temp_app in apps:
-        try:
-            user.user_apps_set.get(href_name=temp_app.href_name)
-        except:
-            temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
-            temp_app.user = user
-            temp_app.save()
 
     app_states = []
     for app in apps:
@@ -87,12 +89,13 @@ def browse(request):
             elif state.downloadable:
                 app_states.append("downloadable-btn-" + href_name)
         except:
-            app_states.append("app-btn" + href_name)
+            app_states.append("app-btn-" + href_name)
+    print app_states
 
     try: 
         messages = user.notification_set.all()
     except:
-        messages = []
+        messages = ["None"]
 
 
     # Dictionary for displaying applications and their statuses.
@@ -113,7 +116,13 @@ def browse(request):
             'notifications' : notifications,
             'messages' : messages,
             })
-
+    try:
+        for message in messages:
+            message.delete()
+        user.notifications = 0
+        user.save()
+    except:
+        pass
 
     # Update context with Security token for html form
     c.update(csrf(request))
@@ -151,13 +160,20 @@ def manage(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
+    user = User.objects.get(name=request.session['user'])
+    group = user.groups
+    all_users = User.objects.all()
+    members = []
+
     if request.method == 'POST':
         if "approve" in request.POST:
             app = request.POST['app']
+            chartstring = Chartstring.objects.get(chartstring = request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
+            app.chartstring = chartstring
             app.requested = False
             app.downloadable = True
             app.save()
@@ -166,6 +182,10 @@ def manage(request):
             notification = Notification(user=user_requested, message=message)
             notification.user = user_requested
             notification.save()
+
+            user_requested.notifications += 1
+            user_requested.save()
+
 
         elif "revoke" in request.POST:
             app = request.POST['app']
@@ -183,13 +203,16 @@ def manage(request):
             notification.user = user_requested
             notification.save()
 
-        user_requested.notifications += 1
-        user_requested.save()
+            user_requested.notifications += 1
+            user_requested.save()
 
-    user = User.objects.get(name=request.session['user'])
-    group = user.groups
-    all_users = User.objects.all()
-    members = []
+        elif "new" in request.POST:
+            nickname = request.POST['nickname']
+            chartstring = request.POST['chartstring']
+            new_chartstring = Chartstring(nickname=nickname, chartstring=chartstring)
+            new_chartstring.group = group
+            new_chartstring.save()
+
 
     for u in all_users:
         if u.groups == group and u != user:
@@ -209,15 +232,24 @@ def manage(request):
             try:
                 requested = User_Apps.objects.get(href_name=href_name, user=member).requested
                 downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
-                users_of_app[app].append((member, requested, downloadable,))
+                chartstring = User_Apps.objects.get(href_name=href_name, user=member).chartstring
+                users_of_app[app].append((member, requested, downloadable, chartstring,))
             except:
                 pass
+
+    chartstrings = group.chartstring_set.all()
+
+    edited_chartstrings = []
+    for chartstring in chartstrings:
+        if chartstring.nickname != "":
+            edited_chartstrings.append(chartstring)
 
     c = Context({
         'username': request.session['user'],
         'group': group,
         'members': members,
         'users_of_app' : users_of_app,
+        'chartstrings': edited_chartstrings,
         })
 
     c.update(csrf(request))
