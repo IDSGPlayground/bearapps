@@ -89,8 +89,10 @@ def browse(request):
         except:
             app_states.append("app-btn" + href_name)
 
-
-    messages = Notification.objects.get(user=user)
+    try: 
+        messages = Notification.objects.get(user=user)
+    except:
+        messages = ""
     # user_messages = []
     # for message in messages:
     #     user_messages.append(message)
