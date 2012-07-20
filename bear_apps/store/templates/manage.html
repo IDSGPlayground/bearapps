@@ -75,13 +75,62 @@
 		  <div class="tab-content">
 
 		    <div class="tab-pane active" id="requested">
-		      <p>Requested</p>
+		      <h2 class="manage-tab">REQUESTED &amp; CURRENT LICENSES</h2>
+
+		      <hr>
+		      {% for app, user in users_of_app.items %}
+		      	<h3>{{ app.app_name }}</h3>
+		        <h4>Requested</h4>
+		      	{% for u, requested, downloadable in user %}
+			      	{% if requested %}
+				      		<li>{{ u.name }}</li>
+							<form name="approve" method="post" action="/manage/">
+								{% csrf_token %}
+								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
+								<input type="hidden" name="user" value="{{ u.SID }}"></input>
+								<input type="submit"
+								       value="Approve License"
+								       name="approve"
+								       class="btn btn-primary btn-mini"></input>
+
+							</form>
+				     {% endif %}
+		      	{% endfor %}
+		      	</br>
+		      	<h4>Licensed</h4>
+		      	{% for u, requested, downloadable in user %}
+			      	{% if downloadable %}
+				      	<li>{{ u.name }}</li>
+				      	<form name="revoke" method="post" action="/manage/">
+								{% csrf_token %}
+								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
+								<input type="hidden" name="user" value="{{ u.SID }}"></input>
+								<input type="submit"
+								       value="Revoke License"
+								       name="revoke"
+								       class="btn btn-danger btn-mini"></input>
+
+							</form>
+				     {% endif %}
+		      	{% endfor %}
+		      	<hr>
+		      {% endfor %}
+
+
 		    </div>
 		    <div class="tab-pane" id="groups">
-		      <p>Groups</p>
+		      <h2 class="manage-tab">MY GROUPS</h2>
+		      <h3>{{ group }}</h3>
+
+		      <ul>
+		      	{% for member in members %}
+		      	<li><a href="#{{ member.SID }}" data-toggle="modal">{{ member.name }} (SID: {{ member.SID }})</a></li>
+		      	{% endfor %}
+		      </ul>
+
 		    </div>
 		   	<div class="tab-pane" id="chartstrings">
-		      <p>Chartstrings</p>
+		      <h2 class="manage-tab">CHARTSTRINGS</h2>
 		    </div>
 		  </div>
 
@@ -89,6 +138,22 @@
 
 	</div>
 </div>
+
+{% for member in members %}
+
+ <div class="modal fade hide manage" id="{{ member.SID }}">
+    <div class="modal-header">
+    	<h3>{{ member.name }}</h3>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+  	</div>
+
+  	<div class="modal-body">
+  		<h4>Requests</h4>
+  		<h4>Licenses</h4>
+    </div>
+ </div>
+
+{% endfor %}
 
 </body>
 
