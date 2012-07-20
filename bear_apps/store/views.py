@@ -80,13 +80,13 @@ def browse(request):
             app_states.append("app-btn" + href_name)
 
     # Dictionary for displaying applications and their statuses.
-    # key = app's href name and value = 'available' or 'requested'
+    # app_display: key = app's href name and value = 'available' or 'requested'
+    # app_info: key = app's href name and value = the app object from App.objects.all()
     app_display = dict([(apps[x].href_name,app_states[x]) for x in range(len(apps))])
     app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
 
     # Context and set-up
     c = Context({
-            'form_value' : '',
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
