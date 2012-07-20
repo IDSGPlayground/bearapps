@@ -98,11 +98,9 @@ def browse(request):
 def myapps(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
-    try:
-        user = User.objects.get(name=request.session['user'])
-    except (KeyError, User.DoesNotExist):
-        user = None
 
+    user = User.objects.get(name=request.session['user'])
+    
     apps = App.objects.all()
     app_states = []
     for app in apps:
@@ -111,6 +109,7 @@ def myapps(request):
             state = user.user_apps_set.get(href_name=href_name).state
             if state == "REQUESTED":
                 app_states.append("requested-btn-" + href_name)
+
         except:
             app_states.append('none')
 
@@ -125,6 +124,9 @@ def myapps(request):
 def manage(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
+
+    user = User.objects.get(name=request.session['user'])
+
     return render_to_response('manage.html', {'username' : request.session['user'],})
 
 
