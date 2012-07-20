@@ -90,12 +90,10 @@ def browse(request):
             app_states.append("app-btn" + href_name)
 
     try: 
-        messages = Notification.objects.get(user=user)
+        messages = user.notification_set.all()
+        #messages = Notification.objects.get(user=user)
     except:
-        messages = ""
-    # user_messages = []
-    # for message in messages:
-    #     user_messages.append(message)
+        messages = []
 
     # Context and set-up
     c = Context({
@@ -107,6 +105,7 @@ def browse(request):
             'notifications' : notifications,
             'messages' : messages,
             })
+
 
     # Update context with Security token for html form
     c.update(csrf(request))
