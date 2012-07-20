@@ -60,6 +60,62 @@
   filter:alpha(opacity=70); /* For IE8 and earlier */
 }
 
+.app-btn-matlab-toolboxes {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width:250px;
+  height:250px;
+  background:url("../img/matlab-toolboxes-icon.png") 0 0 no-repeat;
+  content: attr("MatLab Icon");
+}
+
+.app-btn:hover {
+  text-decoration: none;
+  opacity:0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+}
+
+.requested-btn-matlab-toolboxes {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background: url("../img/matlab-toolboxes-icon-requested.png") 0 0 no-repeat;
+}
+
+.requested-btn:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+}
+
+.downloadable-btn-matlab-toolboxes {
+  text-align: center;
+  font-family: "Ubuntu", Helvetica, sans-serif;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+  width: 250px;
+  height: 250px;
+  background: url("../img/matlab-toolboxes-icon-downloadable.png") 0 0 no-repeat;
+}
+
+.downloadable-btn:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  filter:alpha(opacity=70); /* For IE8 and earlier */
+}
+
+
 
 /* Modal */
 .request-btn {
