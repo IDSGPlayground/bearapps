@@ -14,7 +14,7 @@ BROWSE APPS
 
 {% for app in apps %}
     {% for state in app_states %}
-        <a href="#{{ app.href_name}}" data-toggle="modal" class="{{ state }}" alt="The status of {{ app.app_name }} is {{ state }}">{{ app.app_name }}</a>
+        <a href="#{{ app.href_name}}" data-toggle="modal" class="{{ state[0] }}" alt="The status of {{ app.app_name }} is {{ state_text[1] }}">{{ app.app_name }}</a>
     {% endfor %}
 {% endfor %}
 
