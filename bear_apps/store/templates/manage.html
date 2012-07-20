@@ -81,24 +81,31 @@
 		      {% for app, user in users_of_app.items %}
 		      	<h3>{{ app.app_name }}</h3>
 		        <h4>Requested</h4>
-		      	{% for u, requested, downloadable in user %}
+		      	{% for u, requested, downloadable, c in user %}
 			      	{% if requested %}
 				      		<li>{{ u.name }}</li>
 							<form name="approve" method="post" action="/manage/">
 								{% csrf_token %}
+								<label>Choose Chartstring</label>
+								<select name="chartstring">
+									{% for chartstring in chartstrings %}
+									<option value="{{ chartstring.chartstring }}">{{ chartstring.nickname }}</option>
+									{% endfor %}
+								</select>
 								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
 								<input type="hidden" name="user" value="{{ u.SID }}"></input>
+								</br>
 								<input type="submit"
 								       value="Approve License"
 								       name="approve"
-								       class="btn btn-primary btn-mini"></input>
+								       class="btn btn-primary"></input>
 
 							</form>
 				     {% endif %}
 		      	{% endfor %}
 		      	</br>
 		      	<h4>Licensed</h4>
-		      	{% for u, requested, downloadable in user %}
+		      	{% for u, requested, downloadable, c in user %}
 			      	{% if downloadable %}
 				      	<li>{{ u.name }}</li>
 				      	<form name="revoke" method="post" action="/manage/">
@@ -130,7 +137,15 @@
 
 		    </div>
 		   	<div class="tab-pane" id="chartstrings">
-		      <h2 class="manage-tab">CHARTSTRINGS</h2>
+		      <h2 class="manage-tab">CHARTSTRINGS</h2><hr>
+
+		      <button type="button" class="btn btn-primary" data-toggle="modal" href="#new" value="Add New Chartstring">Add New Chartstring</button>
+		      </br><hr>
+		      <ul>
+		      	{% for chartstring in chartstrings %}
+		      	<li><a href="#{{ chartstring.chartstring }}" data-toggle="modal">{{ chartstring.nickname }}</a>: {{ chartstring.chartstring }}</li>
+		      	{% endfor %}
+		      </ul>
 		    </div>
 		  </div>
 
@@ -138,6 +153,33 @@
 
 	</div>
 </div>
+
+<div class="modal fade hide manage" id="new">
+
+ <div class="modal-header">
+    	<h3>Add New Chartstring</h3>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+  	</div>
+
+  	<div class="modal-body">
+	<form name="new" method="post" action="/manage/">
+		{% csrf_token %}
+
+		<label>Chartstring Name: </label>
+		<input type="text" name="nickname"></input>
+		<label>Chartstring</label>
+		<input type="text" name="chartstring"></input>
+
+		</br>
+		<input type="submit"
+		       value="Add Chartstring"
+		       name="new"
+		       class="btn btn-primary"></input>
+	</form>
+    </div>
+
+ </div>
+
 
 {% for member in members %}
 
@@ -154,6 +196,30 @@
  </div>
 
 {% endfor %}
+
+{% for chartstring in chartstrings %}
+
+ <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
+    <div class="modal-header">
+    	<h3>{{ chartstring.nickname }} History</h3>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+  	</div>
+
+  	<div class="modal-body">
+
+  		{% for app, user in users_of_app.items %}
+  			{% for u, requested, downloadable, c in user %}
+  				{% if c == chartstring %}
+  					<li>{{ u.name }} - {{ app.app_name }}</li>
+  				{% endif %}
+  			{% endfor %}
+  		{% endfor %}
+
+    </div>
+ </div>
+
+{% endfor %}
+
 
 </body>
 
