@@ -23,7 +23,12 @@
 <a href="#{{ app }}"
    data-toggle="modal"
    class="{{ state }}"
-   alt="The status of {{ app }} is {{ state }}">{{ app_info|lookup:app }}</a>
+   {% if 'app-btn-' in state %} alt="The status of {{ app }} is avialable to be requested."
+   {% elif 'requested-btn-' in state %} alt="The status of {{ app }} is being requested."
+   {% elif 'downloadable-btn-' in state %} alt="The status of {{ app }} is now ready to be downloaded."
+   (% else %} alt="The status of {{ app }} is not regocnizable."
+   {% endif %}>
+   {{ app_info|lookup:app }}</a>
 {% endfor %}
 
 
