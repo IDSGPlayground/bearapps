@@ -55,7 +55,9 @@
 				<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a href="#">{{ messages }}</a></li>
+					{% for message in messages %}
+						<li><a href="#">{{ message }}</a></li>
+					{% endfor %}
 				</ul>
 			</div>
 
