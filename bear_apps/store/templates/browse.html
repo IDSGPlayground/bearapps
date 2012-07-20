@@ -22,7 +22,12 @@
 <a href="#{{ app }}"
    data-toggle="modal"
    class="{{ state }}"
-   alt="The status of {{ app }} is {{ state }}">{{ app_info|lookup:app }}</a>
+   {% if 'app-btn-' in state %} alt="The status of {{ app }} is avialable to be requested."
+   {% elif 'requested-btn-' in state %} alt="The status of {{ app }} is being requested."
+   {% elif 'downloadable-btn-' in state %} alt="The status of {{ app }} is now ready to be downloaded."
+   (% else %} alt="The status of {{ app }} is not regocnizable."
+   {% endif %}>
+   {{ app_info|lookup:app }}</a>
 {% endfor %}
 
 
@@ -39,8 +44,8 @@
         {% csrf_token %}
         <input type="hidden" name="app" value="{{ app.href_name }}">
         <input type="submit"
-               value="{% if state == 'requested-btn-matlab' %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
-               class="request-btn" {% if state == 'requested-btn-matlab' %}DISABLED{% else %}{% endif %}>
+               value="{% if 'requested-btn' in state%}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
+               class="request-btn" {% if 'requested-btn' in state %}DISABLED{% else %}{% endif %}>
       </form>
       	<button type="button" class="close" data-dismiss="modal">×</button>
       	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
