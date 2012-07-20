@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load dict_lookup %}
 
 {% block nav %}
 <li><a href="../my-apps/">My Apps</a></li>
@@ -18,11 +19,13 @@
 
 {% block apps %}
 
-{% for app in apps %}
-    {% for state in app_states %}
-        <a href="#{{ app.href_name}}" data-toggle="modal" class="{{ state }}" alt="The status of {{ app.app_name }} is {{ state }}">{{ app.app_name }}</a>
-    {% endfor %}
+{% for app, state in app_display.items %}
+<a href="#{{ app }}"
+   data-toggle="modal"
+   class="{{ state }}"
+   alt="The status of {{ app }} is {{ state }}">{{ app_info|lookup:app }}</a>
 {% endfor %}
+
 
 {% endblock %}
 

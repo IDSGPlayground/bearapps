@@ -91,17 +91,25 @@ def browse(request):
 
     try: 
         messages = user.notification_set.all()
-        #messages = Notification.objects.get(user=user)
     except:
         messages = []
 
+
+    # Dictionary for displaying applications and their statuses.
+    # app_display: key = app's href name and value = 'available' or 'requested'
+    # app_info: key = app's href name and value = the app object from App.objects.all()
+    app_display = dict([(apps[x].href_name,app_states[x]) for x in range(len(apps))])
+    app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
+
+
     # Context and set-up
     c = Context({
-            'form_value' : '',
             'username' : request.session['user'],
             'uid' : request.session['uid'],
             'apps' : apps,
             'app_states' : app_states,
+            'app_display' : app_display,
+            'app_info' : app_info
             'notifications' : notifications,
             'messages' : messages,
             })
@@ -168,13 +176,13 @@ def manage(request):
             app.requested = False
             app.available = True
             app.downloadable = False
-            app.save()  
+            app.save()
 
             message = "Your license for " + app.app_name + " has been revoked."
             notification = Notification(user=user_requested, message=message)
             notification.user = user_requested
             notification.save()
-            
+
         user_requested.notifications += 1
         user_requested.save()
 
@@ -187,7 +195,7 @@ def manage(request):
         if u.groups == group and u != user:
             members.append(u)
 
-    members = sorted(members, key=lambda member: member.name)   
+    members = sorted(members, key=lambda member: member.name)
 
 
     users_of_app = {}
@@ -195,10 +203,10 @@ def manage(request):
 
     for app in apps:
         users_of_app[app] = []
-        
+
         for member in members:
             href_name = app.href_name
-            try: 
+            try:
                 requested = User_Apps.objects.get(href_name=href_name, user=member).requested
                 downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
                 users_of_app[app].append((member, requested, downloadable,))
