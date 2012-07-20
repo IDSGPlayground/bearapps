@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django import forms
-from store.models import User, User_Apps, App
+from store.models import User, User_Apps, App, Notification
 
 def home(request):
     not_user = False
@@ -55,17 +55,25 @@ def browse(request):
         app = User_Apps.objects.get(href_name=app, user=user)
         app.requested = True
         app.available = False
-        app.downloadable = False
-        app.user = user
         app.save()
 
     # Browse page for viewing (non-POST requests)
     user = User.objects.get(name=request.session['user'])
+    notifications = user.notifications
+
 
     if 'uid' not in request.session:
         request.session['uid'] = 000000
 
     apps = App.objects.all()
+
+    for temp_app in apps:
+        try:
+            user.user_apps_set.get(href_name=temp_app.href_name)
+        except:
+            temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
+            temp_app.user = user
+            temp_app.save()
 
     app_states = []
     for app in apps:
@@ -76,10 +84,16 @@ def browse(request):
                 app_states.append("app-btn-" + href_name)
             elif state.requested:
                 app_states.append("requested-btn-" + href_name)
+            elif state.downloadable:
+                app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append("app-btn" + href_name)
 
 
+    messages = Notification.objects.get(user=user)
+    # user_messages = []
+    # for message in messages:
+    #     user_messages.append(message)
 
     # Context and set-up
     c = Context({
@@ -88,6 +102,8 @@ def browse(request):
             'uid' : request.session['uid'],
             'apps' : apps,
             'app_states' : app_states,
+            'notifications' : notifications,
+            'messages' : messages,
             })
 
     # Update context with Security token for html form
@@ -100,16 +116,17 @@ def myapps(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    
+
     apps = App.objects.all()
     app_states = []
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name).state
-            if state == "REQUESTED":
+            state = user.user_apps_set.get(href_name=href_name)
+            if state.requested:
                 app_states.append("requested-btn-" + href_name)
-
+            elif state.downloadable:
+                app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append('none')
 
@@ -125,9 +142,78 @@ def manage(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
-    user = User.objects.get(name=request.session['user'])
+    if request.method == 'POST':
+        if "approve" in request.POST:
+            app = request.POST['app']
+            user_requested = User.objects.get(SID=request.POST['user'])
 
-    return render_to_response('manage.html', {'username' : request.session['user'],})
+            # Write change to database.
+            app = user_requested.user_apps_set.get(href_name=app)
+            app.requested = False
+            app.downloadable = True
+            app.save()
+
+            message = "You have been approved to download " + app.app_name
+            notification = Notification(user=user_requested, message=message)
+            notification.user = user_requested
+            notification.save()
+
+        elif "revoke" in request.POST:
+            app = request.POST['app']
+            user_requested = User.objects.get(SID=request.POST['user'])
+
+            # Write change to database.
+            app = user_requested.user_apps_set.get(href_name=app)
+            app.requested = False
+            app.available = True
+            app.downloadable = False
+            app.save()  
+
+            message = "Your license for " + app.app_name + " has been revoked."
+            notification = Notification(user=user_requested, message=message)
+            notification.user = user_requested
+            notification.save()
+            
+        user_requested.notifications += 1
+        user_requested.save()
+
+    user = User.objects.get(name=request.session['user'])
+    group = user.groups
+    all_users = User.objects.all()
+    members = []
+
+    for u in all_users:
+        if u.groups == group and u != user:
+            members.append(u)
+
+    members = sorted(members, key=lambda member: member.name)   
+
+
+    users_of_app = {}
+    apps = App.objects.all()
+
+    for app in apps:
+        users_of_app[app] = []
+        
+        for member in members:
+            href_name = app.href_name
+            try: 
+                requested = User_Apps.objects.get(href_name=href_name, user=member).requested
+                downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
+                users_of_app[app].append((member, requested, downloadable,))
+            except:
+                pass
+
+    c = Context({
+        'username': request.session['user'],
+        'group': group,
+        'members': members,
+        'users_of_app' : users_of_app,
+        })
+
+    c.update(csrf(request))
+
+    return render_to_response('manage.html', c)
 
 
 # Class to hold form data in browse()
