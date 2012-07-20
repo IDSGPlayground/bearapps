@@ -2,7 +2,7 @@ from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
-from django import forms
+from django import forms, template
 from store.models import User, User_Apps, App
 
 def home(request):
@@ -79,7 +79,10 @@ def browse(request):
         except:
             app_states.append("app-btn" + href_name)
 
-
+    # Dictionary for displaying applications and their statuses.
+    # key = app's href name and value = 'available' or 'requested'
+    app_display = dict([(apps[x].href_name,app_states[x]) for x in range(len(apps))])
+    app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
 
     # Context and set-up
     c = Context({
@@ -88,6 +91,8 @@ def browse(request):
             'uid' : request.session['uid'],
             'apps' : apps,
             'app_states' : app_states,
+            'app_display' : app_display,
+            'app_info' : app_info
             })
 
     # Update context with Security token for html form
@@ -100,7 +105,7 @@ def myapps(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    
+
     apps = App.objects.all()
     app_states = []
     for app in apps:
