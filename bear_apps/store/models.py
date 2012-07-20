@@ -11,6 +11,7 @@ class User(models.Model):
 	SID = models.IntegerField()
 	owner = models.BooleanField()
 	groups = models.ForeignKey('Group')
+	notifications = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return self.name + ", " + str(self.SID)
@@ -18,10 +19,10 @@ class User(models.Model):
 class User_Apps(models.Model):
 	user = models.ForeignKey('User')
 	app_name = models.CharField(max_length=200)
-	href_name = models.CharField(max_length=200)
-	available=models.BooleanField()
+	available=models.BooleanField(default=True)
 	requested=models.BooleanField()
 	downloadable=models.BooleanField()
+	href_name = models.CharField(max_length=200)
 
 	def __unicode__(self):
 		return self.app_name
@@ -42,3 +43,10 @@ class Group(models.Model):
 	name = models.CharField(max_length=200)
 	def __unicode__(self):
 		return self.name
+
+class Notification(models.Model):
+	user = models.ForeignKey('User')
+	message = models.CharField(max_length=200)
+
+	def __unicode__(self):
+		return self.message
