@@ -23,56 +23,56 @@ BROWSE APPS
 {% block content %}
 
 {% for app in apps %}
-{% for state in app_states %}
+  {% for state in app_states %}
 
-<div class="modal fade hide" id="{{ app.href_name }}">
-  <div class="modal-header">
-    <form method="post" action="/browse/">
-      {% csrf_token %}
-      <input type="hidden" name="app" value="{{ app.href_name }}">
-      <input type="submit"
-             value="{% if state == 'requested-btn-matlab' %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
-             class="request-btn" {% if state == 'requested-btn-matlab' %}DISABLED{% else %}{% endif %}>
-    </form>
-    	<button type="button" class="close" data-dismiss="modal">×</button>
-    	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
-	</div>
+  <div class="modal fade hide" id="{{ app.href_name }}">
+    <div class="modal-header">
+      <form method="post" action="/browse/">
+        {% csrf_token %}
+        <input type="hidden" name="app" value="{{ app.href_name }}">
+        <input type="submit"
+               value="{% if state == 'requested-btn-matlab' %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
+               class="request-btn" {% if state == 'requested-btn-matlab' %}DISABLED{% else %}{% endif %}>
+      </form>
+      	<button type="button" class="close" data-dismiss="modal">×</button>
+      	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
+  	</div>
 
-	<div class="modal-body">
-		<ul id="{{ app.href_name }}-tabs" class="nav nav-tabs">
-			<li class="active">
-				<a href="#descrip" data-toggle="tab">Description</a>
-			</li>
-			<li>
-				<a href="#requirements" data-toggle="tab">System Requirements</a>
-			</li>
-			<li>
-				<a href="#obtain" data-toggle="tab">How to Obtain MatLab</a>
-			</li>
-		</ul>
+  	<div class="modal-body">
+  		<ul id="{{ app.href_name }}-tabs" class="nav nav-tabs">
+  			<li class="active">
+  				<a href="#descrip" data-toggle="tab">Description</a>
+  			</li>
+  			<li>
+  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  			</li>
+  			<li>
+  				<a href="#obtain" data-toggle="tab">How to Obtain MatLab</a>
+  			</li>
+  		</ul>
 
-		<div class="tab-content" id="{{ app.href_name }}-tabs-content">
-			<div class="tab-pane fade active in" id="descrip">
-        <h2>Description</h2>
-        <p> {{ app.description }} </p>
-			</div>
+  		<div class="tab-content" id="{{ app.href_name }}-tabs-content">
+  			<div class="tab-pane fade active in" id="descrip">
+          <h2>Description</h2>
+          <p> {{ app.description }} </p>
+  			</div>
 
-			<div class="tab-pane fade" id="requirements">
-		  		<h2>System Requirements</h2>
-    				<p>Windows: {{ app.Sysreq_windows }}</p>
-            <p>Linux: {{ app.Sysreq_linux }}</p>
-            <p>Mac: {{ app.Sysreq_mac }}</p>
-			</div>
+  			<div class="tab-pane fade" id="requirements">
+  		  		<h2>System Requirements</h2>
+      				<p>Windows: {{ app.Sysreq_windows }}</p>
+              <p>Linux: {{ app.Sysreq_linux }}</p>
+              <p>Mac: {{ app.Sysreq_mac }}</p>
+  			</div>
 
-  		<div class="tab-pane fade" id="obtain">
-  	  		<h2>How to Obtain {{ app.app_name }}</h2>
-  			<p>{{ app.obtain }}</p>
-  		</div>
-	  </div>
+    		<div class="tab-pane fade" id="obtain">
+    	  		<h2>How to Obtain {{ app.app_name }}</h2>
+    			<p>{{ app.obtain }}</p>
+    		</div>
+  	  </div>
+    </div>
   </div>
-</div>
 
-{% endfor %}
+  {% endfor %}
 {% endfor %}
 
 <script>

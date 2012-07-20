@@ -18,7 +18,7 @@ def home(request):
     if request.method == 'POST':
         try:
             user = request.POST['user']
-            if User.objects.get(name=user).password==request.POST['password']:
+            if User.objects.get(name=user).password == request.POST['password']:
             # User.objects.get(name=user)
                 request.session['user'] = user
                 uid = User.objects.get(name=user).SID
@@ -42,6 +42,9 @@ def browse(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
+    if User.objects.get(name=request.session['user']).owner:
+        return HttpResponseRedirect('/manage/')
+
     #Form handling; for POST requests to this view.
     if request.method == 'POST':
         form = RequestForm(request.POST)
@@ -49,10 +52,10 @@ def browse(request):
 
         # Write change to database.
         user = User.objects.get(name=request.session['user'])
-        app = User_Apps.objects.get(pk=1)
-        app.requested=True
-        app.available=False
-        app.downloadable=False
+        app = User_Apps.objects.get(href_name=app, user=user)
+        app.requested = True
+        app.available = False
+        app.downloadable = False
         app.user = user
         app.save()
 
@@ -93,6 +96,8 @@ def browse(request):
     return render_to_response('browse.html', c)
 
 def myapps(request):
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
     try:
         user = User.objects.get(name=request.session['user'])
     except (KeyError, User.DoesNotExist):
@@ -118,6 +123,8 @@ def myapps(request):
     return render_to_response('my-apps.html', c)
 
 def manage(request):
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
     return render_to_response('manage.html', {'username' : request.session['user'],})
 
 
