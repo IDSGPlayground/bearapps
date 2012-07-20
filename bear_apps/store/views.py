@@ -109,7 +109,7 @@ def browse(request):
             'apps' : apps,
             'app_states' : app_states,
             'app_display' : app_display,
-            'app_info' : app_info
+            'app_info' : app_info,
             'notifications' : notifications,
             'messages' : messages,
             })
