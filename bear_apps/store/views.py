@@ -16,7 +16,7 @@ def home(request):
         pass
 
     if request.method == 'POST':
-        try: 
+        try:
             user = request.POST['user']
             if User.objects.get(name=user).password==request.POST['password']:
             # User.objects.get(name=user)
@@ -26,7 +26,7 @@ def home(request):
                 return HttpResponseRedirect('/browse/')
             else:
                 return render_to_response('index.html', c)
-        except: 
+        except:
             # Errors if user does not exist.
             not_user = True
 
@@ -55,6 +55,8 @@ def browse(request):
         app.downloadable=False
         app.user = user
         app.save()
+
+    # Browse page for viewing (non-POST requests)
     user = User.objects.get(name=request.session['user'])
 
     if 'uid' not in request.session:
@@ -127,4 +129,3 @@ class RequestForm(forms.Form):
 class LogInForm(forms.Form):
     user = forms.CharField()
     password = forms.CharField()
-

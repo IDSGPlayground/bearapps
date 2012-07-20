@@ -30,7 +30,9 @@ BROWSE APPS
     <form method="post" action="/browse/">
       {% csrf_token %}
       <input type="hidden" name="app" value="{{ app.href_name }}">
-      <input type="submit" value="Request" class="request-btn">
+      <input type="submit"
+             value="{% if state == 'requested-btn-matlab' %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
+             class="request-btn" {% if state == 'requested-btn-matlab' %}DISABLED{% else %}{% endif %}>
     </form>
     	<button type="button" class="close" data-dismiss="modal">×</button>
     	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
