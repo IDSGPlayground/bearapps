@@ -37,6 +37,9 @@ def home(request):
     c.update(csrf(request))
     return render_to_response('index.html', c)
 
+def register(request):
+    return render_to_response('register.html')
+
 def browse(request):
     #If user is not logged in redirects to log in page.
     if 'user' not in request.session:
