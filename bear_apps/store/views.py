@@ -55,7 +55,8 @@ def browse(request):
             try:
                 user.user_apps_set.get(href_name=temp_app.href_name)
             except:
-                temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
+                #temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
+                temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
                 chartstring = Chartstring()
                 chartstring.group = user.groups
                 chartstring.save()
@@ -68,8 +69,9 @@ def browse(request):
 
         # Write change to database.
         app = User_Apps.objects.get(href_name=app, user=user)
-        app.requested = True
-        app.available = False
+        app.status="REQUESTED"
+        #app.requested = True
+        #app.available = False
         app.save()
 
     # Browse page for viewing (non-POST requests)
@@ -81,12 +83,12 @@ def browse(request):
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name)
-            if state.available:
+            state = user.user_apps_set.get(href_name=href_name).status
+            if state.lower()=="available":
                 app_states.append("app-btn-" + href_name)
-            elif state.requested:
+            elif state.lower()=="requested":
                 app_states.append("requested-btn-" + href_name)
-            elif state.downloadable:
+            elif state.lower()=="downloadable":
                 app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append("app-btn-" + href_name)
@@ -140,10 +142,10 @@ def myapps(request):
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name)
-            if state.requested:
+            state = user.user_apps_set.get(href_name=href_name).status
+            if state.lower()=="requested":
                 app_states.append("requested-btn-" + href_name)
-            elif state.downloadable:
+            elif state.lower()=="downloadable":
                 app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append('none')
@@ -174,8 +176,9 @@ def manage(request):
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
             app.chartstring = chartstring
-            app.requested = False
-            app.downloadable = True
+            #app.requested = False
+            #app.downloadable = True
+            app.status="DOWNLOADABLE"
             app.save()
 
             message = "You have been approved to download " + app.app_name
@@ -193,9 +196,10 @@ def manage(request):
 
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
-            app.requested = False
-            app.available = True
-            app.downloadable = False
+            #app.requested = False
+            #app.available = True
+            #app.downloadable = False
+            app.status="AVAILABLE"
             app.save()
 
             message = "Your license for " + app.app_name + " has been revoked."
@@ -217,6 +221,11 @@ def manage(request):
     for u in all_users:
         if u.groups == group and u != user:
             members.append(u)
+        #try:
+         #   u.groups_set.get(name=group)
+          #  members.append(u)
+        #except:
+         #   pass 
 
     members = sorted(members, key=lambda member: member.name)
 
@@ -230,8 +239,15 @@ def manage(request):
         for member in members:
             href_name = app.href_name
             try:
-                requested = User_Apps.objects.get(href_name=href_name, user=member).requested
-                downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
+                #requested = User_Apps.objects.get(href_name=href_name, user=member).requested
+                #downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
+                requested=False
+                downloadable=False
+                stats = User_Apps.objects.get(href_name=href_name, user=member).status
+                if stats.lower()=="requested":
+                    requested = True
+                elif stats.lower()=="downloadable":
+                    downloadable = True
                 chartstring = User_Apps.objects.get(href_name=href_name, user=member).chartstring
                 users_of_app[app].append((member, requested, downloadable, chartstring,))
             except:

@@ -19,9 +19,10 @@ class User(models.Model):
 class User_Apps(models.Model):
 	user = models.ForeignKey('User')
 	app_name = models.CharField(max_length=200)
-	available = models.BooleanField(default=True)
-	requested = models.BooleanField()
-	downloadable = models.BooleanField()
+	#available = models.BooleanField(default=True)
+	#requested = models.BooleanField()
+	#downloadable = models.BooleanField()
+        status=models.CharField(max_length=20, choices=app_status)
 	href_name = models.CharField(max_length=200)
 	chartstring = models.ForeignKey('Chartstring')
 
