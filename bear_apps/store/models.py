@@ -3,7 +3,15 @@ from django.db import models
 app_status=(('AVAILABLE', 'AVAILABLE'),
 	('REQUESTED','REQUESTED'),
 	('DOWNLOADABLE' , 'DOWNLOADABLE'),
-	('UPDATES AVAILABLE', 'UPDATES AVAILABLE'))
+            ('UPDATES AVAILABLE', 'UPDATES AVAILABLE'))
+
+class Admin(models.Model):
+        name = models.CharField(max_length=200)
+        password = models.CharField(max_length=200)
+        UID = models.IntegerField()
+
+        def __unicode__(self):
+                return self.name+ " , " + str(self.UID)
 
 class User(models.Model):
 	name = models.CharField(max_length=200)
