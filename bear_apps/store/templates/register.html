@@ -33,17 +33,47 @@
     <div class="row-fluid span12 well hero-unit">
         <h1>REGISTRATION</h1>
 
-        <form class="form-horizontal register-form">
+        <form class="register-form" action="register">
           <fieldset>
             <div class="control-group">
-              <label class="control-label" for="input01">Text input</label>
+              <label class="control-label" for="username">Username </label>
               <div class="controls">
-                <input type="text" class="input register-form" id="input01">
-                <p class="help-block register-form">Supporting help text</p>
+                <input type="text" class="input" id="username">
               </div>
+            </div>
+
+            <div class="control-group error hide">
+              <label class="control-label" for="username-taken">Username </label>
+              <div class="controls">
+                <input type="text" class="input" id="username">
+                <span class="help-inline">Sorry, this username is already taken.</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="name">Full Name </label>
+              <div class="controls">
+                <input type="text" class="input" id="name">
+              </div>
+            </div>
+
+             <div class="control-group">
+              <label class="control-label" for="status">Status </label>
+              <div class="controls">
+                <input type="radio" name="status" value="undergrad"> Undergraduate</input><br />
+                <input type="radio" name="status" value="grad"> Graduate</input><br />
+                <input type="radio" name="status" value="professor"> Professor</input><br />
+                <input type="radio" name="status" value="rso"> RSO</input><br />
+              </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <button class="btn">Cancel</button>
             </div>
           </fieldset>
         </form>
+
     </div>
 </div>
 

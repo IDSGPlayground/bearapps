@@ -1,16 +1,79 @@
+/* Registration Form */
 .register-form {
-  margin: 30px 0px 0px 0px;
+  margin: 30px 0px 0px -50px;
 }
 
-
-input[type="text"].uneditable-input.register-form {
+.register-form input, textarea, select {
   display: inline-block;
-  height: 300px;
+  *display: inline;
+  margin-bottom: 0;
+  *zoom: 1;
+}
+
+.register-form.hide {
+  display: none;
+}
+.register-form .control-group {
+  margin-bottom: 18px;
+  *zoom: 1;
+}
+
+.register-form .control-group:before,
+.register-form .control-group:after {
+  display: table;
+  content: "";
+}
+
+.register-form .control-group:after {
+  clear: both;
+}
+
+.register-form .control-label {
+  float: left;
+  width: 140px;
+  padding-top: 5px;
+  text-align: right;
+  font-size: 15px;
+  font-family: "Ubuntu", "Helvetica", sans-serif;
+}
+
+.register-form .controls {
+  *display: inline-block;
+  *padding-left: 20px;
+  margin-left: 160px;
+  *margin-left: 0;
+}
+
+.register-form .controls:first-child {
+  *padding-left: 160px;
+}
+
+.register-form .help-block {
+  margin-top: 9px;
+  margin-bottom: 0;
+}
+
+.register-form .form-actions {
+  padding-left: 160px;
+}
+
+.register-form input[type="text"] {
+  display: inline-block;
+  height: 35px;
   padding: 4px;
   margin-bottom: 9px;
-  font-size: 13px;
-  line-height: 18px;
-  color: #555555;
+  font-size: 14px;
+  line-height: 20px;
+  color: #555;
+}
+
+.register-form input[type="radio"] {
+  display: inline-block;
+  height: 15px;
+  padding: 4px;
+  margin-bottom: 9px;
+  font-size: 14px;
+  color: #555;
 }
 
 p.help-block.register-form {
@@ -1111,32 +1174,6 @@ textarea {
 label {
   display: block;
   margin-bottom: 5px;
-}
-
-select,
-textarea,
-input[type="text"],
-input[type="password"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="date"],
-input[type="month"],
-input[type="time"],
-input[type="week"],
-input[type="number"],
-input[type="email"],
-input[type="url"],
-input[type="search"],
-input[type="tel"],
-input[type="color"],
-.uneditable-input {
-  display: inline-block;
-  height: 18px;
-  padding: 4px;
-  margin-bottom: 9px;
-  font-size: 13px;
-  line-height: 18px;
-  color: #555555;
 }
 
 input,
@@ -5010,149 +5047,6 @@ a.badge:hover {
   background-image: -ms-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: -o-linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
   background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
-}
-
-.accordion {
-  margin-bottom: 18px;
-}
-
-.accordion-group {
-  margin-bottom: 2px;
-  border: 1px solid #e5e5e5;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-}
-
-.accordion-heading {
-  border-bottom: 0;
-}
-
-.accordion-heading .accordion-toggle {
-  display: block;
-  padding: 8px 15px;
-}
-
-.accordion-toggle {
-  cursor: pointer;
-}
-
-.accordion-inner {
-  padding: 9px 15px;
-  border-top: 1px solid #e5e5e5;
-}
-
-.carousel {
-  position: relative;
-  margin-bottom: 18px;
-  line-height: 1;
-}
-
-.carousel-inner {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
-
-.carousel .item {
-  position: relative;
-  display: none;
-  -webkit-transition: 0.6s ease-in-out left;
-     -moz-transition: 0.6s ease-in-out left;
-      -ms-transition: 0.6s ease-in-out left;
-       -o-transition: 0.6s ease-in-out left;
-          transition: 0.6s ease-in-out left;
-}
-
-.carousel .item > img {
-  display: block;
-  line-height: 1;
-}
-
-.carousel .active,
-.carousel .next,
-.carousel .prev {
-  display: block;
-}
-
-.carousel .active {
-  left: 0;
-}
-
-.carousel .next,
-.carousel .prev {
-  position: absolute;
-  top: 0;
-  width: 100%;
-}
-
-.carousel .next {
-  left: 100%;
-}
-
-.carousel .prev {
-  left: -100%;
-}
-
-.carousel .next.left,
-.carousel .prev.right {
-  left: 0;
-}
-
-.carousel .active.left {
-  left: -100%;
-}
-
-.carousel .active.right {
-  left: 100%;
-}
-
-.carousel-control {
-  position: absolute;
-  top: 40%;
-  left: 15px;
-  width: 40px;
-  height: 40px;
-  margin-top: -20px;
-  font-size: 60px;
-  font-weight: 100;
-  line-height: 30px;
-  color: #ffffff;
-  text-align: center;
-  background: #222222;
-  border: 3px solid #ffffff;
-  -webkit-border-radius: 23px;
-     -moz-border-radius: 23px;
-          border-radius: 23px;
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-}
-
-.carousel-control.right {
-  right: 15px;
-  left: auto;
-}
-
-.carousel-control:hover {
-  color: #ffffff;
-  text-decoration: none;
-  opacity: 0.9;
-  filter: alpha(opacity=90);
-}
-
-.carousel-caption {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding: 10px 15px 5px;
-  background: #333333;
-  background: rgba(0, 0, 0, 0.75);
-}
-
-.carousel-caption h4,
-.carousel-caption p {
-  color: #ffffff;
 }
 
 .hero-unit {

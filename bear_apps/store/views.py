@@ -38,7 +38,11 @@ def home(request):
     return render_to_response('index.html', c)
 
 def register(request):
-    return render_to_response('register.html')
+    if request.method == 'POST':
+        username = request.POST['username']
+    c = Context ({})
+    c.update(csrf(request))
+    return render_to_response('register.html', c)
 
 def browse(request):
     #If user is not logged in redirects to log in page.
