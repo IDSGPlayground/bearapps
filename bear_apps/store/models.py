@@ -18,7 +18,7 @@ class User(models.Model):
 	password = models.CharField(max_length=200)
 	SID = models.IntegerField()
 	owner = models.BooleanField()
-	groups = models.ForeignKey('Group')
+	groups = models.ManyToManyField('Group', null=True, blank=True)
 	notifications = models.IntegerField(default=0)
 
 	def __unicode__(self):
@@ -32,7 +32,7 @@ class User_Apps(models.Model):
 	#downloadable = models.BooleanField()
         status=models.CharField(max_length=20, choices=app_status)
 	href_name = models.CharField(max_length=200)
-	chartstring = models.ForeignKey('Chartstring')
+	#chartstring = models.ForeignKey('Chartstring')
 
 	def __unicode__(self):
 		return self.app_name
@@ -50,18 +50,18 @@ class App(models.Model):
 		return self.app_name
 
 class Group(models.Model):
-	name = models.CharField(max_length=200)
+        name = models.CharField(max_length=200)
 	def __unicode__(self):
 		return self.name
-
+"""
 class Chartstring(models.Model):
 	nickname = models.CharField(max_length=200, default="")
 	chartstring = models.CharField(max_length=200, default="")
 	group = models.ForeignKey('Group')
 
 	def __unicode__(self):
-		return self.nickname
-
+"		return self.nickname
+"""
 class Notification(models.Model):
 	user = models.ForeignKey('User')
 	message = models.CharField(max_length=200)

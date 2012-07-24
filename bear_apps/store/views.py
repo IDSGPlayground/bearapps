@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django import forms
-from store.models import User, User_Apps, App, Notification, Chartstring
+from store.models import User, User_Apps, App, Notification # Chartstring
 
 def home(request):
     not_user = False
@@ -60,10 +60,12 @@ def browse(request):
             except:
                 #temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
                 temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
+                """
                 chartstring = Chartstring()
                 chartstring.group = user.groups
                 chartstring.save()
                 temp_app.chartstring = chartstring
+                """
                 temp_app.user = user
                 temp_app.save()
 
@@ -97,7 +99,7 @@ def browse(request):
             app_states.append("app-btn-" + href_name)
     print app_states
 
-    try: 
+    try:
         messages = user.notification_set.all()
     except:
         messages = ["None"]
@@ -228,7 +230,7 @@ def manage(request):
          #   u.groups_set.get(name=group)
           #  members.append(u)
         #except:
-         #   pass 
+         #   pass
 
     members = sorted(members, key=lambda member: member.name)
 
