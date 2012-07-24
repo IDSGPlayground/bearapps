@@ -173,12 +173,16 @@ def manage(request):
     if request.method == 'POST':
         if "approve" in request.POST:
             app = request.POST['app']
+            #price = app.price
+            price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(chartstring = request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
             app.chartstring = chartstring
+            chartstring.budget = chartstring.budget - price
+            chartstring.save()
             app.status = "DOWNLOADABLE"
             app.save()
 
@@ -194,7 +198,6 @@ def manage(request):
         elif "revoke" in request.POST:
             app = request.POST['app']
             user_requested = User.objects.get(SID=request.POST['user'])
-
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
             app.status="AVAILABLE"

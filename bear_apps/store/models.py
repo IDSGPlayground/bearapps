@@ -35,6 +35,7 @@ class User_Apps(models.Model):
 
 class App(models.Model):
 	app_name = models.CharField(max_length=200)
+        price = models.IntegerField()
         href_name = models.CharField(max_length=200)
 	description = models.TextField(max_length=1000)
 	Sysreq_windows = models.TextField(max_length=1000)
@@ -54,6 +55,7 @@ class Chartstring(models.Model):
 	nickname = models.CharField(max_length=200, default="")
 	chartstring = models.CharField(max_length=200, default="")
 	group = models.ForeignKey('Group')
+        budget = models.IntegerField()
 
 	def __unicode__(self):
 		return self.nickname

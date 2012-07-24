@@ -11,6 +11,7 @@ class ChartstringInline(admin.TabularInline):
 	model = Chartstring
 
 class UserAdmin(admin.ModelAdmin):
+    fields = ['name', 'password', 'SID', 'owner', 'notifications']
     inlines = [AppsInline, UsersInLine]
 
 class GroupAdmin(admin.ModelAdmin):
