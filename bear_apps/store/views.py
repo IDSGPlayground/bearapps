@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
 from django import forms
-from store.models import User, User_Apps, App, Notification # Chartstring
+from store.models import User, User_Apps, App, Notification, Chartstring, Group
 
 def home(request):
     not_user = False
@@ -58,14 +58,11 @@ def browse(request):
             try:
                 user.user_apps_set.get(href_name=temp_app.href_name)
             except:
-                #temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, available=True, requested=False, downloadable=False)
                 temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
-                """
-                chartstring = Chartstring()
-                chartstring.group = user.groups
-                chartstring.save()
-                temp_app.chartstring = chartstring
-                """
+                # chartstring = Chartstring()
+                # chartstring.group = user.groups
+                # chartstring.save()
+                # temp_app.chartstring = chartstring
                 temp_app.user = user
                 temp_app.save()
 
@@ -75,8 +72,6 @@ def browse(request):
         # Write change to database.
         app = User_Apps.objects.get(href_name=app, user=user)
         app.status="REQUESTED"
-        #app.requested = True
-        #app.available = False
         app.save()
 
     # Browse page for viewing (non-POST requests)
@@ -168,9 +163,12 @@ def manage(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    group = user.groups
+    groups = user.groups.all()
     all_users = User.objects.all()
-    members = []
+
+    # Sorts all groups & all users in alphabetical order.
+    groups = sorted(groups, key=lambda group: group.name)
+    all_users = sorted(all_users, key=lambda user: user.name)
 
     if request.method == 'POST':
         if "approve" in request.POST:
@@ -181,9 +179,7 @@ def manage(request):
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
             app.chartstring = chartstring
-            #app.requested = False
-            #app.downloadable = True
-            app.status="DOWNLOADABLE"
+            app.status = "DOWNLOADABLE"
             app.save()
 
             message = "You have been approved to download " + app.app_name
@@ -201,9 +197,6 @@ def manage(request):
 
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
-            #app.requested = False
-            #app.available = True
-            #app.downloadable = False
             app.status="AVAILABLE"
             app.save()
 
@@ -216,61 +209,60 @@ def manage(request):
             user_requested.save()
 
         elif "new" in request.POST:
-            nickname = request.POST['nickname']
-            chartstring = request.POST['chartstring']
-            new_chartstring = Chartstring(nickname=nickname, chartstring=chartstring)
-            new_chartstring.group = group
+            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'])
+            new_chartstring.group = Group.objects.get(name=request.POST['group'])
             new_chartstring.save()
 
-
-    for u in all_users:
-        if u.groups == group and u != user:
-            members.append(u)
-        #try:
-         #   u.groups_set.get(name=group)
-          #  members.append(u)
-        #except:
-         #   pass
-
-    members = sorted(members, key=lambda member: member.name)
-
-
     users_of_app = {}
-    apps = App.objects.all()
 
-    for app in apps:
-        users_of_app[app] = []
+    for app in App.objects.all():
+        # Generates a list of all members in all groups associated with the user.
+        members = []
+        for group in groups:
+            for u in all_users:
+                for user_group in u.groups.all():
+                    if user_group == group and u != user:
+                        members.append(u)
 
         for member in members:
             href_name = app.href_name
-            try:
-                #requested = User_Apps.objects.get(href_name=href_name, user=member).requested
-                #downloadable = User_Apps.objects.get(href_name=href_name, user=member).downloadable
-                requested=False
-                downloadable=False
-                stats = User_Apps.objects.get(href_name=href_name, user=member).status
-                if stats.lower()=="requested":
-                    requested = True
-                elif stats.lower()=="downloadable":
-                    downloadable = True
-                chartstring = User_Apps.objects.get(href_name=href_name, user=member).chartstring
-                users_of_app[app].append((member, requested, downloadable, chartstring,))
-            except:
-                pass
+            requested, downloadable = False, False
+            status = User_Apps.objects.get(href_name=href_name, user=member).status
 
-    chartstrings = group.chartstring_set.all()
+            if status == "REQUESTED":
+                requested = True
+            elif status == "DOWNLOADABLE":
+                downloadable = True
 
-    edited_chartstrings = []
-    for chartstring in chartstrings:
-        if chartstring.nickname != "":
-            edited_chartstrings.append(chartstring)
+            chartstrings = []
+            for group in member.groups.all():
+                for chartstring in group.chartstring_set.all():
+                    chartstrings.append(chartstring)
+
+            users_of_app[app] = [(member, requested, downloadable, chartstrings,)]
+
+    all_chartstrings, all_members = {}, {}
+
+    for group in groups:
+        chartstrings = group.chartstring_set.all()
+        chartstrings = sorted(chartstrings, key=lambda chartstring: chartstring.nickname)
+        all_chartstrings[group] = [(group.name, chartstrings,)]
+
+        members = []
+        for u in all_users:
+            for user_group in u.groups.all():
+                if user_group == group and u != user:
+                    members.append(u)
+
+        all_members[group] = [(group.name, members,)]
 
     c = Context({
         'username': request.session['user'],
-        'group': group,
-        'members': members,
+        'groups': groups,
         'users_of_app' : users_of_app,
-        'chartstrings': edited_chartstrings,
+        'all_members': all_members,
+        'all_chartstrings': all_chartstrings,
+        'all_users': all_users,
         })
 
     c.update(csrf(request))

@@ -81,9 +81,9 @@
 		      {% for app, user in users_of_app.items %}
 		      	<h3>{{ app.app_name }}</h3>
 		        <h4>Requested</h4>
-		      	{% for u, requested, downloadable, c in user %}
+		      	{% for user_info, requested, downloadable, chartstrings in user %}
 			      	{% if requested %}
-				      		<li>{{ u.name }}</li>
+				      		<li>{{ user_info.name }}</li>
 							<form name="approve" method="post" action="/manage/">
 								{% csrf_token %}
 								<label>Choose Chartstring</label>
@@ -93,13 +93,12 @@
 									{% endfor %}
 								</select>
 								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
-								<input type="hidden" name="user" value="{{ u.SID }}"></input>
+								<input type="hidden" name="user" value="{{ user_info.SID }}"></input>
 								</br>
 								<input type="submit"
 								       value="Approve License"
 								       name="approve"
 								       class="btn btn-primary"></input>
-
 							</form>
 				     {% endif %}
 		      	{% endfor %}
@@ -127,14 +126,18 @@
 		    </div>
 		    <div class="tab-pane" id="groups">
 		      <h2 class="manage-tab">MY GROUPS</h2>
-		      <h3>{{ group }}</h3>
+		      {% for group, group_info in all_members.items %}
+		      	{% for group_name, members in group_info %}
+		      		<h3>{{ group_name }}</h3>
 
-		      <ul>
-		      	{% for member in members %}
-		      	<li><a href="#{{ member.SID }}" data-toggle="modal">{{ member.name }} (SID: {{ member.SID }})</a></li>
+			      <ul>
+			      	{% for member in members %}
+			      	<li><a href="#{{ member.SID }}" data-toggle="modal">{{ member.name }} (SID: {{ member.SID }})</a></li>
+			      	{% endfor %}
+			      </ul>
+
 		      	{% endfor %}
-		      </ul>
-
+		      {% endfor %}
 		    </div>
 		   	<div class="tab-pane" id="chartstrings">
 		      <h2 class="manage-tab">CHARTSTRINGS</h2><hr>
@@ -142,8 +145,12 @@
 		      <button type="button" class="btn btn-primary" data-toggle="modal" href="#new" value="Add New Chartstring">Add New Chartstring</button>
 		      </br><hr>
 		      <ul>
-		      	{% for chartstring in chartstrings %}
-		      	<li><a href="#{{ chartstring.chartstring }}" data-toggle="modal">{{ chartstring.nickname }}</a>: {{ chartstring.chartstring }}</li>
+		      	{% for group, chartstring_info in all_chartstrings.items %}
+		      		{% for group_name, chartstrings in chartstring_info %}
+		      			{% for chartstring in chartstrings %}
+		      				<li><a href="#{{ chartstring.chartstring }}" data-toggle="modal">{{ chartstring.nickname }}</a>: {{ chartstring.chartstring }}</li>
+		      			{% endfor %}
+		      		{% endfor %}
 		      	{% endfor %}
 		      </ul>
 		    </div>
@@ -167,6 +174,13 @@
 
 		<label>Chartstring Name: </label>
 		<input type="text" name="nickname"></input>
+		<label>Group: </label>
+		<select name="group">
+			{% for group in groups %}
+			<option value="{{ group.name }}">{{ group.name }}</option>
+			{% endfor %}
+		</select>
+
 		<label>Chartstring</label>
 		<input type="text" name="chartstring"></input>
 
@@ -181,43 +195,50 @@
  </div>
 
 
-{% for member in members %}
+{% for group, group_info in all_members.items %}
+	{% for group_name, members in group_info %}
+		{% for member in members %}
 
- <div class="modal fade hide manage" id="{{ member.SID }}">
-    <div class="modal-header">
-    	<h3>{{ member.name }}</h3>
-    	<button type="button" class="close" data-dismiss="modal">×</button>
-  	</div>
+		 <div class="modal fade hide manage" id="{{ member.SID }}">
+		    <div class="modal-header">
+		    	<h3>{{ member.name }}</h3>
+		    	<button type="button" class="close" data-dismiss="modal">×</button>
+		  	</div>
 
-  	<div class="modal-body">
-  		<h4>Requests</h4>
-  		<h4>Licenses</h4>
-    </div>
- </div>
+		  	<div class="modal-body">
+		  		<h4>Requests</h4>
+		  		<h4>Licenses</h4>
+		    </div>
+		 </div>
 
+		{% endfor %}
+	{% endfor %}
 {% endfor %}
 
-{% for chartstring in chartstrings %}
 
- <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
-    <div class="modal-header">
-    	<h3>{{ chartstring.nickname }} History</h3>
-    	<button type="button" class="close" data-dismiss="modal">×</button>
-  	</div>
+{% for group, chartstring_info in all_chartstrings.items %}
+	{% for group_name, chartstrings in chartstring_info %}
+	    {% for chartstring in chartstrings %}
+			 <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
+			    <div class="modal-header">
+			    	<h3>{{ chartstring.nickname }} History</h3>
+			    	<button type="button" class="close" data-dismiss="modal">×</button>
+			  	</div>
 
-  	<div class="modal-body">
+			  	<div class="modal-body">
 
-  		{% for app, user in users_of_app.items %}
-  			{% for u, requested, downloadable, c in user %}
-  				{% if c == chartstring %}
-  					<li>{{ u.name }} - {{ app.app_name }}</li>
-  				{% endif %}
-  			{% endfor %}
-  		{% endfor %}
+			  		{% for app, user in users_of_app.items %}
+			  			{% for u, requested, downloadable, c in user %}
+			  				{% if c == chartstring %}
+			  					<li>{{ u.name }} - {{ app.app_name }}</li>
+			  				{% endif %}
+			  			{% endfor %}
+			  		{% endfor %}
 
-    </div>
- </div>
-
+			    </div>
+			 </div>
+		{% endfor %}
+	{% endfor %}
 {% endfor %}
 
 
@@ -230,7 +251,7 @@
    e.preventDefault();
    $(this).tab('show');
  })
- </script>
+</script>
 <script src="../static/js/jquery.js"></script>
 <script src="../static/js/bootstrap-transition.js"></script>
 <script src="../static/js/bootstrap-alert.js"></script>

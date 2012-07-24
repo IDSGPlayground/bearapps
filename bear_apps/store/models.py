@@ -27,12 +27,8 @@ class User(models.Model):
 class User_Apps(models.Model):
 	user = models.ForeignKey('User')
 	app_name = models.CharField(max_length=200)
-	#available = models.BooleanField(default=True)
-	#requested = models.BooleanField()
-	#downloadable = models.BooleanField()
         status=models.CharField(max_length=20, choices=app_status)
 	href_name = models.CharField(max_length=200)
-	#chartstring = models.ForeignKey('Chartstring')
 
 	def __unicode__(self):
 		return self.app_name
@@ -52,16 +48,16 @@ class App(models.Model):
 class Group(models.Model):
         name = models.CharField(max_length=200)
 	def __unicode__(self):
-		return self.name
-"""
+                return self.name
+
 class Chartstring(models.Model):
 	nickname = models.CharField(max_length=200, default="")
 	chartstring = models.CharField(max_length=200, default="")
 	group = models.ForeignKey('Group')
 
 	def __unicode__(self):
-"		return self.nickname
-"""
+		return self.nickname
+
 class Notification(models.Model):
 	user = models.ForeignKey('User')
 	message = models.CharField(max_length=200)
