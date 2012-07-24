@@ -91,7 +91,6 @@ def browse(request):
                 app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append("app-btn-" + href_name)
-    print app_states
 
     try:
         messages = user.notification_set.all()
@@ -136,21 +135,41 @@ def myapps(request):
 
     apps = App.objects.all()
     app_states = []
+    temp_app = []
     for app in apps:
         href_name = app.href_name
         try:
             state = user.user_apps_set.get(href_name=href_name).status
             if state.lower()=="requested":
                 app_states.append("requested-btn-" + href_name)
+                temp_app.append(app)
             elif state.lower()=="downloadable":
                 app_states.append("downloadable-btn-" + href_name)
+                temp_app.append(app)
         except:
-            app_states.append('none')
+            app_states.append('app-btn-' + href_name)
+
+    # Dictionary for displaying applications and their statuses.
+    # app_display: key = app's href name and value = 'available' or 'requested'
+    # app_info: key = app's href name and value = the app object from App.objects.all()
+    print len(apps)
+    print len(app_states)
+
+    app_display = dict([(temp_app[x].href_name,app_states[x]) for x in range(len(app_states))])
+    app_info = dict([(temp_app[x].href_name, temp_app[x]) for x in range(len(app_states))])
+
+    if len(temp_app) == 0:
+        no_apps = True
+    else:
+        no_apps = False
 
     c = Context({
         'username' : request.session['user'],
         'apps' : apps,
         'app_states' : app_states,
+        'app_display' : app_display,
+        'app_info' : app_info,
+        'no_apps' : no_apps,
         })
 
     return render_to_response('my-apps.html', c)
