@@ -59,10 +59,10 @@ def browse(request):
                 user.user_apps_set.get(href_name=temp_app.href_name)
             except:
                 temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
-                # chartstring = Chartstring()
-                # chartstring.group = user.groups
-                # chartstring.save()
-                # temp_app.chartstring = chartstring
+                chartstring = Chartstring()
+                chartstring.group = user.groups
+                chartstring.save()
+                temp_app.chartstring = chartstring
                 temp_app.user = user
                 temp_app.save()
 
@@ -75,7 +75,6 @@ def browse(request):
         app.save()
 
     # Browse page for viewing (non-POST requests)
-
     if 'uid' not in request.session:
         request.session['uid'] = 000000
 
@@ -111,8 +110,6 @@ def browse(request):
     c = Context({
             'username' : request.session['user'],
             'uid' : request.session['uid'],
-            'apps' : apps,
-            'app_states' : app_states,
             'app_display' : app_display,
             'app_info' : app_info,
             'notifications' : notifications,
