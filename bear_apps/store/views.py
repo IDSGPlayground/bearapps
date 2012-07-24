@@ -19,7 +19,6 @@ def home(request):
         try:
             user = request.POST['user']
             if User.objects.get(name=user).password == request.POST['password']:
-            # User.objects.get(name=user)
                 request.session['user'] = user
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
@@ -29,6 +28,7 @@ def home(request):
         except:
             # Errors if user does not exist.
             not_user = True
+            return HttpResponseRedirect('/register/')
 
     c = Context({
         'not_user': not_user,
@@ -59,10 +59,6 @@ def browse(request):
                 user.user_apps_set.get(href_name=temp_app.href_name)
             except:
                 temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
-                # chartstring = Chartstring()
-                # chartstring.group = user.groups
-                # chartstring.save()
-                # temp_app.chartstring = chartstring
                 temp_app.user = user
                 temp_app.save()
 

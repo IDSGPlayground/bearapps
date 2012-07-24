@@ -1,3 +1,22 @@
+.register-form {
+  margin: 30px 0px 0px 0px;
+}
+
+
+input[type="text"].uneditable-input.register-form {
+  display: inline-block;
+  height: 300px;
+  padding: 4px;
+  margin-bottom: 9px;
+  font-size: 13px;
+  line-height: 18px;
+  color: #555555;
+}
+
+p.help-block.register-form {
+  font-size: 15px;
+}
+
 /* My Apps */
 .inline {
   display:inline-block;
@@ -114,8 +133,6 @@
   opacity: 0.7;
   filter:alpha(opacity=70); /* For IE8 and earlier */
 }
-
-
 
 /* Modal */
 .request-btn {
