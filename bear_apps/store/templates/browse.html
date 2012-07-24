@@ -35,64 +35,61 @@
 
 {% block content %}
 
-{% for app in apps %}
-  {% for state in app_states %}
-
-  <div class="modal fade hide" id="{{ app.href_name }}">
+{% for app, state in app_display.items %}
+{% with info=app_info|lookup:app %}
+  <div class="modal fade hide" id="{{ app }}">
     <div class="modal-header">
       <form method="post" action="/browse/">
         {% csrf_token %}
-        <input type="hidden" name="app" value="{{ app.href_name }}">
+        <input type="hidden" name="app" value="{{ app }}">
         <input type="submit"
-               value="{% if 'requested-btn' in state%}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
+               value="{% if 'requested-btn' in state %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
                class="request-btn" {% if 'requested-btn' in state %}DISABLED{% else %}{% endif %}>
       </form>
       	<button type="button" class="close" data-dismiss="modal">×</button>
-      	<h3><img src="../static/img/matlab-icon-small.png" />MatLab</h3>
+      	<h3><img src="../static/img/matlab-icon-small.png" />{{ info.app_name }}</h3>
   	</div>
 
   	<div class="modal-body">
-  		<ul id="{{ app.href_name }}-tabs" class="nav nav-tabs">
+  		<ul id="{{ app }}-tabs" class="nav nav-tabs">
   			<li class="active">
-  				<a href="#descrip" data-toggle="tab">Description</a>
+  				<a href="#descrip-{{ app }}" data-toggle="tab">Description</a>
   			</li>
   			<li>
-  				<a href="#requirements" data-toggle="tab">System Requirements</a>
+  				<a href="#requirements-{{ app }}" data-toggle="tab">System Requirements</a>
   			</li>
   			<li>
-  				<a href="#obtain" data-toggle="tab">How to Obtain MatLab</a>
+  				<a href="#obtain-{{ app }}" data-toggle="tab">How to Obtain MatLab</a>
   			</li>
   		</ul>
 
-  		<div class="tab-content" id="{{ app.href_name }}-tabs-content">
-  			<div class="tab-pane fade active in" id="descrip">
+  		<div class="tab-content" id="{{ app }}-tabs-content">
+  			<div class="tab-pane fade active in" id="descrip-{{ app }}">
           <h2>Description</h2>
-          <p> {{ app.description }} </p>
+          <p> {{ info.description }} </p>
   			</div>
 
-  			<div class="tab-pane fade" id="requirements">
+  			<div class="tab-pane fade" id="requirements-{{app}}">
   		  		<h2>System Requirements</h2>
-      				<p>Windows: {{ app.Sysreq_windows }}</p>
-              <p>Linux: {{ app.Sysreq_linux }}</p>
-              <p>Mac: {{ app.Sysreq_mac }}</p>
+      				<p>Windows: {{ info.Sysreq_windows }}</p>
+              <p>Linux: {{ info.Sysreq_linux }}</p>
+              <p>Mac: {{ info.Sysreq_mac }}</p>
   			</div>
-
-    		<div class="tab-pane fade" id="obtain">
-    	  		<h2>How to Obtain {{ app.app_name }}</h2>
-    			<p>{{ app.obtain }}</p>
+        <div class="tab-pane fade" id="obtain-{{app}}">
+    	  		<h2>How to Obtain {{ info.app_name }}</h2>
+    			<p>{{ info.obtain }}</p>
     		</div>
   	  </div>
     </div>
   </div>
-
-  {% endfor %}
+{% endwith %}
 {% endfor %}
 
 <script>
 
-{% for app in apps %}
+{% for app, state in app_display.items %}
 
- $('{{ app.href_name }}-tabs').click(function (e) {
+ $('{{ app }}-tabs').click(function (e) {
    e.preventDefault();
    $(this).tab('show');
  })
