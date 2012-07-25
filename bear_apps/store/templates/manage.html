@@ -218,31 +218,6 @@
 	{% endfor %}
 {% endfor %}
 
-
-<!--{% for group, chartstring_info in all_chartstrings.items %}
-	{% for group_name, chartstrings in chartstring_info %}
-	    {% for chartstring in chartstrings %}
-			 <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
-			    <div class="modal-header">
-			    	<h3>{{ chartstring.nickname }} History</h3>
-			    	<button type="button" class="close" data-dismiss="modal">×</button>
-			  	</div>
-
-			  	<div class="modal-body">
-
-			  		{% for app, user in users_of_app.items %}
-			  			{% for u, requested, downloadable, c in user %}
-			  				{% if c == chartstring %}
-			  					<li>{{ u.name }} - {{ app.app_name }}</li>
-			  				{% endif %}
-			  			{% endfor %}
-			  		{% endfor %}
-
-			    </div>
-			 </div>
-		{% endfor %}
-	{% endfor %}
-{% endfor %}-->
 {% for chartstring, chartstring_info in chart_history.items %}
     <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
 	<div class="modal-header">
