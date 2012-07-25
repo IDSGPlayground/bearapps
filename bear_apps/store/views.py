@@ -264,6 +264,7 @@ def manage(request):
                     if user_group == group and u != user:
                         members.append(u)
 
+        users_of_app[app] = []
         for member in members:
             href_name = app.href_name
             requested, downloadable = False, False
@@ -279,7 +280,7 @@ def manage(request):
                 for chartstring in group.chartstring_set.all():
                     chartstrings.append(chartstring)
 
-            users_of_app[app] = [(member, requested, downloadable, chartstrings,)]
+            users_of_app[app].append((member, requested, downloadable, chartstrings,))
 
     all_chartstrings, all_members = {}, {}
 
