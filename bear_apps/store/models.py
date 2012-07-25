@@ -17,7 +17,7 @@ class User(models.Model):
 	name = models.CharField(max_length=200)
 	password = models.CharField(max_length=200)
 	SID = models.IntegerField()
-	owner = models.BooleanField()
+	owner = models.BooleanField(default=False)
 	groups = models.ManyToManyField('Group', null=True, blank=True)
 	notifications = models.IntegerField(default=0)
 

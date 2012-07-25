@@ -19,7 +19,6 @@ def home(request):
         try:
             user = request.POST['user']
             if User.objects.get(name=user).password == request.POST['password']:
-            # User.objects.get(name=user)
                 request.session['user'] = user
                 uid = User.objects.get(name=user).SID
                 request.session['uid'] = uid
@@ -29,6 +28,7 @@ def home(request):
         except:
             # Errors if user does not exist.
             not_user = True
+            return HttpResponseRedirect('/register/')
 
     c = Context({
         'not_user': not_user,
@@ -38,7 +38,37 @@ def home(request):
     return render_to_response('index.html', c)
 
 def register(request):
-    return render_to_response('register.html')
+    if request.method == 'POST':
+        # try:
+            username = request.POST['username']
+            SID = request.POST['SID']
+            password = request.POST['password']
+            verify = request.POST['verify-password']
+            group = request.POST['group']
+            status = request.POST['status']
+
+            if password != verify:
+                return render_to_response('register.html')
+            
+            owner = False
+            if status == ("professor" or "RSO"):
+                owner = True
+
+            new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
+            add_group = Group.objects.get(name=group)
+            new_user.groups.add(add_group)
+            return HttpResponseRedirect('/')
+
+        # except:
+        #     pass
+
+    groups = Group.objects.all()
+    c = Context ({
+        'groups': groups
+        })
+    c.update(csrf(request))
+
+    return render_to_response('register.html', c)
 
 def browse(request):
     #If user is not logged in redirects to log in page.
@@ -59,10 +89,6 @@ def browse(request):
                 user.user_apps_set.get(href_name=temp_app.href_name)
             except:
                 temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
-                chartstring = Chartstring()
-                chartstring.group = user.groups
-                chartstring.save()
-                temp_app.chartstring = chartstring
                 temp_app.user = user
                 temp_app.save()
 
@@ -152,9 +178,6 @@ def myapps(request):
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
     # app_info: key = app's href name and value = the app object from App.objects.all()
-    print len(apps)
-    print len(app_states)
-
     app_display = dict([(temp_app[x].href_name,app_states[x]) for x in range(len(app_states))])
     app_info = dict([(temp_app[x].href_name, temp_app[x]) for x in range(len(app_states))])
 
@@ -244,6 +267,7 @@ def manage(request):
                 for user_group in u.groups.all():
                     if user_group == group and u != user:
                         members.append(u)
+
         users_of_app[app] = []
         for member in members:
             href_name = app.href_name
@@ -260,7 +284,7 @@ def manage(request):
                 for chartstring in group.chartstring_set.all():
                     chartstrings.append(chartstring)
 
-            users_of_app[app] = [(member, requested, downloadable, chartstrings,)]
+            users_of_app[app].append((member, requested, downloadable, chartstrings,))
 
     all_chartstrings, all_members = {}, {}
 
@@ -291,8 +315,6 @@ def manage(request):
 
     return render_to_response('manage.html', c)
 
-
-# Class to hold form data in browse()
 class RequestForm(forms.Form):
     app = forms.CharField()
 
