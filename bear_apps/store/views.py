@@ -55,6 +55,8 @@ def register(request):
                 owner = True
 
             new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
+            add_group = Group.objects.get(name=group)
+            new_user.groups.add(add_group)
             return HttpResponseRedirect('/')
 
         # except:
@@ -310,3 +312,10 @@ def manage(request):
 
     return render_to_response('manage.html', c)
 
+class RequestForm(forms.Form):
+    app = forms.CharField()
+
+# Log In Form
+class LogInForm(forms.Form):
+    user = forms.CharField()
+    password = forms.CharField()
