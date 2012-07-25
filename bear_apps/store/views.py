@@ -262,11 +262,15 @@ def manage(request):
     for app in App.objects.all():
         # Generates a list of all members in all groups associated with the user.
         members = []
+        #for group in groups:
+         #   for u in all_users:
+          #      for user_group in u.groups.all():
+           #         if user_group == group and u != user:
+            #            members.append(u)
         for group in groups:
             for u in all_users:
-                for user_group in u.groups.all():
-                    if user_group == group and u != user:
-                        members.append(u)
+                if group in u.groups.all() and u != user:
+                    members.append(u)
 
         users_of_app[app] = []
         for member in members:
