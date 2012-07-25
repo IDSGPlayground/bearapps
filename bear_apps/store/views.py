@@ -158,6 +158,7 @@ def myapps(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
+    notifications = user.notifications
 
     apps = App.objects.all()
     app_states = []
@@ -186,13 +187,18 @@ def myapps(request):
     else:
         no_apps = False
 
+    try:
+        messages = user.notification_set.all()
+    except:
+        messages = ["None"]
+
     c = Context({
         'username' : request.session['user'],
-        'apps' : apps,
-        'app_states' : app_states,
         'app_display' : app_display,
         'app_info' : app_info,
         'no_apps' : no_apps,
+        'notifications' : notifications,
+        'messages' : messages,
         })
 
     return render_to_response('my-apps.html', c)
