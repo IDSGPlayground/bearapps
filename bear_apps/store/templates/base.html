@@ -50,7 +50,11 @@
 			</div>
 
 			<div class="btn-group pull-right">
+				{% if notifications > 0 %}
 				<a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
+				{% else %}
+				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+				{% endif %}
 				<i class="icon-bell icon-white"></i> {{ notifications }}
 				<span class="caret"></span>
 				</a>
