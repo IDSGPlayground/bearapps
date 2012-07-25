@@ -183,6 +183,9 @@
 
 		<label>Chartstring</label>
 		<input type="text" name="chartstring"></input>
+		
+		<label> Budget: </label>
+		<input type="text" name="amount"></input>
 
 		</br>
 		<input type="submit"
@@ -216,7 +219,7 @@
 {% endfor %}
 
 
-{% for group, chartstring_info in all_chartstrings.items %}
+<!--{% for group, chartstring_info in all_chartstrings.items %}
 	{% for group_name, chartstrings in chartstring_info %}
 	    {% for chartstring in chartstrings %}
 			 <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
@@ -239,7 +242,20 @@
 			 </div>
 		{% endfor %}
 	{% endfor %}
-{% endfor %}
+{% endfor %}-->
+{% for chartstring, chartstring_info in chart_history.items %}
+    <div class="modal fade hide manage" id="{{ chartstring.chartstring }}">
+	<div class="modal-header">
+	   	<h3>{{ chartstring.nickname }} History</h3>
+		    	<button type="button" class="close" data-dismiss="modal">×</button>
+ 	</div>
+  	<div class="modal-body">
+  		{% for item in chartstring_info %}
+			<li>{{ item }}</li>
+		{% endfor %}
+	</div>
+     </div>
+{% endfor %}    
 
 
 </body>

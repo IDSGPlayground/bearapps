@@ -189,7 +189,6 @@ def manage(request):
     if request.method == 'POST':
         if "approve" in request.POST:
             app = request.POST['app']
-            #price = app.price
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(chartstring = request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
@@ -217,6 +216,7 @@ def manage(request):
             # Write change to database.
             app = user_requested.user_apps_set.get(href_name=app)
             app.status="AVAILABLE"
+            app.chartstring = None
             app.save()
 
             message = "Your license for " + app.app_name + " has been revoked."
@@ -228,12 +228,14 @@ def manage(request):
             user_requested.save()
 
         elif "new" in request.POST:
-            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'])
+            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'])
             new_chartstring.group = Group.objects.get(name=request.POST['group'])
             new_chartstring.save()
 
     users_of_app = {}
-
+    chart_history = {} 
+    for item in Chartstring.objects.all():
+        chart_history[item]=item.user_apps_set.all()
     for app in App.objects.all():
         # Generates a list of all members in all groups associated with the user.
         members = []
@@ -242,7 +244,7 @@ def manage(request):
                 for user_group in u.groups.all():
                     if user_group == group and u != user:
                         members.append(u)
-
+        users_of_app[app] = []
         for member in members:
             href_name = app.href_name
             requested, downloadable = False, False
@@ -282,6 +284,7 @@ def manage(request):
         'all_members': all_members,
         'all_chartstrings': all_chartstrings,
         'all_users': all_users,
+        'chart_history': chart_history
         })
 
     c.update(csrf(request))
