@@ -33,31 +33,50 @@
     <div class="row-fluid span12 well hero-unit">
         <h1>REGISTRATION</h1>
 
-        <form class="register-form" action="register">
+        <form method="POST" class="register-form" action="/register/">
+          {% csrf_token %}
           <fieldset>
             <div class="control-group">
               <label class="control-label" for="username">Username </label>
               <div class="controls">
-                <input type="text" class="input" id="username">
-              </div>
-            </div>
-
-            <div class="control-group error hide">
-              <label class="control-label" for="username-taken">Username </label>
-              <div class="controls">
-                <input type="text" class="input" id="username">
-                <span class="help-inline">Sorry, this username is already taken.</span>
+                <input type="text" class="input" id="username" name="username">
               </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label" for="name">Full Name </label>
+              <label class="control-label" for="SID">SID </label>
               <div class="controls">
-                <input type="text" class="input" id="name">
+                <input type="text" class="input" id="SID" name="SID">
               </div>
             </div>
 
-             <div class="control-group">
+            <div class="control-group">
+              <label class="control-label" for="password">Password </label>
+              <div class="controls">
+                <input type="password" class="input" id="password" name="password">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="password">Verify Password </label>
+              <div class="controls">
+                <input type="password" class="input" id="verify-password" name="verify-password">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="group">Select Groups </label>
+              <div class="controls">
+                <select name="group" >
+                  <option id="group">Select Group</option>
+                  {% for group in groups %}
+                  <option id="group" value="{{ group.name }}">{{ group.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
               <label class="control-label" for="status">Status </label>
               <div class="controls">
                 <input type="radio" name="status" value="undergrad"> Undergraduate</input><br />
