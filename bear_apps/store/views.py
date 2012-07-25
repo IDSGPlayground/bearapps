@@ -39,9 +39,33 @@ def home(request):
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST['username']
-    c = Context ({})
+        # try:
+            username = request.POST['username']
+            SID = request.POST['SID']
+            password = request.POST['password']
+            verify = request.POST['verify-password']
+            group = request.POST['group']
+            status = request.POST['status']
+
+            if password != verify:
+                return render_to_response('register.html')
+            
+            owner = False
+            if status == ("professor" or "RSO"):
+                owner = True
+
+            new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
+            return HttpResponseRedirect('/')
+
+        # except:
+        #     pass
+
+    groups = Group.objects.all()
+    c = Context ({
+        'groups': groups
+        })
     c.update(csrf(request))
+
     return render_to_response('register.html', c)
 
 def browse(request):
@@ -285,12 +309,3 @@ def manage(request):
 
     return render_to_response('manage.html', c)
 
-
-# Class to hold form data in browse()
-class RequestForm(forms.Form):
-    app = forms.CharField()
-
-# Log In Form
-class LogInForm(forms.Form):
-    user = forms.CharField()
-    password = forms.CharField()
