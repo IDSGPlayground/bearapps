@@ -57,7 +57,7 @@
   padding-left: 160px;
 }
 
-.register-form input[type="text"] {
+.register-form input[type="text"], input[type="password"] {
   display: inline-block;
   height: 35px;
   padding: 4px;
