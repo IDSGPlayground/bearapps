@@ -311,7 +311,10 @@ def manage(request):
                         downloadable = True
 
                     chartstrings = []
-                    for group in member.groups.all():
+                    # for group in member.groups.all():
+                    #     for chartstring in group.chartstring_set.all():
+                    #         chartstrings.append(chartstring)
+                    for group in user.groups.all():
                         for chartstring in group.chartstring_set.all():
                             chartstrings.append(chartstring)
 
@@ -321,10 +324,11 @@ def manage(request):
 
     all_chartstrings, all_members = {}, {}
 
-    for group in user.groups.all():
+    for group in groups:
         chartstrings = group.chartstring_set.all()
         chartstrings = sorted(chartstrings, key=lambda chartstring: chartstring.nickname)
         all_chartstrings[group] = [(group.name, chartstrings,)]
+        print all_chartstrings
 
         members = []
         for u in all_users:
