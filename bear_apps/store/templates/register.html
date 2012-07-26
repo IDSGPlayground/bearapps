@@ -111,7 +111,6 @@
               <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
                 <div id="adding-groups"></div>
-                <input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='[{% for group in groups %}"{{ group.name }}", {% endfor %}""]'></input></br>
               </div>
             </div>
 
@@ -143,11 +142,12 @@
 <script>
 var num_groups = 1;
 genGroups();
-$('#add-group').click(function(event){
-  event.preventDefault();
+
+$('.add-group').click(function(event){
   num_groups++;
   genGroups();
 });
+
 
 function genGroups(){
   saved = '[{% for group in groups %}{{ group.name }}, {% endfor %}]';
@@ -155,10 +155,10 @@ function genGroups(){
   console.log("here");
 
   for (i=0; i < num_groups; i++){
-    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input>');
+    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
   }
 
-  $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
+  $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" class="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
 }
 </script>
 
