@@ -92,8 +92,9 @@ def register(request):
 
         for app in App.objects.all():
             new_user_app = User_Apps.objects.create(user=new_user,app_name=app.app_name,status="AVAILABLE",href_name=app.href_name)
-            #new_user.User_Apps.add(new_user_app)
 
+        # Resets request.method, so that POST data is no longer stored.
+        request.method = None
         return HttpResponseRedirect('/')
 
     c.update(csrf(request))
