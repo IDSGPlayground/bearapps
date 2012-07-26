@@ -30,6 +30,7 @@ class User_Apps(models.Model):
         status=models.CharField(max_length=20, choices=app_status)
 	href_name = models.CharField(max_length=200)
 	chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
+	group = models.ForeignKey('Group', null=True, blank=True)
 
 	def __unicode__(self):
 		return "Name: " + str(self.user.name) + "\nID:  " + str(self.user.SID)+ "\nApp Name: "+self.app_name

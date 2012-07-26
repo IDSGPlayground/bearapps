@@ -104,6 +104,7 @@ def browse(request):
         # Write change to database.
         app = User_Apps.objects.get(href_name=app, user=user)
         app.status="REQUESTED"
+        app.group = Group.objects.get(name=request.POST['mygroup'])
         app.save()
 
     # Browse page for viewing (non-POST requests)
@@ -290,25 +291,29 @@ def manage(request):
 
         users_of_app[app] = []
         for member in members:
-            href_name = app.href_name
-            requested, downloadable = False, False
-            status = User_Apps.objects.get(href_name=href_name, user=member).status
+            try:
+                if member.user_apps_set.get(app_name=app.app_name).group in user.groups.all():
+                    href_name = app.href_name
+                    requested, downloadable = False, False
+                    status = User_Apps.objects.get(href_name=href_name, user=member).status
 
-            if status == "REQUESTED":
-                requested = True
-            elif status == "DOWNLOADABLE":
-                downloadable = True
+                    if status == "REQUESTED":
+                        requested = True
+                    elif status == "DOWNLOADABLE":
+                        downloadable = True
 
-            chartstrings = []
-            for group in member.groups.all():
-                for chartstring in group.chartstring_set.all():
-                    chartstrings.append(chartstring)
+                    chartstrings = []
+                    for group in member.groups.all():
+                        for chartstring in group.chartstring_set.all():
+                            chartstrings.append(chartstring)
 
-            users_of_app[app].append((member, requested, downloadable, chartstrings,))
+                    users_of_app[app].append((member, requested, downloadable, chartstrings,))
+            except:
+                pass
 
     all_chartstrings, all_members = {}, {}
 
-    for group in groups:
+    for group in user.groups.all():
         chartstrings = group.chartstring_set.all()
         chartstrings = sorted(chartstrings, key=lambda chartstring: chartstring.nickname)
         all_chartstrings[group] = [(group.name, chartstrings,)]

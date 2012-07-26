@@ -42,7 +42,7 @@
       <form method="post" action="/browse/">
         {% csrf_token %}
         <input type="hidden" name="app" value="{{ app }}">
-        <select>
+        <select name=mygroup>
             {% for group in groups %}
               <option value="{{ group.name }}">{{ group.name }}</option>
             {% endfor %}
