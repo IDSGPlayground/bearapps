@@ -110,13 +110,8 @@
             <div class="control-group">
               <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
-                <input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='[{% for group in groups %}"{{ group.name }}", {% endfor %}"Add New"]'></input>
-<!--                 <select multiple size="multiple" name="groups">
-                  <option id="groups" DISABLED>Select Group</option>
-                  {% for group in groups %}
-                  <option id="groups" value="{{ group.name }}">{{ group.name }}</option>
-                  {% endfor %}
-                </select> -->
+                <div id="adding-groups"></div>
+                <input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='[{% for group in groups %}"{{ group.name }}", {% endfor %}""]'></input></br>
               </div>
             </div>
 
@@ -145,6 +140,25 @@
 
 <!-- Le javascript
 ================================================== -->
+<script>
+var groups = 1;
+//genGroups();
+$('#add-group').click(function(event){
+  event.preventDefault();
+  groups++;
+  genGroups();
+});
+
+function genGroups(){
+  saved = '[{% for group in groups %}"{{ group.name }}", {% endfor %}""]';
+  $('#adding-groups').html('');
+  for (i=0; i < groups; i++){
+    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='+ saved + '></input></br>');
+  }
+  $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
+}
+</script>
+
 <script src="../static/js/jquery.js"></script>
 <script src="../static/js/bootstrap-transition.js"></script>
 <script src="../static/js/bootstrap-alert.js"></script>
