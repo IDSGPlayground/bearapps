@@ -84,7 +84,10 @@ def register(request):
 
         new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
 
-        add_group = Group.objects.get(name=groups)
+        try:
+            add_group = Group.objects.get(name=groups)
+        except: 
+            add_group = Group.objects.create(name=groups)
         new_user.groups.add(add_group)
 
         for app in App.objects.all():
