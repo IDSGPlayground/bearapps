@@ -141,20 +141,23 @@
 <!-- Le javascript
 ================================================== -->
 <script>
-var groups = 1;
+var num_groups = 0;
 //genGroups();
 $('#add-group').click(function(event){
   event.preventDefault();
-  groups++;
+  num_groups++;
   genGroups();
 });
 
 function genGroups(){
-  saved = '[{% for group in groups %}"{{ group.name }}", {% endfor %}""]';
+  saved = '[{% for group in groups %}{{ group.name }}, {% endfor %}]';
   $('#adding-groups').html('');
-  for (i=0; i < groups; i++){
-    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='+ saved + '></input></br>');
+  console.log("here");
+
+  for (i=0; i < num_groups; i++){
+    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source=' + saved + '></input>');
   }
+
   $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
 }
 </script>
