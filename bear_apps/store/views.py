@@ -39,9 +39,11 @@ def home(request):
 
 def register(request):
     all_groups = Group.objects.all()
+
     c = Context ({
     'groups': all_groups,
     })
+
     if request.method == 'POST':
         try:
             username = request.POST['username']
@@ -55,20 +57,26 @@ def register(request):
             'empty_fields': True,
             'groups': all_groups,
             })
+            c.update(csrf(request))
+            return render_to_response('register.html', c)
 
         if password != verify:
             c = Context ({
             'not_match': True,
             'groups': all_groups,
             })
+            c.update(csrf(request))
+            return render_to_response('register.html', c)
 
         all_users = User.objects.all()
         for user in all_users:
             if user.name == username:
-                 c = Context ({
+                c = Context ({
                 'user_taken': True,
                 'groups': all_groups,
                 })
+                c.update(csrf(request))
+                return render_to_response('register.html', c)
         
         owner = False
         if status == ("professor" or "RSO"):
@@ -287,11 +295,6 @@ def manage(request):
     for app in App.objects.all():
         # Generates a list of all members in all groups associated with the user.
         members = []
-        #for group in groups:
-         #   for u in all_users:
-          #      for user_group in u.groups.all():
-           #         if user_group == group and u != user:
-            #            members.append(u)
         for group in groups:
             for u in all_users:
                 if group in u.groups.all() and u != user:
@@ -328,9 +331,8 @@ def manage(request):
 
         members = []
         for u in all_users:
-            for user_group in u.groups.all():
-                if user_group == group and u != user:
-                    members.append(u)
+            if group in u.groups.all() and u != user:
+                members.append(u)
 
         all_members[group] = [(group.name, members,)]
 
