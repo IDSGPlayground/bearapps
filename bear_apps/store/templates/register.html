@@ -36,12 +36,24 @@
         <form method="POST" class="register-form" action="/register/">
           {% csrf_token %}
           <fieldset>
+            {% if not user_taken %}
             <div class="control-group">
               <label class="control-label" for="username">Username </label>
               <div class="controls">
                 <input type="text" class="input" id="username" name="username">
               </div>
             </div>
+            {% endif %}
+
+            {% if user_taken %}
+            <div class="control-group error">
+              <label class="control-label" for="username">Username </label>
+              <div class="controls">
+                <input type="text" class="inputError" id="username" name="username">
+                <span class="help-inline">Sorry, this username is already taken</span>
+              </div>
+            </div>
+            {% endif %}
 
             <div class="control-group">
               <label class="control-label" for="SID">SID </label>
@@ -50,6 +62,7 @@
               </div>
             </div>
 
+            {% if not not_match %}
             <div class="control-group">
               <label class="control-label" for="password">Password </label>
               <div class="controls">
@@ -63,14 +76,32 @@
                 <input type="password" class="input" id="verify-password" name="verify-password">
               </div>
             </div>
+            {% endif %}
+
+            {% if not_match %}
+            <div class="control-group error">
+              <label class="control-label" for="password">Password </label>
+              <div class="controls">
+                <input type="password" class="inputError" id="password" name="password">
+              </div>
+            </div>
+
+            <div class="control-group error">
+              <label class="control-label" for="password">Verify Password </label>
+              <div class="controls">
+                <input type="password" class="inputError" id="verify-password" name="verify-password">
+                <span class="help-inline">Passwords do not match. Please try again.</span>
+              </div>
+            </div>
+            {% endif %}
 
             <div class="control-group">
               <label class="control-label" for="group">Select Groups </label>
               <div class="controls">
-                <select name="group" >
-                  <option id="group">Select Group</option>
+                <select multiple size="multiple" name="groups">
+                  <option id="groups" DISABLED>Select Group</option>
                   {% for group in groups %}
-                  <option id="group" value="{{ group.name }}">{{ group.name }}</option>
+                  <option id="groups" value="{{ group.name }}">{{ group.name }}</option>
                   {% endfor %}
                 </select>
               </div>
