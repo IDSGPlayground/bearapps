@@ -38,6 +38,7 @@ def home(request):
     return render_to_response('index.html', c)
 
 def register(request):
+    groups = Group.objects.all()
     if request.method == 'POST':
         username = request.POST['username']
         SID = request.POST['SID']
@@ -45,7 +46,6 @@ def register(request):
         verify = request.POST['verify-password']
         groups = request.POST['groups']
         status = request.POST['status']
-        groups = Group.objects.all()
 
         if password != verify:
             return render_to_response('register.html', {'not_match': True, 'groups': groups})
