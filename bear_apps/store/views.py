@@ -130,6 +130,9 @@ def browse(request):
     app_display = dict([(apps[x].href_name,app_states[x]) for x in range(len(apps))])
     app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
 
+    groups = user.groups.all()
+    groups = sorted(groups, key=lambda group: group.name)
+    print groups
 
     # Context and set-up
     c = Context({
@@ -139,6 +142,7 @@ def browse(request):
             'app_info' : app_info,
             'notifications' : notifications,
             'messages' : messages,
+            'groups' : groups,
             })
     try:
         for message in messages:

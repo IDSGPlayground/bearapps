@@ -42,6 +42,11 @@
       <form method="post" action="/browse/">
         {% csrf_token %}
         <input type="hidden" name="app" value="{{ app }}">
+        <select>
+            {% for group in groups %}
+              <option value="{{ group.name }}">{{ group.name }}</option>
+            {% endfor %}
+        </select>
         <input type="submit"
                value="{% if 'requested-btn' in state %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
                class="request-btn" {% if 'requested-btn' in state %}DISABLED{% else %}{% endif %}>
