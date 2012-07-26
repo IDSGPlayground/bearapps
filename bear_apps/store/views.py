@@ -39,12 +39,12 @@ def home(request):
 
 def register(request):
     all_groups = Group.objects.all()
-
     c = Context ({
     'groups': all_groups,
     })
 
     if request.method == 'POST':
+        #Try clause checks if all fields are filled out.
         try:
             username = request.POST['username']
             SID = request.POST['SID']
@@ -60,6 +60,7 @@ def register(request):
             c.update(csrf(request))
             return render_to_response('register.html', c)
 
+        # Checks if passwords match.
         if password != verify:
             c = Context ({
             'not_match': True,
@@ -68,8 +69,8 @@ def register(request):
             c.update(csrf(request))
             return render_to_response('register.html', c)
 
-        all_users = User.objects.all()
-        for user in all_users:
+        # Checks if username is already taken.
+        for user in User.objects.all():
             if user.name == username:
                 c = Context ({
                 'user_taken': True,
