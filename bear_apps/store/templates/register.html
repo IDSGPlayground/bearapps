@@ -33,8 +33,20 @@
     <div class="row-fluid span12 well hero-unit">
         <h1>REGISTRATION</h1>
 
+        </br>
+        <div class="row-fluid">
+          {% if empty_fields %}
+          <div class="alert alert-error span6">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Not all fields are complete.</strong>
+            Please complete all fields.
+          </div>
+          {% endif %}
+        </div>
+
         <form method="POST" class="register-form" action="/register/">
           {% csrf_token %}
+
           <fieldset>
             {% if not user_taken %}
             <div class="control-group">
@@ -96,14 +108,15 @@
             {% endif %}
 
             <div class="control-group">
-              <label class="control-label" for="group">Select Groups </label>
+              <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
-                <select multiple size="multiple" name="groups">
+                <input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source='[{% for group in groups %}"{{ group.name }}", {% endfor %}"Add New"]'></input>
+<!--                 <select multiple size="multiple" name="groups">
                   <option id="groups" DISABLED>Select Group</option>
                   {% for group in groups %}
                   <option id="groups" value="{{ group.name }}">{{ group.name }}</option>
                   {% endfor %}
-                </select>
+                </select> -->
               </div>
             </div>
 

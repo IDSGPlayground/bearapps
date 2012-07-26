@@ -38,22 +38,25 @@ def home(request):
     return render_to_response('index.html', c)
 
 def register(request):
-    groups = Group.objects.all()
+    all_groups = Group.objects.all()
     if request.method == 'POST':
-        username = request.POST['username']
-        SID = request.POST['SID']
-        password = request.POST['password']
-        verify = request.POST['verify-password']
-        groups = request.POST['groups']
-        status = request.POST['status']
+        try:
+            username = request.POST['username']
+            SID = request.POST['SID']
+            password = request.POST['password']
+            verify = request.POST['verify-password']
+            groups = request.POST['groups']
+            status = request.POST['status']
+        except:
+            return render_to_response('register.html', {'empty_fields': True, 'groups': all_groups})
 
         if password != verify:
-            return render_to_response('register.html', {'not_match': True, 'groups': groups})
+            return render_to_response('register.html', {'not_match': True, 'groups': all_groups})
 
         all_users = User.objects.all()
         for user in all_users:
             if user.name == username:
-                return render_to_response('register.html', {'user_taken': True, 'groups': groups})
+                return render_to_response('register.html', {'user_taken': True, 'groups': all_groups})
         
         owner = False
         if status == ("professor" or "RSO"):
@@ -61,14 +64,13 @@ def register(request):
 
         new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
 
-        for group in groups:
-            add_group = Group.objects.get(name=group)
-            new_user.groups.add(add_group)
+        add_group = Group.objects.get(name=groups)
+        new_user.groups.add(add_group)
 
         return HttpResponseRedirect('/')
     
     c = Context ({
-        'groups': groups
+        'groups': all_groups,
         })
 
     c.update(csrf(request))
