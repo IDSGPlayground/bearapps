@@ -87,6 +87,10 @@ def register(request):
         add_group = Group.objects.get(name=groups)
         new_user.groups.add(add_group)
 
+        for app in App.objects.all():
+            new_user_app = User_Apps.objects.create(user=new_user,app_name=app.app_name,status="AVAILABLE",href_name=app.href_name)
+            #new_user.User_Apps.add(new_user_app)
+
         return HttpResponseRedirect('/')
 
     c.update(csrf(request))
