@@ -78,23 +78,30 @@ def register(request):
                 c.update(csrf(request))
                 return render_to_response('register.html', c)
         
+        # Creates admin functionality if professor or rso is selected.
         owner = False
-        if status == ("professor" or "RSO"):
+        if (status == "professor") or (status == "rso"):
             owner = True
 
+        # Initializes the new user.
         new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
 
+        # Adds the new user to selected group.
+        # If group exists, gets Group object, otherwise, creates a new group.
         try:
             add_group = Group.objects.get(name=groups)
         except: 
             add_group = Group.objects.create(name=groups)
         new_user.groups.add(add_group)
 
+        # Associates apps with the new user.
         for app in App.objects.all():
-            new_user_app = User_Apps.objects.create(user=new_user,app_name=app.app_name,status="AVAILABLE",href_name=app.href_name)
+            new_user_app = User_Apps.objects.create(user=new_user, app_name=app.app_name, status="AVAILABLE", href_name=app.href_name)
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
+
+        # Redirects user to the log in page.
         return HttpResponseRedirect('/')
 
     c.update(csrf(request))
