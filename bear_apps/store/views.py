@@ -10,6 +10,7 @@ from django.contrib import messages
 def home(request):
     not_user = False
     logout = False
+
     # Deletes session if logged in previously.
     try:
         del request.session['user']
@@ -22,20 +23,20 @@ def home(request):
             user = request.POST['user']
             if User.objects.get(name=user).password == request.POST['password']:
                 request.session['user'] = user
-                uid = User.objects.get(name=user).SID
-                request.session['uid'] = uid
+                sid = User.objects.get(name=user).SID
+                request.session['sid'] = sid
                 return HttpResponseRedirect('/browse/')
             else:
                 return render_to_response('index.html', c)
         except:
-            # Errors if user does not exist.
-            not_user = True
+            # Redirects to registration page if username does not exist.
             return HttpResponseRedirect('/register/')
 
     c = Context({
         'not_user': not_user,
         'logout': logout,
     })
+
     c.update(csrf(request))
     return render_to_response('index.html', c)
 
@@ -99,10 +100,6 @@ def register(request):
             add_group = Group.objects.create(name=groups)
         new_user.groups.add(add_group)
 
-        # Associates apps with the new user.
-        # for app in App.objects.all():
-        #     new_user_app = User_Apps.objects.create(user=new_user, app_name=app.app_name, status="AVAILABLE", href_name=app.href_name, date=timezone.now())
-
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
 
@@ -124,7 +121,6 @@ def browse(request):
         return HttpResponseRedirect('/admin/')
 
     user = User.objects.get(name=request.session['user'])
-    #notifications = user.notifications
 
     #Form handling; for POST requests to this view.
     apps = App.objects.all()
@@ -133,37 +129,33 @@ def browse(request):
         app = request.POST['app']
 
         # Write change to database.
-
         try:
             new_app = User_Apps.objects.get(href_name=app, user=user)
         except:
             app_object = App.objects.get(href_name=app)
-            new_app = User_Apps.objects.create(user=user, app_name=app_object.app_name, status="AVAILABLE", href_name=app)
+            new_app = User_Apps.objects.create(user=user, app=app_object, status="AVAILABLE")
 
         new_app.status="REQUESTED"
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
 
-    # Browse page for viewing (non-POST requests)
-    if 'uid' not in request.session:
-        request.session['uid'] = 000000
-
     app_states = []
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name).status
-            if state.lower()=="available":
+            status = User_Apps.objects.get(app=app, user=user).status
+            if status.lower()=="available":
                 app_states.append("app-btn-" + href_name)
-            elif state.lower()=="requested":
+            elif status.lower()=="requested":
                 app_states.append("requested-btn-" + href_name)
-            elif state.lower()=="downloadable":
+            elif status.lower()=="approved":
                 app_states.append("downloadable-btn-" + href_name)
         except:
             app_states.append("app-btn-" + href_name)
 
     messages = ["None"]
     notifications = 0
+
     try:
         messages = user.notification_set.all()
         notifications = len(messages)
@@ -178,12 +170,11 @@ def browse(request):
 
     groups = user.groups.all()
     groups = sorted(groups, key=lambda group: group.name)
-    print groups
 
     # Context and set-up
     c = Context({
             'username' : request.session['user'],
-            'uid' : request.session['uid'],
+            'sid' : request.session['sid'],
             'app_display' : app_display,
             'app_info' : app_info,
             'messages' : messages,
@@ -215,11 +206,11 @@ def myapps(request):
     for app in apps:
         href_name = app.href_name
         try:
-            state = user.user_apps_set.get(href_name=href_name).status
-            if state.lower()=="requested":
+            status = User_Apps.objects.get(app=app, user=user).status
+            if status.lower() == "requested":
                 app_states.append("requested-btn-" + href_name)
                 temp_app.append(app)
-            elif state.lower()=="downloadable":
+            elif status.lower() == "approved":
                 app_states.append("downloadable-btn-" + href_name)
                 temp_app.append(app)
         except:
@@ -275,36 +266,33 @@ def manage(request):
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
-            app = user_requested.user_apps_set.get(href_name=app)
+            app_object = App.objects.get(href_name=app)
+            app = user_requested.user_apps_set.get(app=app_object)
             app.chartstring = chartstring
             chartstring.budget = chartstring.budget - price
             chartstring.save()
-            app.status = "DOWNLOADABLE"
+            app.status = "APPROVED"
             app.save()
 
-            message = "You have been approved to download " + app.app_name
+            message = "You have been approved to download " + app_object.app_name
             notification = Notification(user=user_requested, message=message)
             notification.user = user_requested
             notification.save()
-
-            #user_requested.save()
-
 
         elif "revoke" in request.POST:
             app = request.POST['app']
             user_requested = User.objects.get(SID=request.POST['user'])
             # Write change to database.
-            app = user_requested.user_apps_set.get(href_name=app)
+            app_object = App.objects.get(href_name=app)
+            app = user_requested.user_apps_set.get(app=app_object)
             app.status="AVAILABLE"
             app.chartstring = None
             app.save()
 
-            message = "Your license for " + app.app_name + " has been revoked."
+            message = "Your license for " + app_object.app_name + " has been revoked."
             notification = Notification(user=user_requested, message=message)
             notification.user = user_requested
             notification.save()
-
-            #user_requested.save()
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'])
@@ -326,20 +314,17 @@ def manage(request):
         users_of_app[app] = []
         for member in members:
             try:
-                if member.user_apps_set.get(app_name=app.app_name).group in user.groups.all():
+                if member.user_apps_set.get(app=app).group in user.groups.all():
                     href_name = app.href_name
                     requested, downloadable = False, False
-                    status = User_Apps.objects.get(href_name=href_name, user=member).status
+                    status = User_Apps.objects.get(app=app, user=member).status
 
                     if status == "REQUESTED":
                         requested = True
-                    elif status == "DOWNLOADABLE":
+                    elif status == "APPROVED":
                         downloadable = True
 
                     chartstrings = []
-                    # for group in member.groups.all():
-                    #     for chartstring in group.chartstring_set.all():
-                    #         chartstrings.append(chartstring)
                     for group in user.groups.all():
                         for chartstring in group.chartstring_set.all():
                             chartstrings.append(chartstring)
@@ -382,9 +367,21 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
+    all_users = User.objects.all()
+    user_summary = {}
+    count = 0
+
+    for u in all_users:
+        if u != user:
+            user_summary[count] = []
+            user_summary[count].append((u, u.user_apps_set.all()))
+            count += 1
+
+    print user_summary
 
     c = Context({
-        
+        'user': user,
+        'user_summary': user_summary,
         })
 
     return render_to_response('admin.html', c)
