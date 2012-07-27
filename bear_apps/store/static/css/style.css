@@ -216,6 +216,19 @@ p.help-block.register-form {
   filter:alpha(opacity=70); /* For IE8 and earlier */
 }
 
+.modal-header select {
+  position:absolute;
+  right:150px;
+  top:42px;
+  width:auto;
+}
+
+.request-text {
+  position:absolute;
+  right: 215px;
+  top: 45px;
+}
+
 .modal-open .dropdown-menu {
   z-index: 2050;
 }
