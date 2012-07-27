@@ -5,6 +5,7 @@ from django.core.context_processors import csrf
 from django.utils import timezone
 from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
+from django.contrib import messages
 
 def home(request):
     not_user = False
@@ -190,8 +191,8 @@ def browse(request):
             'uid' : request.session['uid'],
             'app_display' : app_display,
             'app_info' : app_info,
-            'notifications' : notifications,
             'messages' : messages,
+            'notifications' : notifications,
             'groups' : groups,
             })
     try:
@@ -395,3 +396,4 @@ def admin(request):
 
 class RequestForm(forms.Form):
     app = forms.CharField()
+
