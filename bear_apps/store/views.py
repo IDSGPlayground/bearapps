@@ -80,12 +80,14 @@ def register(request):
                 return render_to_response('register.html', c)
         
         # Creates admin functionality if professor or rso is selected.
-        owner = False
+        user_type = "GENERAL"
         if (status == "professor") or (status == "rso"):
-            owner = True
+            user_type = "MANAGER"
+        elif (status == "admin"):
+            user_type = "ADMIN"
 
         # Initializes the new user.
-        new_user = User.objects.create(name=username, SID=SID, password=password, owner=owner)
+        new_user = User.objects.create(name=username, SID=SID, password=password, user_type=user_type)
 
         # Adds the new user to selected group.
         # If group exists, gets Group object, otherwise, creates a new group.
@@ -113,8 +115,11 @@ def browse(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
-    if User.objects.get(name=request.session['user']).owner:
+    if User.objects.get(name=request.session['user']).user_type == "MANAGER":
         return HttpResponseRedirect('/manage/')
+
+    elif User.objects.get(name=request.session['user']).user_type == "ADMIN":
+        return HttpResponseRedirect('/admin/')
 
     user = User.objects.get(name=request.session['user'])
     #notifications = user.notifications
@@ -372,10 +377,14 @@ def manage(request):
 
     return render_to_response('manage.html', c)
 
-class RequestForm(forms.Form):
-    app = forms.CharField()
+def admin(request):
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
 
-# Log In Form
-class LogInForm(forms.Form):
-    user = forms.CharField()
-    password = forms.CharField()
+    user = User.objects.get(name=request.session['user'])
+
+    c = Context({
+        
+        })
+
+    return render_to_response('admin.html', c)
