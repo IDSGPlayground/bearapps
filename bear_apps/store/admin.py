@@ -11,13 +11,11 @@ class ChartstringInline(admin.TabularInline):
 	model = Chartstring
 
 class UserAdmin(admin.ModelAdmin):
-    fields = ['name', 'password', 'SID', 'owner']
+    fields = ['name', 'password', 'SID', 'user_type']
     inlines = [AppsInline, UsersInLine]
 
 class GroupAdmin(admin.ModelAdmin):
 	inlines = [UsersInLine]
-
-
 
 admin.site.register(User, UserAdmin)
 admin.site.register(App)
