@@ -100,8 +100,8 @@ def register(request):
         new_user.groups.add(add_group)
 
         # Associates apps with the new user.
-        for app in App.objects.all():
-            new_user_app = User_Apps.objects.create(user=new_user, app_name=app.app_name, status="AVAILABLE", href_name=app.href_name)
+        # for app in App.objects.all():
+        #     new_user_app = User_Apps.objects.create(user=new_user, app_name=app.app_name, status="AVAILABLE", href_name=app.href_name, date=timezone.now())
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
@@ -129,25 +129,20 @@ def browse(request):
     #Form handling; for POST requests to this view.
     apps = App.objects.all()
     if request.method == 'POST':
-        for temp_app in apps:
-            try:
-                user.user_apps_set.get(href_name=temp_app.href_name)
-            except:
-                temp_app = User_Apps(app_name=temp_app.app_name, href_name=temp_app.href_name, status="AVAILABLE")
-                temp_app.user = user
-                temp_app.save()
-
         form = RequestForm(request.POST)
         app = request.POST['app']
 
         # Write change to database.
-        app = User_Apps.objects.get(href_name=app, user=user)
-        app.status="REQUESTED"
-        app.date= timezone.now()
-        #print app.date
-        app.group = Group.objects.get(name=request.POST['mygroup'])
-        app.save()
-        print user.user_apps_set.get(href_name=app.href_name)
+
+        try:
+            new_app = User_Apps.objects.get(href_name=app, user=user)
+        except:
+            app_object = App.objects.get(href_name=app)
+            new_app = User_Apps.objects.create(user=user, app_name=app_object.app_name, status="AVAILABLE", href_name=app)
+
+        new_app.status="REQUESTED"
+        new_app.group = Group.objects.get(name=request.POST['mygroup'])
+        new_app.save()
 
     # Browse page for viewing (non-POST requests)
     if 'uid' not in request.session:
