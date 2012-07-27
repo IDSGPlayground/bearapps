@@ -121,6 +121,7 @@
                 <input type="radio" name="status" value="grad"> Graduate</input><br />
                 <input type="radio" name="status" value="professor"> Professor</input><br />
                 <input type="radio" name="status" value="rso"> RSO</input><br />
+                <input type="radio" name="status" value="admin"> Admin</input><br />
               </div>
             </div>
 
@@ -144,7 +145,7 @@ var num_groups = 1;
 genGroups();
 
 $('.add-group').click(function(event){
-  num_groups++;
+  num_groups+=1;
   genGroups();
 });
 
@@ -152,14 +153,15 @@ $('.add-group').click(function(event){
 function genGroups(){
   saved = '[{% for group in groups %}{{ group.name }}, {% endfor %}]';
   $('#adding-groups').html('');
-  console.log("here");
 
-  for (i=0; i < num_groups; i++){
+  var i;
+  for (i=0; i < num_groups; i++) {
     $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
   }
 
   $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" class="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
 }
+
 </script>
 
 <script src="../static/js/jquery.js"></script>
