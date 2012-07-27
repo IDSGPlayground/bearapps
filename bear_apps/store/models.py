@@ -19,7 +19,6 @@ class User(models.Model):
 	SID = models.IntegerField()
 	owner = models.BooleanField()
 	groups = models.ManyToManyField('Group', null=True, blank=True)
-	notifications = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return self.name + ", " + str(self.SID)

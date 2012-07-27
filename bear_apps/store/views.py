@@ -117,7 +117,7 @@ def browse(request):
         return HttpResponseRedirect('/manage/')
 
     user = User.objects.get(name=request.session['user'])
-    notifications = user.notifications
+    #notifications = user.notifications
 
     #Form handling; for POST requests to this view.
     apps = App.objects.all()
@@ -157,11 +157,13 @@ def browse(request):
         except:
             app_states.append("app-btn-" + href_name)
 
+    messages = ["None"]
+    notifications = 0
     try:
         messages = user.notification_set.all()
+        notifications = len(messages)
     except:
-        messages = ["None"]
-
+        pass
 
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
@@ -201,7 +203,6 @@ def myapps(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    notifications = user.notifications
 
     apps = App.objects.all()
     app_states = []
@@ -230,10 +231,13 @@ def myapps(request):
     else:
         no_apps = False
 
+    messages = ["None"]
+    notifications = 0
     try:
         messages = user.notification_set.all()
+        notifications = len(messages)
     except:
-        messages = ["None"]
+        pass
 
     c = Context({
         'username' : request.session['user'],
@@ -278,8 +282,7 @@ def manage(request):
             notification.user = user_requested
             notification.save()
 
-            user_requested.notifications += 1
-            user_requested.save()
+            #user_requested.save()
 
 
         elif "revoke" in request.POST:
@@ -296,8 +299,7 @@ def manage(request):
             notification.user = user_requested
             notification.save()
 
-            user_requested.notifications += 1
-            user_requested.save()
+            #user_requested.save()
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'])
