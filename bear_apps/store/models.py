@@ -3,7 +3,7 @@ from django.db import models
 app_status = (
     ('AVAILABLE', 'AVAILABLE'),
     ('REQUESTED','REQUESTED'),
-    ('DOWNLOADABLE' , 'DOWNLOADABLE'),
+    ('APPROVED' , 'APPROVED'),
     ('UPDATES AVAILABLE', 'UPDATES AVAILABLE'),
 )
 
@@ -21,24 +21,23 @@ class User(models.Model):
 
 class User_Apps(models.Model):
     user = models.ForeignKey('User')
+    app = models.ForeignKey('App')
     date = models.DateField(auto_now=True, auto_now_add=True)
-    app_name = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=app_status)
-    href_name = models.CharField(max_length=200)
     chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
     group = models.ForeignKey('Group', null=True, blank=True)
 
     def __unicode__(self):
-        return "Name: " + str(self.user.name) + "\nID:  " + str(self.user.SID)+ "\nApp Name: "+self.app_name
+        return "User: " + str(self.user.name) +  "\nApp Name: " + str(self.app.app_name) + "\nStatus: " + str(self.status)
 
 class App(models.Model):
     app_name = models.CharField(max_length=200)
-    price = models.IntegerField()
     href_name = models.CharField(max_length=200)
+    price = models.IntegerField()
     description = models.TextField(max_length=1000)
-    Sysreq_windows = models.TextField(max_length=1000)
-    Sysreq_linux = models.TextField(max_length=1000)
-    Sysreq_mac = models.TextField(max_length=1000)
+    windows = models.TextField(max_length=1000)
+    linux = models.TextField(max_length=1000)
+    mac = models.TextField(max_length=1000)
     obtain = models.TextField(max_length=1000)
 
     def __unicode__(self):
