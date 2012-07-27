@@ -269,7 +269,7 @@ def manage(request):
             app_object = App.objects.get(href_name=app)
             app = user_requested.user_apps_set.get(app=app_object)
             app.chartstring = chartstring
-            chartstring.budget = chartstring.budget - price
+            chartstring.remaining = chartstring.remaining - price
             chartstring.save()
             app.status = "APPROVED"
             app.save()
@@ -295,14 +295,17 @@ def manage(request):
             notification.save()
 
         elif "new" in request.POST:
-            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'])
+            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'], remaining=request.POST['amount'], manager=user)
             new_chartstring.group = Group.objects.get(name=request.POST['group'])
             new_chartstring.save()
 
+        request.method = None
+
     users_of_app = {}
     chart_history = {} 
-    for item in Chartstring.objects.all():
-        chart_history[item]=item.user_apps_set.all()
+    for chartstring in Chartstring.objects.all():
+        chart_history[chartstring] = chartstring.user_apps_set.all()
+
     for app in App.objects.all():
         # Generates a list of all members in all groups associated with the user.
         members = []
@@ -380,7 +383,7 @@ def admin(request):
     print user_summary
 
     c = Context({
-        'user': user,
+        'username': user.name,
         'user_summary': user_summary,
         })
 
