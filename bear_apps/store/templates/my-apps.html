@@ -17,6 +17,11 @@
 {% endblock %}
 
 {% block apps %}
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="well hero-unit">
+        <div class="row-fluid">
+
 {% for app, state in app_display.items %}
 <a href="#{{ app }}"
    data-toggle="modal"
@@ -29,6 +34,12 @@
    {{ app_info|lookup:app }}</a>
 {% endfor %}
 {% if no_apps %}<h3>There are currently no apps to display.</h3>{% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block content %}

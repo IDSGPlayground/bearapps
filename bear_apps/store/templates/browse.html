@@ -17,6 +17,10 @@
 {% endblock %}
 
 {% block apps %}
+  <div class="row-fluid">
+    <div class="span12">
+      <div class="well hero-unit">
+        <div class="row-fluid">
 
 {% for app, state in app_display.items %}
 <a href="#{{ app }}"
@@ -30,11 +34,14 @@
    {{ app_info|lookup:app }}</a>
 {% endfor %}
 
-
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block content %}
-
 {% for app, state in app_display.items %}
 {% with info=app_info|lookup:app %}
   <div class="modal fade hide" id="{{ app }}">
@@ -54,7 +61,6 @@
       	<button type="button" class="close" data-dismiss="modal">×</button>
       	<h3><img src="../static/img/matlab-icon-small.png" />{{ info.app_name }}</h3>
   	</div>
-
   	<div class="modal-body">
   		<ul id="{{ app }}-tabs" class="nav nav-tabs">
   			<li class="active">
@@ -67,7 +73,6 @@
   				<a href="#obtain-{{ app }}" data-toggle="tab">How to Obtain MatLab</a>
   			</li>
   		</ul>
-
   		<div class="tab-content" id="{{ app }}-tabs-content">
   			<div class="tab-pane fade active in" id="descrip-{{ app }}">
           <h2>Description</h2>
@@ -91,15 +96,11 @@
 {% endfor %}
 
 <script>
-
 {% for app, state in app_display.items %}
-
  $('{{ app }}-tabs').click(function (e) {
    e.preventDefault();
    $(this).tab('show');
  })
-
 {% endfor %}
-
 </script>
 {% endblock %}
