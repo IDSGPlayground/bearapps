@@ -33,14 +33,16 @@
 
                   {% for key, user in user_summary.items %}
                       {% for user_info, user_apps in user %}  
-                        {% for app in user_apps %}       
+                        {% for app in user_apps %}  
+                          {% if app.status == 'APPROVED' %}     
                           <tr>
-                            <td></td>
+                            <td>{{ app.chartstring }}</td>
                             <td>{{ user_info.name }}</td>
-                            <td>{{ app.app_name }}</td>
-                            <td>{{ app.price }}</td>
-                            <td></td>
+                            <td>{{ app.app.app_name }}</td>
+                            <td>${{ app.app.price }}</td>
+                            <td>{{ app.chartstring.manager }}</td>
                           </tr>
+                          {% endif %}
                         {% endfor %}
                       {% endfor %}
                   {% endfor %}
