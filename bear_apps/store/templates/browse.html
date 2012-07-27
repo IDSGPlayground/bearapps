@@ -46,17 +46,24 @@
 {% with info=app_info|lookup:app %}
   <div class="modal fade hide" id="{{ app }}">
     <div class="modal-header">
+      {% if 'app-btn' in state %}
+      <div class="request-text">
+        <p>request from group:</p>
+      </div>
+      {% endif %}
       <form method="post" action="/browse/">
         {% csrf_token %}
         <input type="hidden" name="app" value="{{ app }}">
-        <select name="mygroup">
+        {% if 'app-btn' in state %}
+        <select name="mygroup" class="request-selection">
             {% for group in groups %}
               <option value="{{ group.name }}">{{ group.name }}</option>
             {% endfor %}
         </select>
+        {% endif %}
         <input type="submit"
-               value="{% if 'requested-btn' in state %}ALREADY REQUESTED{% else %}REQUEST{% endif%}"
-               class="request-btn" {% if 'requested-btn' in state %}DISABLED{% else %}{% endif %}>
+               value="{% if 'app-btn' in state %}REQUEST{% endif %}{% if 'requested-btn' in state %}ALREADY REQUESTED{% endif %}{% if 'downloadable-btn' in state %}DOWNLOADABLE{% endif %}"
+               class="request-btn" {% if 'requested-btn' in state or 'downloadable-btn' in state %}DISABLED{% endif %}>
       </form>
       	<button type="button" class="close" data-dismiss="modal">×</button>
       	<h3><img src="../static/img/matlab-icon-small.png" />{{ info.app_name }}</h3>
