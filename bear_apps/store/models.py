@@ -21,7 +21,7 @@ class User(models.Model):
 
 class User_Apps(models.Model):
     user = models.ForeignKey('User')
-    date = models.DateField(auto_now=True)
+    date = models.DateField(auto_now=True, auto_now_add=True)
     app_name = models.CharField(max_length=200)
     status = models.CharField(max_length=20, choices=app_status)
     href_name = models.CharField(max_length=200)
