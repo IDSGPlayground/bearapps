@@ -2,6 +2,7 @@ from django.template import Context, loader
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.core.context_processors import csrf
+from django.utils import timezone
 from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
 
@@ -141,8 +142,11 @@ def browse(request):
         # Write change to database.
         app = User_Apps.objects.get(href_name=app, user=user)
         app.status="REQUESTED"
+        app.date= timezone.now()
+        #print app.date
         app.group = Group.objects.get(name=request.POST['mygroup'])
         app.save()
+        print user.user_apps_set.get(href_name=app.href_name)
 
     # Browse page for viewing (non-POST requests)
     if 'uid' not in request.session:
@@ -388,3 +392,6 @@ def admin(request):
         })
 
     return render_to_response('admin.html', c)
+
+class RequestForm(forms.Form):
+    app = forms.CharField()
