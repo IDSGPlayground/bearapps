@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block nav %}
+<li class="active"><a href="../admin/">Admin</a></li>
+{% endblock %}
+
+{% block title %}
+<h1>ADMIN</h1><br /><br />
+{% endblock %}
+
+{% block content %}
+    <div class="row-fluid">
+        <div class="span12">
+          <ul id="manage-tabs" class="nav nav-tabs">
+            <li class="active"><a href="#requested" data-toggle="tab">Requested &amp; Current Licenses</a></li>
+            <li><a href="#groups" data-toggle="tab">Groups</a></li>
+            <li><a href="#chartstrings" data-toggle="tab">Chartstrings</a></li>
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="requested">
+            </div>
+          </div>
+          
+        </div>
+    </div>
+{% endblock %}
