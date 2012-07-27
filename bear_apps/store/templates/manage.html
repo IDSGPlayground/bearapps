@@ -36,7 +36,7 @@
 								</select>
 								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
 								<input type="hidden" name="user" value="{{ user_info.SID }}"></input>
-								</br>
+								</br></br>
 								<input type="submit"
 								       value="Approve License"
 								       name="approve"
@@ -116,7 +116,7 @@
 		<label> Budget: </label>
 		<input type="text" name="amount"></input>
 
-		</br>
+		</br></br>
 		<input type="submit"
 		       value="Add Chartstring"
 		       name="new"
@@ -149,9 +149,34 @@
 		    	<button type="button" class="close" data-dismiss="modal">×</button>
  	</div>
   	<div class="modal-body">
-  		{% for item in chartstring_info %}
-			<li>{{ item }}</li>
-		{% endfor %}
+		<table class="table table-striped">
+	        <thead>
+	          <tr>
+	            <th>User</th>
+	            <th>Description</th>
+	            <th>Price</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+
+	       		{% for item in chartstring_info %}	
+				<tr>
+					<td>{{ item.user.name }}</td>
+					<td>{{ item.app.app_name }}</td>
+					<td>${{ item.app.price }}</td>
+				</tr>
+				{% endfor %}
+
+				<tr>
+					<td></td>
+	        		<td><strong>Starting Budget: </strong>{{ chartstring.budget }}</td>
+	        		<td><strong>Remaining Budget: </strong>{{ chartstring.remaining }}</td>
+	        		
+	        	</tr>  
+
+	        </tbody>
+	    </table>
+
 	</div>
      </div>
 {% endfor %}
