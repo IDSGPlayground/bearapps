@@ -17,15 +17,15 @@ class User(models.Model):
     groups = models.ManyToManyField('Group', null=True, blank=True)
 
     def __unicode__(self):
-        return self.name + ", " + str(self.SID)
+        return self.name
 
 class User_Apps(models.Model):
     user = models.ForeignKey('User')
     app = models.ForeignKey('App')
-    date = models.DateField(auto_now=True, auto_now_add=True)
-    status = models.CharField(max_length=20, choices=app_status)
     chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
     group = models.ForeignKey('Group', null=True, blank=True)
+    date = models.DateField(auto_now=True, auto_now_add=True)
+    status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):
         return "User: " + str(self.user.name) +  "\nApp Name: " + str(self.app.app_name) + "\nStatus: " + str(self.status)
@@ -51,8 +51,10 @@ class Group(models.Model):
 class Chartstring(models.Model):
     nickname = models.CharField(max_length=200, default="")
     chartstring = models.CharField(max_length=200, default="")
+    manager = models.ForeignKey('User')
     group = models.ForeignKey('Group')
     budget = models.IntegerField()
+    remaining = models.IntegerField()
 
     def __unicode__(self):
         return self.nickname
