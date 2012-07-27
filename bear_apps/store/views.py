@@ -217,7 +217,7 @@ def myapps(request):
                 app_states.append("downloadable-btn-" + href_name)
                 temp_app.append(app)
         except:
-            app_states.append('app-btn-' + href_name)
+            pass
 
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
