@@ -49,6 +49,23 @@
 
                 </tbody>
               </table>
+
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Chartstring</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for chart in chartstrings %}
+                    <tr>
+                      <td>{{ chart.nickname }}</td>
+                      <td>{{ chart.chartstring }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
           </div>
           
