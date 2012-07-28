@@ -6,6 +6,7 @@ from django.utils import timezone
 from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
 from django.contrib import messages
+from store.notifications import addNotification
 
 def home(request):
     not_user = False
@@ -274,10 +275,7 @@ def manage(request):
             app.status = "APPROVED"
             app.save()
 
-            message = "You have been approved to download " + app_object.app_name
-            notification = Notification(user=user_requested, message=message)
-            notification.user = user_requested
-            notification.save()
+            addNotification(user = user_requested, app = app_object, code = 'approve')
 
         elif "revoke" in request.POST:
             app = request.POST['app']
@@ -289,10 +287,7 @@ def manage(request):
             app.chartstring = None
             app.save()
 
-            message = "Your license for " + app_object.app_name + " has been revoked."
-            notification = Notification(user=user_requested, message=message)
-            notification.user = user_requested
-            notification.save()
+            addNotification(user = user_requested, app = app_object, code = 'revoke')
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'], remaining=request.POST['amount'], manager=user)
@@ -382,9 +377,12 @@ def admin(request):
 
     print user_summary
 
+    chartstrings = Chartstring.objects.all()
+
     c = Context({
         'username': user.name,
         'user_summary': user_summary,
+        'chartstrings': chartstrings,
         })
 
     return render_to_response('admin.html', c)

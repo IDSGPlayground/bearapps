@@ -62,6 +62,8 @@ class Chartstring(models.Model):
 class Notification(models.Model):
     user = models.ForeignKey('User')
     message = models.CharField(max_length=200)
+    viewed = models.BooleanField()
+    date = models.DateTimeField(auto_now=True, auto_now_add=True)
 
     def __unicode__(self):
         return self.message
