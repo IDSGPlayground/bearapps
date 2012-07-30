@@ -283,9 +283,10 @@ def manage(request):
             # Write change to database.
             app_object = App.objects.get(href_name=app)
             app = user_requested.user_apps_set.get(app=app_object)
-            app.status="AVAILABLE"
-            app.chartstring = None
-            app.save()
+            app.delete()
+            # app.status="AVAILABLE"
+            # app.chartstring = None
+            # app.save()
 
             addNotification(user = user_requested, app = app_object, code = 'revoke')
 
