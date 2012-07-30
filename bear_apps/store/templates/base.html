@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+				<a class="btn dropdown-toggle" alt="User Pulldown Menu" data-toggle="dropdown" href="#">
 					<i class="icon-user"></i>
 					{{ username }}
 					<span class="caret"></span>
@@ -50,9 +50,9 @@
 
 			<div class="btn-group pull-right">
 				{% if notifications > 0 %}
-				<a class="btn btn-danger dropdown-toggle" data-toggle="dropdown" href="#">
+				<a class="btn btn-danger dropdown-toggle" alt="You have {{notifications}} notifications" data-toggle="dropdown" href="#">
 				{% else %}
-				<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+				<a class="btn btn-primary dropdown-toggle" alt="You have no notifications" data-toggle="dropdown" href="#">
 				{% endif %}
 				<i class="icon-bell icon-white"></i> {{ notifications }}
 				<span class="caret"></span>
