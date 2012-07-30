@@ -6,7 +6,7 @@ from django.utils import timezone
 from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
 from django.contrib import messages
-from store.notifications import addNotification
+from store.notifications import addNotification, getNotifications
 
 def home(request):
     not_user = False
@@ -154,14 +154,8 @@ def browse(request):
         except:
             app_states.append("app-btn-" + href_name)
 
-    messages = ["None"]
-    notifications = 0
-
-    try:
-        messages = user.notification_set.all()
-        notifications = len(messages)
-    except:
-        pass
+    messages = getNotifications(user)
+    notifications = len(messages)
 
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
@@ -284,9 +278,6 @@ def manage(request):
             app_object = App.objects.get(href_name=app)
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
-            # app.status="AVAILABLE"
-            # app.chartstring = None
-            # app.save()
 
             addNotification(user = user_requested, app = app_object, code = 'revoke')
 
