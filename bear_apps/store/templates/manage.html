@@ -135,7 +135,23 @@
 		  	</div>
 		  	<div class="modal-body">
 		  		<h4>Requests</h4>
+
 		  		<h4>Licenses</h4>
+		  		<table class="table table-striped">
+		  			<tbody>
+				  		{% for chartstring, chartstring_info in chart_history.items %}
+				  			{% for item in chartstring_info %}
+				  				{% if item.user.name == member.name %}
+				  				<tr>
+								<td>{{ item.app.app_name }}</td>
+								<td>{{ item.date }}</td>
+								<td>${{ item.app.price }}</td>
+								</tr>
+								{% endif %}
+							{% endfor %}
+						{% endfor %}
+					</tbody>
+				</table>
 		    </div>
 		 </div>
 		{% endfor %}
