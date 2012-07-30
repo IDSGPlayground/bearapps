@@ -154,6 +154,7 @@
 	          <tr>
 	            <th>User</th>
 	            <th>Description</th>
+		    <th>Date Approved</th>
 	            <th>Price</th>
 	          </tr>
 	        </thead>
@@ -163,6 +164,7 @@
 				<tr>
 					<td>{{ item.user.name }}</td>
 					<td>{{ item.app.app_name }}</td>
+					<td>{{ item.date }}</td>
 					<td>${{ item.app.price }}</td>
 				</tr>
 				{% endfor %}

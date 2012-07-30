@@ -24,7 +24,8 @@ class User_Apps(models.Model):
     app = models.ForeignKey('App')
     chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
     group = models.ForeignKey('Group', null=True, blank=True)
-    date = models.DateField(auto_now=True, auto_now_add=True)
+    #date = models.DateField(auto_now=True, auto_now_add=True)
+    date = models.DateField("Date Accepted", null=True, blank=True)
     status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):

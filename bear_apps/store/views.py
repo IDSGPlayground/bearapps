@@ -7,6 +7,7 @@ from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
 from django.contrib import messages
 from store.notifications import addNotification, getNotifications
+from datetime import date
 
 def home(request):
     not_user = False
@@ -266,6 +267,8 @@ def manage(request):
             app.chartstring = chartstring
             chartstring.remaining = chartstring.remaining - price
             chartstring.save()
+            app.date= date.today()
+            print app.date
             app.status = "APPROVED"
             app.save()
 

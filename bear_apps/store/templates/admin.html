@@ -25,6 +25,7 @@
                     <th>Chartstring</th>
                     <th>Username</th>
                     <th>Description</th>
+		    <th>Date Approved</th>
                     <th>Price</th>
                     <th>RSO</th>
                   </tr>
@@ -39,6 +40,7 @@
                             <td>{{ app.chartstring }}</td>
                             <td>{{ user_info.name }}</td>
                             <td>{{ app.app.app_name }}</td>
+			    <td>{{ app.date }}</td>
                             <td>${{ app.app.price }}</td>
                             <td>{{ app.chartstring.manager }}</td>
                           </tr>
