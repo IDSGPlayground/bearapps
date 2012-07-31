@@ -102,6 +102,9 @@
 {% endwith %}
 {% endfor %}
 
+{% endblock %}
+
+{% block javascript %}
 <script>
 {% for app, state in app_display.items %}
  $('{{ app }}-tabs').click(function (e) {
