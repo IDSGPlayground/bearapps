@@ -111,6 +111,7 @@
               <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
                 <div id="adding-groups"></div>
+                <a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>
               </div>
             </div>
 
@@ -125,8 +126,10 @@
               </div>
             </div>
 
+            <div id="group_count"></div>
+
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" name="register" class="btn btn-primary">Register</button>
                 <button class="btn">Cancel</button>
             </div>
           </fieldset>
@@ -140,32 +143,31 @@
 
 <!-- Le javascript
 ================================================== -->
-<script>
-var num_groups = 1;
-genGroups();
+<script src="../static/js/jquery.js"></script>
 
-$('.add-group').click(function(event){
-  num_groups += 1;
-  genGroups();
+<script>
+var group_count = 1;
+groupCount(group_count);
+genGroups(group_count);
+
+$('#add-group').click(function(event){
+  event.preventDefault();
+  group_count += 1;
+  genGroups(group_count);
+  groupCount(group_count);
 });
 
 
-function genGroups(){
-  $('#adding-groups').html('');
+function genGroups(group_count){
+  $('#adding-groups').append('<input type="text" name="groups-' + group_count + '" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
+}
 
-  var i;
-  for (i=0; i < num_groups; i++) {
-    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
-  }
-
-  $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" class="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
-
-  console.log($('#adding-groups').html());
+function groupCount(group_count){
+  $('#group_count').html('<input type="hidden" name="group_count" value="' + group_count + '"></input>')
 }
 
 </script>
 
-<script src="../static/js/jquery.js"></script>
 <script src="../static/js/bootstrap-transition.js"></script>
 <script src="../static/js/bootstrap-alert.js"></script>
 <script src="../static/js/bootstrap-modal.js"></script>
