@@ -111,7 +111,7 @@
               <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
                 <div id="adding-groups"></div>
-              </input><a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>
+                <a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>
               </div>
             </div>
 
@@ -125,6 +125,8 @@
                 <input type="radio" name="status" value="admin"> Admin</input><br />
               </div>
             </div>
+
+            <div id="group_count"></div>
 
             <div class="form-actions">
                 <button type="submit" name="register" class="btn btn-primary">Register</button>
@@ -144,16 +146,24 @@
 <script src="../static/js/jquery.js"></script>
 
 <script>
-genGroups();
+var group_count = 1;
+groupCount(group_count);
+genGroups(group_count);
 
 $('#add-group').click(function(event){
   event.preventDefault();
-  genGroups();
+  group_count += 1;
+  genGroups(group_count);
+  groupCount(group_count);
 });
 
 
-function genGroups(){
-  $('#adding-groups').append('<input type="text" name="groups[]" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
+function genGroups(group_count){
+  $('#adding-groups').append('<input type="text" name="groups-' + group_count + '" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
+}
+
+function groupCount(group_count){
+  $('#group_count').html('<input type="hidden" name="group_count" value="' + group_count + '"></input>')
 }
 
 </script>

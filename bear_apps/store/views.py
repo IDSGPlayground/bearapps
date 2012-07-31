@@ -56,9 +56,10 @@ def register(request):
             SID = request.POST['SID']
             password = request.POST['password']
             verify = request.POST['verify-password']
-            groups = request.POST['groups[]']
-            print "here"
-            print groups
+            group_count = int(request.POST['group_count'])
+            groups = []
+            for i in range(1, group_count + 1):
+                groups.append(request.POST['groups-' + str(i)])
             status = request.POST['status']
         except:
             c = Context ({
@@ -99,11 +100,12 @@ def register(request):
 
         # Adds the new user to selected group.
         # If group exists, gets Group object, otherwise, creates a new group.
-        try:
-            add_group = Group.objects.get(name=groups)
-        except: 
-            add_group = Group.objects.create(name=groups)
-        new_user.groups.add(add_group)
+        for group in groups:
+            try:
+                add_group = Group.objects.get(name=group)
+            except: 
+                add_group = Group.objects.create(name=group)
+            new_user.groups.add(add_group)
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
