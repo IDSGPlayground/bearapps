@@ -124,22 +124,25 @@ def browse(request):
 
     user = User.objects.get(name=request.session['user'])
 
-    #Form handling; for POST requests to this view.
+    # Form handling; for POST requests to this view.
     apps = App.objects.all()
     if request.method == 'POST':
         form = RequestForm(request.POST)
         app = request.POST['app']
+        app_object = App.objects.get(href_name=app)
 
         # Write change to database.
         try:
-            new_app = User_Apps.objects.get(href_name=app, user=user)
+            new_app = User_Apps.objects.get(app=app_object, user=user)
         except:
-            app_object = App.objects.get(href_name=app)
             new_app = User_Apps.objects.create(user=user, app=app_object, status="AVAILABLE")
 
         new_app.status="REQUESTED"
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
+
+        # Resets request.method, so that POST data is no longer stored.
+        request.method = None
 
     app_states = []
     for app in apps:
