@@ -145,13 +145,12 @@ var num_groups = 1;
 genGroups();
 
 $('.add-group').click(function(event){
-  num_groups+=1;
+  num_groups += 1;
   genGroups();
 });
 
 
 function genGroups(){
-  saved = '[{% for group in groups %}{{ group.name }}, {% endfor %}]';
   $('#adding-groups').html('');
 
   var i;
@@ -160,6 +159,8 @@ function genGroups(){
   }
 
   $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" class="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
+
+  console.log($('#adding-groups').html());
 }
 
 </script>

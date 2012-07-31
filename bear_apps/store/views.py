@@ -1,15 +1,18 @@
-from django.template import Context, loader
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.template import Context
+from django.http import HttpResponseRedirect
+from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
-from django.utils import timezone
 from django import forms
 from store.models import User, User_Apps, App, Notification, Chartstring, Group
 from django.contrib import messages
 from store.notifications import addNotification, getNotifications
 from datetime import date
-from operator import attrgetter
 
+# Defines the login page for bearapps.
+# If the user enters a valid username/password combination, 
+# he or she will be redirected to browse. If the user enters in an invalid 
+# password, he or she will be redirected back to the blank login. If the user 
+# enters an invalid username, home will redirect user to the register page.
 def home(request):
     not_user = False
     logout = False
@@ -29,8 +32,8 @@ def home(request):
                 sid = User.objects.get(name=user).SID
                 request.session['sid'] = sid
                 return HttpResponseRedirect('/browse/')
-            else:
-                return render_to_response('index.html', c)
+            # else:
+            #     return render_to_response('index.html', c)
         except:
             # Redirects to registration page if username does not exist.
             return HttpResponseRedirect('/register/')
@@ -43,7 +46,10 @@ def home(request):
     c.update(csrf(request))
     return render_to_response('index.html', c)
 
+
 def register(request):
+    # Creates a front end interface to register new users.
+    # Note: If the username already exists, the user will not be registered
     all_groups = Group.objects.all()
     c = Context ({
     'groups': all_groups,
@@ -93,7 +99,11 @@ def register(request):
             user_type = "ADMIN"
 
         # Initializes the new user.
-        new_user = User.objects.create(name=username, SID=SID, password=password, user_type=user_type)
+        new_user = User.objects.create(
+            name=username, 
+            SID=SID, password=password, 
+            user_type=user_type,
+            )
 
         # Adds the new user to selected group.
         # If group exists, gets Group object, otherwise, creates a new group.
@@ -112,6 +122,7 @@ def register(request):
     c.update(csrf(request))
     return render_to_response('register.html', c)
 
+# Manages the browse view, handles requesting of an app from a general user
 def browse(request):
     #If user is not logged in redirects to log in page.
     if 'user' not in request.session:
@@ -128,7 +139,6 @@ def browse(request):
     # Form handling; for POST requests to this view.
     apps = App.objects.all()
     if request.method == 'POST':
-        form = RequestForm(request.POST)
         app = request.POST['app']
         app_object = App.objects.get(href_name=app)
 
@@ -136,9 +146,11 @@ def browse(request):
         try:
             new_app = User_Apps.objects.get(app=app_object, user=user)
         except:
-            new_app = User_Apps.objects.create(user=user, app=app_object, status="AVAILABLE")
+            new_app = User_Apps.objects.create(user=user, 
+                app=app_object, 
+                status="AVAILABLE")
 
-        new_app.status="REQUESTED"
+        new_app.status = "REQUESTED"
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
         
@@ -167,7 +179,7 @@ def browse(request):
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
     # app_info: key = app's href name and value = the app object from App.objects.all()
-    app_display = dict([(apps[x].href_name,app_states[x]) for x in range(len(apps))])
+    app_display = dict([(apps[x].href_name, app_states[x]) for x in range(len(apps))])
     app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
 
     groups = user.groups.all()
@@ -196,6 +208,7 @@ def browse(request):
 
     return render_to_response('browse.html', c)
 
+# Creates the information necessary for the myapps page
 def myapps(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
@@ -221,7 +234,7 @@ def myapps(request):
     # Dictionary for displaying applications and their statuses.
     # app_display: key = app's href name and value = 'available' or 'requested'
     # app_info: key = app's href name and value = the app object from App.objects.all()
-    app_display = dict([(temp_app[x].href_name,app_states[x]) for x in range(len(app_states))])
+    app_display = dict([(temp_app[x].href_name, app_states[x]) for x in range(len(app_states))])
     app_info = dict([(temp_app[x].href_name, temp_app[x]) for x in range(len(app_states))])
 
     if len(temp_app) == 0:
@@ -273,7 +286,7 @@ def manage(request):
             app.chartstring = chartstring
             chartstring.remaining = chartstring.remaining - price
             chartstring.save()
-            app.date= date.today()
+            app.date = date.today()
             print app.date
             app.status = "APPROVED"
             app.save()
@@ -319,7 +332,6 @@ def manage(request):
         for member in members:
             try:
                 if member.user_apps_set.get(app=app).group in user.groups.all():
-                    href_name = app.href_name
                     requested, downloadable = False, False
                     status = User_Apps.objects.get(app=app, user=member).status
 
@@ -366,19 +378,13 @@ def manage(request):
 
     return render_to_response('manage.html', c)
 
+# Manages the admin view, generates a dictionary containing the user and all apps related to the user
 def admin(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
     all_users = User.objects.all()
-    all_user_apps = User_Apps.objects.all()
-    all_accepted_apps=[]
-    for app in all_user_apps:
-        if app.status=="APPROVED":
-            all_accepted_apps.append(app)
-    sorted_by_chartstring = sorted(all_accepted_apps, key=attrgetter('chartstring.nickname'))
-    sorted_by_group = sorted(Group.objects.all(), key=attrgetter('name'))
     user_summary = {}
     count = 0
 
@@ -394,8 +400,6 @@ def admin(request):
         'username': user.name,
         'user_summary': user_summary,
         'chartstrings': chartstrings,
-        'sorted_by_chartstring' : sorted_by_chartstring,
-        'sorted_by_group' : sorted_by_group,
         })
 
     return render_to_response('admin.html', c)
