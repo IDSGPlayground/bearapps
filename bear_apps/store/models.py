@@ -10,9 +10,9 @@ app_status = (
 user_types = (('GENERAL', 'GENERAL'), ('ADMIN', 'ADMIN'), ('MANAGER', 'MANAGER'))
 
 class User(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
-    SID = models.IntegerField()
+    SID = models.IntegerField(unique=True)
     user_type = models.CharField(max_length=10, choices=user_types)
     groups = models.ManyToManyField('Group', null=True, blank=True)
 
@@ -24,16 +24,15 @@ class User_Apps(models.Model):
     app = models.ForeignKey('App')
     chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
     group = models.ForeignKey('Group', null=True, blank=True)
-    #date = models.DateField(auto_now=True, auto_now_add=True)
-    date = models.DateField("Date Accepted", null=True, blank=True)
+    date = models.DateField('Date Accepted', null=True, blank=True)
     status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):
-        return "User: " + str(self.user.name) +  "\nApp Name: " + str(self.app.app_name) + "\nStatus: " + str(self.status)
+        return 'User: ' + str(self.user.name) +  '\nApp Name: ' + str(self.app.app_name) + '\nStatus: ' + str(self.status)
 
 class App(models.Model):
-    app_name = models.CharField(max_length=200)
-    href_name = models.CharField(max_length=200)
+    app_name = models.CharField(max_length=200, unique=True)
+    href_name = models.CharField(max_length=200, unique=True)
     price = models.IntegerField()
     description = models.TextField(max_length=1000)
     windows = models.TextField(max_length=1000)
@@ -45,13 +44,13 @@ class App(models.Model):
         return self.app_name
 
 class Group(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     def __unicode__(self):
         return self.name
 
 class Chartstring(models.Model):
-    nickname = models.CharField(max_length=200, default="")
-    chartstring = models.CharField(max_length=200, default="")
+    nickname = models.CharField(max_length=200, default='', unique=True)
+    chartstring = models.CharField(max_length=200, default='', unique=True)
     manager = models.ForeignKey('User')
     group = models.ForeignKey('Group')
     budget = models.IntegerField()
