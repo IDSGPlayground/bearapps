@@ -111,6 +111,7 @@
               <label class="control-label" for="groups">Select Groups </label>
               <div class="controls">
                 <div id="adding-groups"></div>
+              </input><a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>
               </div>
             </div>
 
@@ -126,7 +127,7 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" name="register" class="btn btn-primary">Register</button>
                 <button class="btn">Cancel</button>
             </div>
           </fieldset>
@@ -140,31 +141,23 @@
 
 <!-- Le javascript
 ================================================== -->
+<script src="../static/js/jquery.js"></script>
+
 <script>
-var num_groups = 1;
 genGroups();
 
-$('.add-group').click(function(event){
-  num_groups+=1;
+$('#add-group').click(function(event){
+  event.preventDefault();
   genGroups();
 });
 
 
 function genGroups(){
-  saved = '[{% for group in groups %}{{ group.name }}, {% endfor %}]';
-  $('#adding-groups').html('');
-
-  var i;
-  for (i=0; i < num_groups; i++) {
-    $('#adding-groups').html($('#adding-groups').html() + '<input type="text" name="groups" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
-  }
-
-  $('#adding-groups').html($('#adding-groups').html() + '</input><a href="#" class="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Add Another Group</a>');
+  $('#adding-groups').append('<input type="text" name="groups[]" data-provide="typeahead" placeholder="Search for Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
 }
 
 </script>
 
-<script src="../static/js/jquery.js"></script>
 <script src="../static/js/bootstrap-transition.js"></script>
 <script src="../static/js/bootstrap-alert.js"></script>
 <script src="../static/js/bootstrap-modal.js"></script>

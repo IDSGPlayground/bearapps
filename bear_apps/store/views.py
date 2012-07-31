@@ -49,14 +49,16 @@ def register(request):
     'groups': all_groups,
     })
 
-    if request.method == 'POST':
+    if request.method == 'POST' and "register" in request.POST:
         #Try clause checks if all fields are filled out.
         try:
             username = request.POST['username']
             SID = request.POST['SID']
             password = request.POST['password']
             verify = request.POST['verify-password']
-            groups = request.POST['groups']
+            groups = request.POST['groups[]']
+            print "here"
+            print groups
             status = request.POST['status']
         except:
             c = Context ({
@@ -265,6 +267,8 @@ def manage(request):
             app = request.POST['app']
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(chartstring = request.POST['chartstring'])
+            print "HFASFSDFSDFSDF"
+            print request.POST['user']
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
