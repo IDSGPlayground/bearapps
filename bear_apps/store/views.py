@@ -186,7 +186,7 @@ def browse(request):
             'messages' : messages,
             'notifications' : notifications,
             'groups' : groups,
-            })
+        })
     try:
         for message in messages:
             message.delete()
