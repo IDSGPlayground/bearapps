@@ -8,6 +8,7 @@ from store.models import User, User_Apps, App, Notification, Chartstring, Group
 from django.contrib import messages
 from store.notifications import addNotification, getNotifications
 from datetime import date
+from operator import attrgetter
 
 def home(request):
     not_user = False
@@ -129,17 +130,19 @@ def browse(request):
     if request.method == 'POST':
         form = RequestForm(request.POST)
         app = request.POST['app']
+        app_object = App.objects.get(href_name=app)
 
         # Write change to database.
         try:
-            new_app = User_Apps.objects.get(href_name=app, user=user)
+            new_app = User_Apps.objects.get(app=app_object, user=user)
         except:
-            app_object = App.objects.get(href_name=app)
             new_app = User_Apps.objects.create(user=user, app=app_object, status="AVAILABLE")
 
         new_app.status="REQUESTED"
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
+        
+        request.method = None
 
     app_states = []
     for app in apps:
@@ -285,7 +288,12 @@ def manage(request):
             addNotification(user = user_requested, app = app_object, code = 'revoke')
 
         elif "new" in request.POST:
-            new_chartstring = Chartstring(nickname=request.POST['nickname'], chartstring=request.POST['chartstring'], budget=request.POST['amount'], remaining=request.POST['amount'], manager=user)
+            new_chartstring = Chartstring(
+                nickname=request.POST['nickname'], 
+                chartstring=request.POST['chartstring'],
+                budget=request.POST['amount'], 
+                remaining=request.POST['amount'], 
+                manager=user)
             new_chartstring.group = Group.objects.get(name=request.POST['group'])
             new_chartstring.save()
 
@@ -361,6 +369,13 @@ def admin(request):
 
     user = User.objects.get(name=request.session['user'])
     all_users = User.objects.all()
+    all_user_apps = User_Apps.objects.all()
+    all_accepted_apps=[]
+    for app in all_user_apps:
+        if app.status=="APPROVED":
+            all_accepted_apps.append(app)
+    sorted_by_chartstring = sorted(all_accepted_apps, key=attrgetter('chartstring.nickname'))
+    sorted_by_group = sorted(Group.objects.all(), key=attrgetter('name'))
     user_summary = {}
     count = 0
 
@@ -370,14 +385,14 @@ def admin(request):
             user_summary[count].append((u, u.user_apps_set.all()))
             count += 1
 
-    print user_summary
-
     chartstrings = Chartstring.objects.all()
 
     c = Context({
         'username': user.name,
         'user_summary': user_summary,
         'chartstrings': chartstrings,
+        'sorted_by_chartstring' : sorted_by_chartstring,
+        'sorted_by_group' : sorted_by_group,
         })
 
     return render_to_response('admin.html', c)
