@@ -62,7 +62,10 @@
         </select>
         {% endif %}
         <input type="submit"
-               value="{% if 'app-btn' in state %}REQUEST{% endif %}{% if 'requested-btn' in state %}ALREADY REQUESTED{% endif %}{% if 'downloadable-btn' in state %}DOWNLOADABLE{% endif %}"
+               value={% if 'app-btn' in state %}"REQUEST"
+			         {% elif 'requested-btn' in state %}"ALREADY REQUESTED"
+					 {% elif 'downloadable-btn' in state %}"DOWNLOADABLE"
+					 {% endif %}
                class="request-btn" {% if 'requested-btn' in state or 'downloadable-btn' in state %}DISABLED{% endif %}>
       </form>
       	<button type="button" class="close" data-dismiss="modal">×</button>

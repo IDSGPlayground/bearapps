@@ -125,7 +125,7 @@ def browse(request):
 
     user = User.objects.get(name=request.session['user'])
 
-    #Form handling; for POST requests to this view.
+    # Form handling; for POST requests to this view.
     apps = App.objects.all()
     if request.method == 'POST':
         form = RequestForm(request.POST)
@@ -142,6 +142,9 @@ def browse(request):
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
         
+        request.method = None
+
+        # Resets request.method, so that POST data is no longer stored.
         request.method = None
 
     app_states = []
