@@ -24,7 +24,7 @@
 		      	<h3>{{ app.app_name }}</h3>
 		        <h4>Requested</h4>
 		      	{% for user_info, requested, downloadable, chartstrings in user %}
-			      	{% if requested %}
+			      	{% if requested %} 
 				      		<li>{{ user_info.name }}</li>
 							<form name="approve" method="post" action="/manage/">
 								{% csrf_token %}
@@ -199,3 +199,5 @@
      </div>
 {% endfor %}
 {% endblock %}
+
+{% block javascript %}{% endblock %}

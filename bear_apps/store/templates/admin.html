@@ -9,23 +9,25 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="row-fluid">
         <div class="span12">
           <ul id="manage-tabs" class="nav nav-tabs">
-            <li class="active"><a href="users" data-toggle="tab">Summary</a></li>
+            <li class="active"><a href="#summary" data-toggle="tab">Summary</a></li>
             <li><a href="#groups" data-toggle="tab">By Group</a></li>
             <li><a href="#chartstrings" data-toggle="tab">By Chartstring</a></li>
           </ul>
 
           <div class="tab-content">
             <div class="tab-pane active" id="summary">
-              <table class="table table-striped">
+
+              <table class="table table-striped tablesorter" id="myTable">
                 <thead>
                   <tr>
                     <th>Chartstring</th>
                     <th>Username</th>
                     <th>Description</th>
-		    <th>Date Approved</th>
+		                <th>Date Approved</th>
                     <th>Price</th>
                     <th>RSO</th>
                   </tr>
@@ -40,7 +42,7 @@
                             <td>{{ app.chartstring }}</td>
                             <td>{{ user_info.name }}</td>
                             <td>{{ app.app.app_name }}</td>
-			    <td>{{ app.date }}</td>
+			                      <td>{{ app.date }}</td>
                             <td>${{ app.app.price }}</td>
                             <td>{{ app.chartstring.manager }}</td>
                           </tr>
@@ -69,8 +71,22 @@
                 </tbody>
               </table>
             </div>
-          </div>
-          
+
+          </div>   
+
         </div>
     </div>
+
+
 {% endblock %}
+{% block javascript %}
+<script src="../static/js/jquery.tablesorter.js"></script>
+<script type="text/javascript">
+$(document).ready(function() 
+  { 
+    $("#myTable").tablesorter(); 
+  }); 
+</script>
+{% endblock %}
+
+
