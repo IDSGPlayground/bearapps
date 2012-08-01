@@ -59,9 +59,13 @@
 				<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
+					{% if notifications > 0 %}
 					{% for message in messages %}
 						<li><a href="#">{{ message }}</a></li>
 					{% endfor %}
+					{% else %}
+						<li><a href="#">No New Notifications</a></li>
+					{% endif %}
 				</ul>
 			</div>
 

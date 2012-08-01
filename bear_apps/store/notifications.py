@@ -34,11 +34,11 @@ def add_Notification(user, code, info):
         returns nothing
     """
     if code == 'request':
-        message = user.name + MESSAGES[code] + info['app'].app_name
+        message = info['requestor'].name + MESSAGES[code] + info['app'].app_name
     elif code == 'approve' or code == 'reject' or code == 'revoke':
         message = MESSAGES[code] + info['app'].app_name
     elif code == 'new_user':
-        message = user.name + MESSAGES[code] + info['group'].name
+        message = info['requestor'].name + MESSAGES[code] + info['group'].name
 
     notification = Notification(user=user, message=message, viewed=False)
     notification.user = user

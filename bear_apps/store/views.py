@@ -116,14 +116,15 @@ def register(request):
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
-            managers = User.objects.filter(
-                groups=add_group,
-                user_type="MANAGER")
-            for manager in managers:
-                add_Notification(
-                    user=manager,
-                    code="new_user",
-                    info={'group': add_group})
+            if new_user.user_type != "GENERAL":
+                managers = User.objects.filter(
+                    groups=add_group,
+                    user_type="MANAGER")
+                for manager in managers:
+                    add_Notification(
+                        user=manager,
+                        code="new_user",
+                        info={'group': add_group, 'requestor': new_user})
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
@@ -168,6 +169,15 @@ def browse(request):
         new_app.status = 'REQUESTED'
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
+
+        managers = User.objects.filter(
+                    groups=new_app.group,
+                    user_type="MANAGER")
+        for manager in managers:
+            add_Notification(
+                user=manager,
+                code="request",
+                info={'app': app_object, 'requestor': user})
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
