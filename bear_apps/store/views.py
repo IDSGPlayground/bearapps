@@ -306,7 +306,7 @@ def manage(request):
             app = request.POST['app']
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(
-            chartstring=request.POST['chartstring'])
+                chartstring=request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
@@ -340,7 +340,6 @@ def manage(request):
             user_requested = User.objects.get(SID=request.POST['user'])
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
-            
             add_Notification(user=user_requested,
                             info={'app': app_object},
                             code='reject')

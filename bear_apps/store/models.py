@@ -35,8 +35,8 @@ class User(models.Model):
 
 
 class User_Apps(models.Model):
-    """ Model to describe the apps that a user has requested. Contains 
-        information about the user requesting the app, the status (either 
+    """ Model to describe the apps that a user has requested. Contains
+        information about the user requesting the app, the status (either
         'available', 'requested', or 'downloadable'), the date accepted,
         and group and chartstring associated with an accepted app.
     """
@@ -49,7 +49,8 @@ class User_Apps(models.Model):
     status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):
-        return 'User: ' + self.user.name + '\nApp Name: ' + self.app.app_name + '\nStatus: ' + self.status
+        return ('User: ' + self.user.name + '\nApp Name: ' +
+            self.app.app_name + '\nStatus: ' + self.status)
 
 
 class App(models.Model):
@@ -100,11 +101,10 @@ class Chartstring(models.Model):
 
 
 class Notification(models.Model):
-    """ Model that describes the notifications a user recieves, includes 
+    """ Model that describes the notifications a user recieves, includes
         the user that it is directed to, the message body, the date received,
         and whether the message has been viewed.
-    """ 
-
+    """
     user = models.ForeignKey('User')
     message = models.CharField(max_length=200)
     viewed = models.BooleanField()
