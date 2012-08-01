@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django import forms
 from store.models import User, User_Apps, App, Chartstring, Group
-from store.notifications import addNotification, getNotifications
+from store.notifications import addnotification, getnotifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -190,7 +190,7 @@ def browse(request):
     app_info = dict([(apps[x].href_name, apps[x]) 
         for x in range(len(apps))])
 
-    messages = getNotifications(user)
+    messages = getnotifications(user)
 
     # Context and set-up
     con = Context({
@@ -198,7 +198,7 @@ def browse(request):
             'sid' : request.session['sid'],
             'app_display' : app_display,
             'app_info' : app_info,
-            'messages' : getNotifications(user),
+            'messages' : getnotifications(user),
             'notifications' : len(messages),
             'groups' : sorted(user.groups.all(), key=lambda group: group.name),
         })
@@ -253,7 +253,7 @@ def myapps(request):
     else:
         no_apps = False
 
-    messages = getNotifications(user)
+    messages = getnotifications(user)
     notifications = len(messages)
 
     con = Context({
@@ -289,8 +289,6 @@ def manage(request):
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(
                 chartstring = request.POST['chartstring'])
-            print "HFASFSDFSDFSDF"
-            print request.POST['user']
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
@@ -304,7 +302,7 @@ def manage(request):
             app.status = "APPROVED"
             app.save()
 
-            addNotification(user = user_requested, 
+            addnotification(user = user_requested, 
                             app = app_object, 
                             code = 'approve')
 
@@ -316,7 +314,7 @@ def manage(request):
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
 
-            addNotification(user = user_requested, 
+            addnotification(user = user_requested, 
                             app = app_object, 
                             code = 'revoke')
 
