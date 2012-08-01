@@ -55,7 +55,7 @@ def register(request):
         a username that already exists in our database.
     """
     con = Context()
-    con['groups'] =  Group.objects.all()
+    con['groups'] = Group.objects.all()
 
     if "register" in request.POST:
         # Try clause checks if all fields are filled out.
@@ -90,7 +90,7 @@ def register(request):
                 con['sid_taken'] = True
                 con.update(csrf(request))
                 return render_to_response('register.html', con)
-        
+
         # Creates admin functionality if professor or rso is selected.
         user_type = 'GENERAL'
         if (status == 'professor') or (status == 'rso'):
@@ -100,9 +100,9 @@ def register(request):
 
         # Initializes the new user.
         new_user = User.objects.create(
-            name=username, 
-            SID=studentid, 
-            password=password, 
+            name=username,
+            SID=studentid,
+            password=password,
             user_type=user_type,
             )
 
@@ -111,7 +111,7 @@ def register(request):
         for group in groups:
             try:
                 add_group = Group.objects.get(name=group)
-            except ObjectDoesNotExist: 
+            except ObjectDoesNotExist:
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
@@ -127,6 +127,7 @@ def register(request):
 
     con.update(csrf(request))
     return render_to_response('register.html', con)
+
 
 def browse(request):
     """ Defines the view to browse and request applications.
@@ -161,7 +162,7 @@ def browse(request):
         new_app.status = 'REQUESTED'
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
-        
+
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
 
@@ -193,13 +194,13 @@ def browse(request):
 
     # Context and set-up
     con = Context({
-            'username' : request.session['user'],
-            'sid' : request.session['sid'],
-            'app_display' : app_display,
-            'app_info' : app_info,
-            'messages' : messages,
-            'notifications' : len(messages),
-            'groups' : sorted(user.groups.all(), key=lambda group: group.name),
+            'username': request.session['user'],
+            'sid': request.session['sid'],
+            'app_display': app_display,
+            'app_info': app_info,
+            'messages': messages,
+            'notifications': len(messages),
+            'groups': sorted(user.groups.all(), key=lambda group: group.name),
         })
 
     for message in messages:
@@ -289,7 +290,7 @@ def manage(request):
             app = request.POST['app']
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(
-                chartstring = request.POST['chartstring'])
+            chartstring=request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
@@ -320,10 +321,10 @@ def manage(request):
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(
-                nickname=request.POST['nickname'], 
+                nickname=request.POST['nickname'],
                 chartstring=request.POST['chartstring'],
-                budget=request.POST['amount'], 
-                remaining=request.POST['amount'], 
+                budget=request.POST['amount'],
+                remaining=request.POST['amount'],
                 manager=user)
             new_chartstring.group = Group.objects.get(
                                     name=request.POST['group'])
@@ -332,7 +333,7 @@ def manage(request):
         request.method = None
 
     users_of_app = {}
-    chart_history = {} 
+    chart_history = {}
     for chartstring in Chartstring.objects.all():
         chart_history[chartstring] = chartstring.user_apps_set.all()
 
@@ -370,7 +371,7 @@ def manage(request):
 
     for group in groups:
         chartstrings = group.chartstring_set.all()
-        chartstrings = sorted(chartstrings, 
+        chartstrings = sorted(chartstrings,
                             key=lambda chartstring: chartstring.nickname)
         all_chartstrings[group] = [(group.name, chartstrings,)]
         print all_chartstrings
@@ -387,7 +388,7 @@ def manage(request):
     con = Context({
         'username': request.session['user'],
         'groups': groups,
-        'users_of_app' : users_of_app,
+        'users_of_app': users_of_app,
         'all_members': all_members,
         'all_chartstrings': all_chartstrings,
         'all_users': all_users,
@@ -399,6 +400,7 @@ def manage(request):
     con.update(csrf(request))
 
     return render_to_response('manage.html', con)
+
 
 def admin(request):
     """ Defines the administrator view for BearApps.
@@ -427,6 +429,7 @@ def admin(request):
         })
 
     return render_to_response('admin.html', con)
+
 
 class RequestForm(forms.Form):
     """ RequestForm is used by Django to validate
