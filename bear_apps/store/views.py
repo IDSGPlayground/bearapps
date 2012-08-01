@@ -115,6 +115,10 @@ def register(request):
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
+            managers = User.objects.filter(groups=add_group, user_type="MANAGER")
+            for manager in managers:
+                add_Notification(user=user, code="new_user", info={'group': add_group})
+
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
 
@@ -149,7 +153,8 @@ def browse(request):
         try:
             new_app = User_Apps.objects.get(app=app_object, user=user)
         except ObjectDoesNotExist:
-            new_app = User_Apps.objects.create(user=user, 
+            new_app = User_Apps.objects.create(
+                user=user, 
                 app=app_object, 
                 status='AVAILABLE')
 
@@ -157,8 +162,6 @@ def browse(request):
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
         
-        request.method = None
-
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
 
@@ -254,15 +257,16 @@ def myapps(request):
     notifications = len(messages)
 
     con = Context({
-        'username' : request.session['user'],
-        'app_display' : app_display,
-        'app_info' : app_info,
-        'no_apps' : no_apps,
-        'notifications' : notifications,
-        'messages' : messages,
+        'username': request.session['user'],
+        'app_display': app_display,
+        'app_info': app_info,
+        'no_apps': no_apps,
+        'notifications': notifications,
+        'messages': messages,
         })
 
     return render_to_response('my-apps.html', con)
+
 
 def manage(request):
     """ Defines the manager view for BearApps. PIs and RSOs are
@@ -299,7 +303,7 @@ def manage(request):
             app.save()
 
             add_Notification(user = user_requested, 
-                            app = app_object, 
+                            info = {'app': app_object}, 
                             code = 'approve')
 
         elif "revoke" in request.POST:
@@ -311,7 +315,7 @@ def manage(request):
             app.delete()
 
             add_Notification(user = user_requested, 
-                            app = app_object, 
+                            info = {'app': app_object}, 
                             code = 'revoke')
 
         elif "new" in request.POST:
@@ -378,6 +382,8 @@ def manage(request):
 
         all_members[group] = [(group.name, members,)]
 
+    messages = get_Notifications(user)
+
     con = Context({
         'username': request.session['user'],
         'groups': groups,
@@ -385,7 +391,9 @@ def manage(request):
         'all_members': all_members,
         'all_chartstrings': all_chartstrings,
         'all_users': all_users,
-        'chart_history': chart_history
+        'chart_history': chart_history,
+        'messages' : messages,
+        'notifications' : len(messages),
         })
 
     con.update(csrf(request))
