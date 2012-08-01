@@ -1,19 +1,20 @@
+""" Defines views in the model-view-controller scheme for Django. """
 from django.template import Context
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django import forms
-from store.models import User, User_Apps, App, Notification, Chartstring, Group
-from django.contrib import messages
+from store.models import User, User_Apps, App, Chartstring, Group
 from store.notifications import addNotification, getNotifications
 from datetime import date
+from django.core.exceptions import ObjectDoesNotExist
 
-# Defines the login page for bearapps.
-# If the user enters a valid username/password combination, 
-# he or she will be redirected to browse. If the user enters in an invalid 
-# password, he or she will be redirected back to the blank login. If the user 
-# enters an invalid username, home will redirect user to the register page.
 def home(request):
+    """ Defines the login page for BearApps.
+        Entering valid login credentials will direct user to /browse.
+        An invalid password redirects to this page with a blank password field.
+        An invalid username redirects the user to /register.
+    """
     not_user = False
     logout = False
 
@@ -21,8 +22,8 @@ def home(request):
     try:
         del request.session['user']
         logout = True
-    except:
-        pass
+    except KeyError:
+        print 'No sessions are active yet.'
 
     if request.method == 'POST':
         try:
@@ -34,32 +35,33 @@ def home(request):
                 return HttpResponseRedirect('/browse/')
             # else:
             #     return render_to_response('index.html', c)
-        except:
+        except ObjectDoesNotExist:
             # Redirects to registration page if username does not exist.
             return HttpResponseRedirect('/register/')
 
-    c = Context({
+    con = Context({
         'not_user': not_user,
         'logout': logout,
     })
 
-    c.update(csrf(request))
-    return render_to_response('index.html', c)
+    con.update(csrf(request))
+    return render_to_response('index.html', con)
 
 
 def register(request):
-    # Creates a front end interface to register new users.
-    # Note: If the username already exists, the user will not be registered
-    all_groups = Group.objects.all()
-    c = Context ({
-    'groups': all_groups,
+    """ Defines the registration view for first-time users.
+        Note: the user will not be registered if they enter
+        a username that already exists in our database.
+    """
+    con = Context ({
+    'groups': Group.objects.all(),
     })
 
     if request.method == 'POST' and "register" in request.POST:
         #Try clause checks if all fields are filled out.
         try:
             username = request.POST['username']
-            SID = request.POST['SID']
+            studentid = request.POST['SID']
             password = request.POST['password']
             verify = request.POST['verify-password']
             group_count = int(request.POST['group_count'])
@@ -67,32 +69,32 @@ def register(request):
             for i in range(1, group_count + 1):
                 groups.append(request.POST['groups-' + str(i)])
             status = request.POST['status']
-        except:
-            c = Context ({
+        except ObjectDoesNotExist:
+            con = Context ({
             'empty_fields': True,
-            'groups': all_groups,
+            'groups': Group.objects.all(),
             })
-            c.update(csrf(request))
-            return render_to_response('register.html', c)
+            con.update(csrf(request))
+            return render_to_response('register.html', con)
 
         # Checks if passwords match.
         if password != verify:
-            c = Context ({
+            con = Context ({
             'not_match': True,
-            'groups': all_groups,
+            'groups': Group.objects.all(),
             })
-            c.update(csrf(request))
-            return render_to_response('register.html', c)
+            con.update(csrf(request))
+            return render_to_response('register.html', con)
 
         # Checks if username is already taken.
         for user in User.objects.all():
             if user.name == username:
-                c = Context ({
+                con = Context ({
                 'user_taken': True,
-                'groups': all_groups,
+                'groups': Group.objects.all(),
                 })
-                c.update(csrf(request))
-                return render_to_response('register.html', c)
+                con.update(csrf(request))
+                return render_to_response('register.html', con)
         
         # Creates admin functionality if professor or rso is selected.
         user_type = "GENERAL"
@@ -104,7 +106,7 @@ def register(request):
         # Initializes the new user.
         new_user = User.objects.create(
             name=username, 
-            SID=SID, password=password, 
+            SID=studentid, password=password, 
             user_type=user_type,
             )
 
@@ -113,7 +115,7 @@ def register(request):
         for group in groups:
             try:
                 add_group = Group.objects.get(name=group)
-            except: 
+            except ObjectDoesNotExist: 
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
@@ -123,12 +125,13 @@ def register(request):
         # Redirects user to the log in page.
         return HttpResponseRedirect('/')
 
-    c.update(csrf(request))
-    return render_to_response('register.html', c)
+    con.update(csrf(request))
+    return render_to_response('register.html', con)
 
-# Manages the browse view, handles requesting of an app from a general user
 def browse(request):
-    #If user is not logged in redirects to log in page.
+    """ Defines the view to browse and request applications.
+        Users not logged in are redirected to the login page.
+    """
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -149,7 +152,7 @@ def browse(request):
         # Write change to database.
         try:
             new_app = User_Apps.objects.get(app=app_object, user=user)
-        except:
+        except ObjectDoesNotExist:
             new_app = User_Apps.objects.create(user=user, 
                 app=app_object, 
                 status="AVAILABLE")
@@ -174,46 +177,46 @@ def browse(request):
                 app_states.append("requested-btn-" + href_name)
             elif status.lower()=="approved":
                 app_states.append("downloadable-btn-" + href_name)
-        except:
+        except ObjectDoesNotExist:
             app_states.append("app-btn-" + href_name)
 
+    # Dictionary for displaying applications and their statuses
+    # app_display: key = app's href name 
+    #              value = 'available' or 'requested'
+    # app_info: key = app's href name
+    #           value = the app object from App.objects.all()
+    app_display = dict([(apps[x].href_name, app_states[x]) 
+        for x in range(len(apps))])
+    app_info = dict([(apps[x].href_name, apps[x]) 
+        for x in range(len(apps))])
+
     messages = getNotifications(user)
-    notifications = len(messages)
-
-    # Dictionary for displaying applications and their statuses.
-    # app_display: key = app's href name and value = 'available' or 'requested'
-    # app_info: key = app's href name and value = the app object from App.objects.all()
-    app_display = dict([(apps[x].href_name, app_states[x]) for x in range(len(apps))])
-    app_info = dict([(apps[x].href_name, apps[x]) for x in range(len(apps))])
-
-    groups = user.groups.all()
-    groups = sorted(groups, key=lambda group: group.name)
 
     # Context and set-up
-    c = Context({
+    con = Context({
             'username' : request.session['user'],
             'sid' : request.session['sid'],
             'app_display' : app_display,
             'app_info' : app_info,
-            'messages' : messages,
-            'notifications' : notifications,
-            'groups' : groups,
+            'messages' : getNotifications(user),
+            'notifications' : len(messages),
+            'groups' : sorted(user.groups.all(), key=lambda group: group.name),
         })
-    try:
-        for message in messages:
-            message.delete()
-        user.notifications = 0
-        user.save()
-    except:
-        pass
+
+    for message in messages:
+        message.delete()
+    user.notifications = 0
+    user.save()
 
     # Update context with Security token for html form
-    c.update(csrf(request))
+    con.update(csrf(request))
 
-    return render_to_response('browse.html', c)
+    return render_to_response('browse.html', con)
 
-# Creates the information necessary for the myapps page
 def myapps(request):
+    """ Defines the my-apps view for BearApps to display applications
+        of interest to a user (requested, approved, etc.)
+    """
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -232,29 +235,28 @@ def myapps(request):
             elif status.lower() == "approved":
                 app_states.append("downloadable-btn-" + href_name)
                 temp_app.append(app)
-        except:
-            pass
+        except ObjectDoesNotExist:
+            print 'User browsing my-apps currently has no apps'
 
     # Dictionary for displaying applications and their statuses.
-    # app_display: key = app's href name and value = 'available' or 'requested'
-    # app_info: key = app's href name and value = the app object from App.objects.all()
-    app_display = dict([(temp_app[x].href_name, app_states[x]) for x in range(len(app_states))])
-    app_info = dict([(temp_app[x].href_name, temp_app[x]) for x in range(len(app_states))])
+    # app_display: key = app's href name
+    #              value = 'available' or 'requested'
+    # app_info: key = app's href name
+    #           value = the app object from App.objects.all()
+    app_display = dict([(temp_app[x].href_name, app_states[x])
+        for x in range(len(app_states))])
+    app_info = dict([(temp_app[x].href_name, temp_app[x])
+        for x in range(len(app_states))])
 
     if len(temp_app) == 0:
         no_apps = True
     else:
         no_apps = False
 
-    messages = ["None"]
-    notifications = 0
-    try:
-        messages = user.notification_set.all()
-        notifications = len(messages)
-    except:
-        pass
+    messages = getNotifications(user)
+    notifications = len(messages)
 
-    c = Context({
+    con = Context({
         'username' : request.session['user'],
         'app_display' : app_display,
         'app_info' : app_info,
@@ -263,9 +265,13 @@ def myapps(request):
         'messages' : messages,
         })
 
-    return render_to_response('my-apps.html', c)
+    return render_to_response('my-apps.html', con)
 
 def manage(request):
+    """ Defines the manager view for BearApps. PIs and RSOs are
+        directed to this view to manage their user requests and
+        chartstrings/budgets.
+    """
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -281,7 +287,8 @@ def manage(request):
         if "approve" in request.POST:
             app = request.POST['app']
             price = App.objects.get(href_name=app).price
-            chartstring = Chartstring.objects.get(chartstring = request.POST['chartstring'])
+            chartstring = Chartstring.objects.get(
+                chartstring = request.POST['chartstring'])
             print "HFASFSDFSDFSDF"
             print request.POST['user']
             user_requested = User.objects.get(SID=request.POST['user'])
@@ -297,7 +304,9 @@ def manage(request):
             app.status = "APPROVED"
             app.save()
 
-            addNotification(user = user_requested, app = app_object, code = 'approve')
+            addNotification(user = user_requested, 
+                            app = app_object, 
+                            code = 'approve')
 
         elif "revoke" in request.POST:
             app = request.POST['app']
@@ -307,7 +316,9 @@ def manage(request):
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
 
-            addNotification(user = user_requested, app = app_object, code = 'revoke')
+            addNotification(user = user_requested, 
+                            app = app_object, 
+                            code = 'revoke')
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(
@@ -316,7 +327,8 @@ def manage(request):
                 budget=request.POST['amount'], 
                 remaining=request.POST['amount'], 
                 manager=user)
-            new_chartstring.group = Group.objects.get(name=request.POST['group'])
+            new_chartstring.group = Group.objects.get(
+                                    name=request.POST['group'])
             new_chartstring.save()
 
         request.method = None
@@ -327,12 +339,12 @@ def manage(request):
         chart_history[chartstring] = chartstring.user_apps_set.all()
 
     for app in App.objects.all():
-        # Generates a list of all members in all groups associated with the user.
+        # Generates a list of members in all groups associated with the user.
         members = []
         for group in groups:
-            for u in all_users:
-                if group in u.groups.all() and u != user:
-                    members.append(u)
+            for person in all_users:
+                if group in person.groups.all() and person != user:
+                    members.append(person)
 
         users_of_app[app] = []
         for member in members:
@@ -351,26 +363,28 @@ def manage(request):
                         for chartstring in group.chartstring_set.all():
                             chartstrings.append(chartstring)
 
-                    users_of_app[app].append((member, requested, downloadable, chartstrings,))
-            except:
+                    users_of_app[app].append(
+                        (member, requested, downloadable, chartstrings,))
+            except ObjectDoesNotExist:
                 pass
 
     all_chartstrings, all_members = {}, {}
 
     for group in groups:
         chartstrings = group.chartstring_set.all()
-        chartstrings = sorted(chartstrings, key=lambda chartstring: chartstring.nickname)
+        chartstrings = sorted(chartstrings, 
+                            key=lambda chartstring: chartstring.nickname)
         all_chartstrings[group] = [(group.name, chartstrings,)]
         print all_chartstrings
 
         members = []
-        for u in all_users:
-            if group in u.groups.all() and u != user:
-                members.append(u)
+        for person in all_users:
+            if group in person.groups.all() and person != user:
+                members.append(person)
 
         all_members[group] = [(group.name, members,)]
 
-    c = Context({
+    con = Context({
         'username': request.session['user'],
         'groups': groups,
         'users_of_app' : users_of_app,
@@ -380,12 +394,14 @@ def manage(request):
         'chart_history': chart_history
         })
 
-    c.update(csrf(request))
+    con.update(csrf(request))
 
-    return render_to_response('manage.html', c)
+    return render_to_response('manage.html', con)
 
-# Manages the admin view, generates a dictionary containing the user and all apps related to the user
 def admin(request):
+    """ Defines the administrator view for BearApps.
+        Helpdesk and Financing officials are directed to this page.
+    """
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -394,22 +410,24 @@ def admin(request):
     user_summary = {}
     count = 0
 
-    for u in all_users:
-        if u != user:
+    for person in all_users:
+        if person != user:
             user_summary[count] = []
-            user_summary[count].append((u, u.user_apps_set.all()))
+            user_summary[count].append((person, person.user_apps_set.all()))
             count += 1
 
     chartstrings = Chartstring.objects.all()
 
-    c = Context({
+    con = Context({
         'username': user.name,
         'user_summary': user_summary,
         'chartstrings': chartstrings,
         })
 
-    return render_to_response('admin.html', c)
+    return render_to_response('admin.html', con)
 
 class RequestForm(forms.Form):
+    """ RequestForm is used by Django to validate
+        fields in application requests.
+    """
     app = forms.CharField()
-
