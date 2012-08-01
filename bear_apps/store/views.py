@@ -9,6 +9,7 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def home(request):
     """ Defines the login page for BearApps.
         Entering valid login credentials will direct user to /browse.
@@ -54,7 +55,7 @@ def register(request):
         a username that already exists in our database.
     """
     con = Context()
-    con['groups'] =  Group.objects.all()
+    con['groups'] = Group.objects.all()
 
     if "register" in request.POST:
         # Try clause checks if all fields are filled out.
@@ -89,7 +90,7 @@ def register(request):
                 con['sid_taken'] = True
                 con.update(csrf(request))
                 return render_to_response('register.html', con)
-        
+
         # Creates admin functionality if professor or rso is selected.
         user_type = 'GENERAL'
         if (status == 'professor') or (status == 'rso'):
@@ -99,9 +100,9 @@ def register(request):
 
         # Initializes the new user.
         new_user = User.objects.create(
-            name=username, 
-            SID=studentid, 
-            password=password, 
+            name=username,
+            SID=studentid,
+            password=password,
             user_type=user_type,
             )
 
@@ -110,7 +111,7 @@ def register(request):
         for group in groups:
             try:
                 add_group = Group.objects.get(name=group)
-            except ObjectDoesNotExist: 
+            except ObjectDoesNotExist:
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
@@ -122,6 +123,7 @@ def register(request):
 
     con.update(csrf(request))
     return render_to_response('register.html', con)
+
 
 def browse(request):
     """ Defines the view to browse and request applications.
@@ -148,14 +150,15 @@ def browse(request):
         try:
             new_app = User_Apps.objects.get(app=app_object, user=user)
         except ObjectDoesNotExist:
-            new_app = User_Apps.objects.create(user=user, 
-                app=app_object, 
+            new_app = User_Apps.objects.create(
+                user=user,
+                app=app_object,
                 status='AVAILABLE')
 
         new_app.status = 'REQUESTED'
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
-        
+
         request.method = None
 
         # Resets request.method, so that POST data is no longer stored.
@@ -176,26 +179,26 @@ def browse(request):
             app_states.append("app-btn-" + href_name)
 
     # Dictionary for displaying applications and their statuses
-    # app_display: key = app's href name 
+    # app_display: key = app's href name
     #              value = 'available' or 'requested'
     # app_info: key = app's href name
     #           value = the app object from App.objects.all()
-    app_display = dict([(apps[x].href_name, app_states[x]) 
+    app_display = dict([(apps[x].href_name, app_states[x])
         for x in range(len(apps))])
-    app_info = dict([(apps[x].href_name, apps[x]) 
+    app_info = dict([(apps[x].href_name, apps[x])
         for x in range(len(apps))])
 
     messages = get_Notifications(user)
 
     # Context and set-up
     con = Context({
-            'username' : request.session['user'],
-            'sid' : request.session['sid'],
-            'app_display' : app_display,
-            'app_info' : app_info,
-            'messages' : messages,
-            'notifications' : len(messages),
-            'groups' : sorted(user.groups.all(), key=lambda group: group.name),
+            'username': request.session['user'],
+            'sid': request.session['sid'],
+            'app_display': app_display,
+            'app_info': app_info,
+            'messages': messages,
+            'notifications': len(messages),
+            'groups': sorted(user.groups.all(), key=lambda group: group.name),
         })
 
     for message in messages:
@@ -207,6 +210,7 @@ def browse(request):
     con.update(csrf(request))
 
     return render_to_response('browse.html', con)
+
 
 def myapps(request):
     """ Defines the my-apps view for BearApps to display applications
@@ -252,15 +256,16 @@ def myapps(request):
     notifications = len(messages)
 
     con = Context({
-        'username' : request.session['user'],
-        'app_display' : app_display,
-        'app_info' : app_info,
-        'no_apps' : no_apps,
-        'notifications' : notifications,
-        'messages' : messages,
+        'username': request.session['user'],
+        'app_display': app_display,
+        'app_info': app_info,
+        'no_apps': no_apps,
+        'notifications': notifications,
+        'messages': messages,
         })
 
     return render_to_response('my-apps.html', con)
+
 
 def manage(request):
     """ Defines the manager view for BearApps. PIs and RSOs are
@@ -283,7 +288,7 @@ def manage(request):
             app = request.POST['app']
             price = App.objects.get(href_name=app).price
             chartstring = Chartstring.objects.get(
-                chartstring = request.POST['chartstring'])
+            chartstring=request.POST['chartstring'])
             user_requested = User.objects.get(SID=request.POST['user'])
 
             # Write change to database.
@@ -296,9 +301,9 @@ def manage(request):
             app.status = 'APPROVED'
             app.save()
 
-            add_Notification(user = user_requested, 
-                            app = app_object, 
-                            code = 'approve')
+            add_Notification(user=user_requested,
+                             app=app_object,
+                             code='approve')
 
         elif "revoke" in request.POST:
             app = request.POST['app']
@@ -308,16 +313,16 @@ def manage(request):
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
 
-            add_Notification(user = user_requested, 
-                            app = app_object, 
-                            code = 'revoke')
+            add_Notification(user=user_requested,
+                             app=app_object,
+                             code='revoke')
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(
-                nickname=request.POST['nickname'], 
+                nickname=request.POST['nickname'],
                 chartstring=request.POST['chartstring'],
-                budget=request.POST['amount'], 
-                remaining=request.POST['amount'], 
+                budget=request.POST['amount'],
+                remaining=request.POST['amount'],
                 manager=user)
             new_chartstring.group = Group.objects.get(
                                     name=request.POST['group'])
@@ -326,7 +331,7 @@ def manage(request):
         request.method = None
 
     users_of_app = {}
-    chart_history = {} 
+    chart_history = {}
     for chartstring in Chartstring.objects.all():
         chart_history[chartstring] = chartstring.user_apps_set.all()
 
@@ -364,7 +369,7 @@ def manage(request):
 
     for group in groups:
         chartstrings = group.chartstring_set.all()
-        chartstrings = sorted(chartstrings, 
+        chartstrings = sorted(chartstrings,
                             key=lambda chartstring: chartstring.nickname)
         all_chartstrings[group] = [(group.name, chartstrings,)]
         print all_chartstrings
@@ -379,7 +384,7 @@ def manage(request):
     con = Context({
         'username': request.session['user'],
         'groups': groups,
-        'users_of_app' : users_of_app,
+        'users_of_app': users_of_app,
         'all_members': all_members,
         'all_chartstrings': all_chartstrings,
         'all_users': all_users,
@@ -389,6 +394,7 @@ def manage(request):
     con.update(csrf(request))
 
     return render_to_response('manage.html', con)
+
 
 def admin(request):
     """ Defines the administrator view for BearApps.
@@ -417,6 +423,7 @@ def admin(request):
         })
 
     return render_to_response('admin.html', con)
+
 
 class RequestForm(forms.Form):
     """ RequestForm is used by Django to validate
