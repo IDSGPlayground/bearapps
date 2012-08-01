@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django import forms
 from store.models import User, User_Apps, App, Chartstring, Group
-from store.notifications import addnotification, getnotifications
+from store.notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -185,7 +185,7 @@ def browse(request):
     app_info = dict([(apps[x].href_name, apps[x]) 
         for x in range(len(apps))])
 
-    messages = getnotifications(user)
+    messages = get_Notifications(user)
 
     # Context and set-up
     con = Context({
@@ -193,7 +193,7 @@ def browse(request):
             'sid' : request.session['sid'],
             'app_display' : app_display,
             'app_info' : app_info,
-            'messages' : getnotifications(user),
+            'messages' : messages,
             'notifications' : len(messages),
             'groups' : sorted(user.groups.all(), key=lambda group: group.name),
         })
@@ -248,7 +248,7 @@ def myapps(request):
     else:
         no_apps = False
 
-    messages = getnotifications(user)
+    messages = get_Notifications(user)
     notifications = len(messages)
 
     con = Context({
@@ -296,7 +296,7 @@ def manage(request):
             app.status = 'APPROVED'
             app.save()
 
-            addnotification(user = user_requested, 
+            add_Notification(user = user_requested, 
                             app = app_object, 
                             code = 'approve')
 
@@ -308,7 +308,7 @@ def manage(request):
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
 
-            addnotification(user = user_requested, 
+            add_Notification(user = user_requested, 
                             app = app_object, 
                             code = 'revoke')
 

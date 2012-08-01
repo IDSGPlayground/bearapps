@@ -8,7 +8,7 @@ MESSAGES = {
     'revoke': 'Your license has been revoked for ',
 }
 
-def getnotifications(user):
+def get_Notifications(user):
     """ Retrieves all a user's current getNotifications.
             **each notification will have a unique primary key.
             args:
@@ -22,7 +22,7 @@ def getnotifications(user):
         pass
     return messages
 
-def addnotification(user, app, code):
+def add_Notification(user, app, code):
     """ Adds a new message to a User in the database.
             args:
             user = a User object
