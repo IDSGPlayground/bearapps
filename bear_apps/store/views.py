@@ -9,6 +9,7 @@ from store.notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
+
 def home(request):
     """ Defines the login page for BearApps.
         Entering valid login credentials will direct user to /browse.
@@ -176,13 +177,13 @@ def browse(request):
             app_states.append("app-btn-" + href_name)
 
     # Dictionary for displaying applications and their statuses
-    # app_display: key = app's href name 
+    # app_display: key = app's href name
     #              value = 'available' or 'requested'
     # app_info: key = app's href name
     #           value = the app object from App.objects.all()
-    app_display = dict([(apps[x].href_name, app_states[x]) 
+    app_display = dict([(apps[x].href_name, app_states[x])
         for x in range(len(apps))])
-    app_info = dict([(apps[x].href_name, apps[x]) 
+    app_info = dict([(apps[x].href_name, apps[x])
         for x in range(len(apps))])
 
     messages = get_Notifications(user)
@@ -207,6 +208,7 @@ def browse(request):
     con.update(csrf(request))
 
     return render_to_response('browse.html', con)
+
 
 def myapps(request):
     """ Defines the my-apps view for BearApps to display applications
