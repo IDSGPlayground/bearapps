@@ -1,5 +1,4 @@
-from store.models import User, User_Apps, App, Notification, Chartstring, Group
-from django.utils import timezone
+from store.models import Notification
 
 messages = {
     'request': ' has requested a license for ',
@@ -14,6 +13,8 @@ messages = {
         user = a User object
     returns a list object of message strings.
 """
+
+
 def getNotifications(user):
     messages = []
     try:
@@ -30,6 +31,8 @@ def getNotifications(user):
         code = a key to one of the predefined message above.
     returns nothing
 """
+
+
 def addNotification(user, app, code):
     if code == 'request':
         message = user.Name + messages[code] + app.app_name

@@ -2,12 +2,17 @@ from django.db import models
 
 app_status = (
     ('AVAILABLE', 'AVAILABLE'),
-    ('REQUESTED','REQUESTED'),
-    ('APPROVED' , 'APPROVED'),
-    ('UPDATES AVAILABLE', 'UPDATES AVAILABLE'),
+    ('REQUESTED', 'REQUESTED'),
+    ('APPROVED', 'APPROVED'),
+    ('UPDATES', 'UPDATES'),
 )
 
-user_types = (('GENERAL', 'GENERAL'), ('ADMIN', 'ADMIN'), ('MANAGER', 'MANAGER'))
+user_types = (
+    ('GENERAL', 'GENERAL'),
+    ('ADMIN', 'ADMIN'),
+    ('MANAGER', 'MANAGER')
+)
+
 
 class User(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -19,6 +24,7 @@ class User(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class User_Apps(models.Model):
     user = models.ForeignKey('User')
     app = models.ForeignKey('App')
@@ -28,7 +34,8 @@ class User_Apps(models.Model):
     status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):
-        return 'User: ' + str(self.user.name) +  '\nApp Name: ' + str(self.app.app_name) + '\nStatus: ' + str(self.status)
+        return 'User: ' + str(self.user.name) + '\nApp Name: ' + str(self.app.app_name) + '\nStatus: ' + str(self.status)
+
 
 class App(models.Model):
     app_name = models.CharField(max_length=200, unique=True)
@@ -43,10 +50,13 @@ class App(models.Model):
     def __unicode__(self):
         return self.app_name
 
+
 class Group(models.Model):
     name = models.CharField(max_length=200, unique=True)
+
     def __unicode__(self):
         return self.name
+
 
 class Chartstring(models.Model):
     nickname = models.CharField(max_length=200, default='', unique=True)
@@ -58,6 +68,7 @@ class Chartstring(models.Model):
 
     def __unicode__(self):
         return self.nickname
+
 
 class Notification(models.Model):
     user = models.ForeignKey('User')
