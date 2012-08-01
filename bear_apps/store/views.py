@@ -97,11 +97,11 @@ def register(request):
                 return render_to_response('register.html', con)
         
         # Creates admin functionality if professor or rso is selected.
-        user_type = "GENERAL"
-        if (status == "professor") or (status == "rso"):
-            user_type = "MANAGER"
-        elif (status == "admin"):
-            user_type = "ADMIN"
+        user_type = 'GENERAL'
+        if (status == 'professor') or (status == 'rso'):
+            user_type = 'MANAGER'
+        elif (status == 'admin'):
+            user_type = 'ADMIN'
 
         # Initializes the new user.
         new_user = User.objects.create(
@@ -135,10 +135,10 @@ def browse(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
-    if User.objects.get(name=request.session['user']).user_type == "MANAGER":
+    if User.objects.get(name=request.session['user']).user_type == 'MANAGER':
         return HttpResponseRedirect('/manage/')
 
-    elif User.objects.get(name=request.session['user']).user_type == "ADMIN":
+    elif User.objects.get(name=request.session['user']).user_type == 'ADMIN':
         return HttpResponseRedirect('/admin/')
 
     user = User.objects.get(name=request.session['user'])
@@ -155,9 +155,9 @@ def browse(request):
         except ObjectDoesNotExist:
             new_app = User_Apps.objects.create(user=user, 
                 app=app_object, 
-                status="AVAILABLE")
+                status='AVAILABLE')
 
-        new_app.status = "REQUESTED"
+        new_app.status = 'REQUESTED'
         new_app.group = Group.objects.get(name=request.POST['mygroup'])
         new_app.save()
         
@@ -171,12 +171,12 @@ def browse(request):
         href_name = app.href_name
         try:
             status = User_Apps.objects.get(app=app, user=user).status
-            if status.lower()=="available":
+            if status.lower() == 'available':
                 app_states.append("app-btn-" + href_name)
-            elif status.lower()=="requested":
-                app_states.append("requested-btn-" + href_name)
-            elif status.lower()=="approved":
-                app_states.append("downloadable-btn-" + href_name)
+            elif status.lower() == 'requested':
+                app_states.append('requested-btn-' + href_name)
+            elif status.lower() == 'approved':
+                app_states.append('downloadable-btn-' + href_name)
         except ObjectDoesNotExist:
             app_states.append("app-btn-" + href_name)
 
@@ -229,11 +229,11 @@ def myapps(request):
         href_name = app.href_name
         try:
             status = User_Apps.objects.get(app=app, user=user).status
-            if status.lower() == "requested":
-                app_states.append("requested-btn-" + href_name)
+            if status.lower() == 'requested':
+                app_states.append('requested-btn-' + href_name)
                 temp_app.append(app)
-            elif status.lower() == "approved":
-                app_states.append("downloadable-btn-" + href_name)
+            elif status.lower() == 'approved':
+                app_states.append('downloadable-btn-' + href_name)
                 temp_app.append(app)
         except ObjectDoesNotExist:
             print 'User browsing my-apps currently has no apps'
@@ -298,8 +298,7 @@ def manage(request):
             chartstring.remaining = chartstring.remaining - price
             chartstring.save()
             app.date = date.today()
-            print app.date
-            app.status = "APPROVED"
+            app.status = 'APPROVED'
             app.save()
 
             addnotification(user = user_requested, 
@@ -351,9 +350,9 @@ def manage(request):
                     requested, downloadable = False, False
                     status = User_Apps.objects.get(app=app, user=member).status
 
-                    if status == "REQUESTED":
+                    if status == 'REQUESTED':
                         requested = True
-                    elif status == "APPROVED":
+                    elif status == 'APPROVED':
                         downloadable = True
 
                     chartstrings = []
