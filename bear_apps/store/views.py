@@ -121,7 +121,7 @@ def register(request):
                 user_type="MANAGER")
             for manager in managers:
                 add_Notification(
-                    user=user,
+                    user=manager,
                     code="new_user",
                     info={'group': add_group})
 
