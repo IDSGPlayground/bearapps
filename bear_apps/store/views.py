@@ -334,7 +334,16 @@ def manage(request):
             add_Notification(user=user_requested,
                             info={'app': app_object},
                             code='revoke')
-
+        elif "reject" in request.POST:
+            app = request.POST['app']
+            app_object = App.objects.get(href_name=app)
+            user_requested = User.objects.get(SID=request.POST['user'])
+            app = user_requested.user_apps_set.get(app=app_object)
+            app.delete()
+            
+            add_Notification(user=user_requested,
+                            info={'app': app_object},
+                            code='reject')
         elif "new" in request.POST:
             new_chartstring = Chartstring(
                 nickname=request.POST['nickname'],

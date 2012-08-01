@@ -1,3 +1,7 @@
+"""The database models used for Bearapps. The models describe
+the app, users, groups, charstrings, and notifications used
+within the store."""
+
 from django.db import models
 
 app_status = (
@@ -15,6 +19,11 @@ user_types = (
 
 
 class User(models.Model):
+    """ Model to describe all users of bearapps, contains the
+        user's name, SID, password, group(s) the user is associated
+        with, and the user type (either user, manager, or admin).
+    """
+
     name = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
     SID = models.IntegerField(unique=True)
@@ -26,6 +35,12 @@ class User(models.Model):
 
 
 class User_Apps(models.Model):
+    """ Model to describe the apps that a user has requested. Contains 
+        information about the user requesting the app, the status (either 
+        'available', 'requested', or 'downloadable'), the date accepted,
+        and group and chartstring associated with an accepted app.
+    """
+
     user = models.ForeignKey('User')
     app = models.ForeignKey('App')
     chartstring = models.ForeignKey('Chartstring', null=True, blank=True)
@@ -34,10 +49,15 @@ class User_Apps(models.Model):
     status = models.CharField(max_length=20, choices=app_status)
 
     def __unicode__(self):
-        return 'User: ' + str(self.user.name) + '\nApp Name: ' + str(self.app.app_name) + '\nStatus: ' + str(self.status)
+        return 'User: ' + self.user.name + '\nApp Name: ' + self.app.app_name + '\nStatus: ' + self.status
 
 
 class App(models.Model):
+    """ Model that provides the information about an app. Contains information
+        such as the name, price, system requirements, the href name, and how
+        to obtain it.
+    """
+
     app_name = models.CharField(max_length=200, unique=True)
     href_name = models.CharField(max_length=200, unique=True)
     price = models.IntegerField()
@@ -52,6 +72,10 @@ class App(models.Model):
 
 
 class Group(models.Model):
+    """ Model that describes the group a user is in,
+        includes the name of the group.
+    """
+
     name = models.CharField(max_length=200, unique=True)
 
     def __unicode__(self):
@@ -59,6 +83,11 @@ class Group(models.Model):
 
 
 class Chartstring(models.Model):
+    """ Model that describes a chartstring. It includes the name, chartstring
+        number, the group and owner it is associated with, the initial budget,
+        and how much of the budget remains.
+    """
+
     nickname = models.CharField(max_length=200, default='', unique=True)
     chartstring = models.CharField(max_length=200, default='', unique=True)
     manager = models.ForeignKey('User')
@@ -71,6 +100,11 @@ class Chartstring(models.Model):
 
 
 class Notification(models.Model):
+    """ Model that describes the notifications a user recieves, includes 
+        the user that it is directed to, the message body, the date received,
+        and whether the message has been viewed.
+    """ 
+
     user = models.ForeignKey('User')
     message = models.CharField(max_length=200)
     viewed = models.BooleanField()
