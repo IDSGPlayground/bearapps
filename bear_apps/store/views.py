@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.core.context_processors import csrf
 from django import forms
 from store.models import User, User_Apps, App, Chartstring, Group
-from store.notifications import add_Notification, get_Notifications
+from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
