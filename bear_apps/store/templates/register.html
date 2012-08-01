@@ -55,9 +55,8 @@
                 <input type="text" class="input" id="username" name="username">
               </div>
             </div>
-            {% endif %}
 
-            {% if user_taken %}
+            {% else %}
             <div class="control-group error">
               <label class="control-label" for="username">Username </label>
               <div class="controls">
@@ -67,12 +66,23 @@
             </div>
             {% endif %}
 
+            {% if not sid_taken %}
             <div class="control-group">
               <label class="control-label" for="SID">SID </label>
               <div class="controls">
                 <input type="text" class="input" id="SID" name="SID">
               </div>
             </div>
+
+            {% else %}
+            <div class="control-group error">
+              <label class="control-label" for="SID">SID </label>
+              <div class="controls">
+                <input type="text" class="inputError" id="SID" name="SID">
+                <span class="help-inline">Sorry, this SID is already taken</span>
+              </div>
+            </div>
+            {% endif %}
 
             {% if not not_match %}
             <div class="control-group">

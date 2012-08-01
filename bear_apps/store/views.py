@@ -53,12 +53,11 @@ def register(request):
         Note: the user will not be registered if they enter
         a username that already exists in our database.
     """
-    con = Context ({
-    'groups': Group.objects.all(),
-    })
+    con = Context()
+    con['groups'] =  Group.objects.all()
 
-    if request.method == 'POST' and "register" in request.POST:
-        #Try clause checks if all fields are filled out.
+    if "register" in request.POST:
+        # Try clause checks if all fields are filled out.
         try:
             username = request.POST['username']
             studentid = request.POST['SID']
@@ -70,29 +69,24 @@ def register(request):
                 groups.append(request.POST['groups-' + str(i)])
             status = request.POST['status']
         except ObjectDoesNotExist:
-            con = Context ({
-            'empty_fields': True,
-            'groups': Group.objects.all(),
-            })
+            con['empty_fields'] = True
             con.update(csrf(request))
             return render_to_response('register.html', con)
 
         # Checks if passwords match.
         if password != verify:
-            con = Context ({
-            'not_match': True,
-            'groups': Group.objects.all(),
-            })
+            con['not_match'] = True
             con.update(csrf(request))
             return render_to_response('register.html', con)
 
         # Checks if username is already taken.
         for user in User.objects.all():
             if user.name == username:
-                con = Context ({
-                'user_taken': True,
-                'groups': Group.objects.all(),
-                })
+                con['user_taken'] = True
+                con.update(csrf(request))
+                return render_to_response('register.html', con)
+            if user.SID == studentid:
+                con['sid_taken'] = True
                 con.update(csrf(request))
                 return render_to_response('register.html', con)
         
@@ -106,11 +100,12 @@ def register(request):
         # Initializes the new user.
         new_user = User.objects.create(
             name=username, 
-            SID=studentid, password=password, 
+            SID=studentid, 
+            password=password, 
             user_type=user_type,
             )
 
-        # Adds the new user to selected group.
+        # Adds the new user to selected groups.
         # If group exists, gets Group object, otherwise, creates a new group.
         for group in groups:
             try:
