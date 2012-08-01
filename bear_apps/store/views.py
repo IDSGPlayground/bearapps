@@ -29,7 +29,8 @@ def home(request):
     if request.method == 'POST':
         try:
             user = request.POST['user']
-            if User.objects.get(name=user).password == request.POST['password']:
+            password = User.objects.get(name=user).password
+            if password == request.POST['password']:
                 request.session['user'] = user
                 sid = User.objects.get(name=user).SID
                 request.session['sid'] = sid
@@ -115,9 +116,14 @@ def register(request):
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
-            managers = User.objects.filter(groups=add_group, user_type="MANAGER")
+            managers = User.objects.filter(
+                groups=add_group,
+                user_type="MANAGER")
             for manager in managers:
-                add_Notification(user=user, code="new_user", info={'group': add_group})
+                add_Notification(
+                    user=user,
+                    code="new_user",
+                    info={'group': add_group})
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
@@ -155,8 +161,8 @@ def browse(request):
             new_app = User_Apps.objects.get(app=app_object, user=user)
         except ObjectDoesNotExist:
             new_app = User_Apps.objects.create(
-                user=user, 
-                app=app_object, 
+                user=user,
+                app=app_object,
                 status='AVAILABLE')
 
         new_app.status = 'REQUESTED'
@@ -303,9 +309,9 @@ def manage(request):
             app.status = 'APPROVED'
             app.save()
 
-            add_Notification(user = user_requested, 
-                            info = {'app': app_object}, 
-                            code = 'approve')
+            add_Notification(user=user_requested,
+                            info={'app': app_object},
+                            code='approve')
 
         elif "revoke" in request.POST:
             app = request.POST['app']
@@ -315,9 +321,9 @@ def manage(request):
             app = user_requested.user_apps_set.get(app=app_object)
             app.delete()
 
-            add_Notification(user = user_requested, 
-                            info = {'app': app_object}, 
-                            code = 'revoke')
+            add_Notification(user=user_requested,
+                            info={'app': app_object},
+                            code='revoke')
 
         elif "new" in request.POST:
             new_chartstring = Chartstring(
@@ -348,7 +354,8 @@ def manage(request):
         users_of_app[app] = []
         for member in members:
             try:
-                if member.user_apps_set.get(app=app).group in user.groups.all():
+                if (member.user_apps_set.get(app=app).group
+                    in user.groups.all()):
                     requested, downloadable = False, False
                     status = User_Apps.objects.get(app=app, user=member).status
 
@@ -393,8 +400,8 @@ def manage(request):
         'all_chartstrings': all_chartstrings,
         'all_users': all_users,
         'chart_history': chart_history,
-        'messages' : messages,
-        'notifications' : len(messages),
+        'messages': messages,
+        'notifications': len(messages),
         })
 
     con.update(csrf(request))
