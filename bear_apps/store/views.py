@@ -16,7 +16,6 @@ def home(request):
         An invalid password redirects to this page with a blank password field.
         An invalid username redirects the user to /register.
     """
-    not_user = False
     logout = False
 
     # Deletes session if logged in previously.
@@ -42,7 +41,6 @@ def home(request):
             return HttpResponseRedirect('/register/')
 
     con = Context({
-        'not_user': not_user,
         'logout': logout,
     })
 
@@ -65,11 +63,11 @@ def register(request):
             studentid = request.POST['SID']
             password = request.POST['password']
             verify = request.POST['verify-password']
+            status = request.POST['status']
             group_count = int(request.POST['group_count'])
             groups = []
             for i in range(1, group_count + 1):
                 groups.append(request.POST['groups-' + str(i)])
-            status = request.POST['status']
         except ObjectDoesNotExist:
             con['empty_fields'] = True
             con.update(csrf(request))
@@ -116,7 +114,7 @@ def register(request):
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
-            if new_user.user_type != "GENERAL":
+            if new_user.user_type == "GENERAL":
                 managers = User.objects.filter(
                     groups=add_group,
                     user_type="MANAGER")
@@ -294,12 +292,10 @@ def manage(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    groups = user.groups.all()
-    all_users = User.objects.all()
 
     # Sorts all groups & all users in alphabetical order.
-    groups = sorted(groups, key=lambda group: group.name)
-    all_users = sorted(all_users, key=lambda user: user.name)
+    groups = sorted(user.groups.all(), key=lambda group: group.name)
+    all_users = sorted(User.objects.all(), key=lambda user: user.name)
     all_users.remove(user)
 
     if request.method == 'POST':
