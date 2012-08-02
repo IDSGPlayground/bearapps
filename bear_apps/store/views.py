@@ -300,6 +300,7 @@ def manage(request):
     # Sorts all groups & all users in alphabetical order.
     groups = sorted(groups, key=lambda group: group.name)
     all_users = sorted(all_users, key=lambda user: user.name)
+    all_users.remove(user)
 
     if request.method == 'POST':
         if "approve" in request.POST:
@@ -363,11 +364,9 @@ def manage(request):
 
     for app in App.objects.all():
         # Generates a list of members in all groups associated with the user.
-        members = []
-        for group in groups:
-            for person in all_users:
-                if group in person.groups.all() and person != user:
-                    members.append(person)
+
+        members = [member for member in all_users
+            if (len(set(member.groups.all()).intersection(set(groups))) > 0)]
 
         users_of_app[app] = []
         for member in members:
@@ -401,10 +400,8 @@ def manage(request):
         all_chartstrings[group] = [(group.name, chartstrings,)]
         print all_chartstrings
 
-        members = []
-        for person in all_users:
-            if group in person.groups.all() and person != user:
-                members.append(person)
+        members = [member for member in all_users
+                    if group in member.groups.all()]
 
         all_members[group] = [(group.name, members,)]
 
@@ -416,7 +413,6 @@ def manage(request):
         'users_of_app': users_of_app,
         'all_members': all_members,
         'all_chartstrings': all_chartstrings,
-        'all_users': all_users,
         'chart_history': chart_history,
         'messages': messages,
         'notifications': len(messages),
@@ -436,14 +432,9 @@ def admin(request):
 
     user = User.objects.get(name=request.session['user'])
     all_users = User.objects.all()
-    user_summary = {}
-    count = 0
 
-    for person in all_users:
-        if person != user:
-            user_summary[count] = []
-            user_summary[count].append((person, person.user_apps_set.all()))
-            count += 1
+    user_summary = [(member, member.user_apps_set.all())
+                        for member in all_users if member != user]
 
     chartstrings = Chartstring.objects.all()
 

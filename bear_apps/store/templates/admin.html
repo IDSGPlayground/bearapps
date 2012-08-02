@@ -34,21 +34,19 @@
                 </thead>
                 <tbody>
 
-                  {% for key, user in user_summary.items %}
-                      {% for user_info, user_apps in user %}  
-                        {% for app in user_apps %}  
-                          {% if app.status == 'APPROVED' %}     
-                          <tr>
-                            <td>{{ app.chartstring }}</td>
-                            <td>{{ user_info.name }}</td>
-                            <td>{{ app.app.app_name }}</td>
-			                      <td>{{ app.date }}</td>
-                            <td>${{ app.app.price }}</td>
-                            <td>{{ app.chartstring.manager }}</td>
-                          </tr>
-                          {% endif %}
-                        {% endfor %}
-                      {% endfor %}
+                  {% for user_info, user_apps in user_summary %}  
+                    {% for app in user_apps %}  
+                      {% if app.status == 'APPROVED' %}     
+                      <tr>
+                        <td>{{ app.chartstring }}</td>
+                        <td>{{ user_info.name }}</td>
+                        <td>{{ app.app.app_name }}</td>
+	                      <td>{{ app.date }}</td>
+                        <td>${{ app.app.price }}</td>
+                        <td>{{ app.chartstring.manager }}</td>
+                      </tr>
+                      {% endif %}
+                    {% endfor %}
                   {% endfor %}
 
                 </tbody>
