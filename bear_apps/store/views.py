@@ -127,7 +127,8 @@ def register(request):
 
         # Redirects user to the log in page.
         return HttpResponseRedirect('/')
-
+    elif "cancel" in request.POST:
+        return HttpResponseRedirect('/')
     con.update(csrf(request))
     return render_to_response('register.html', con)
 
@@ -234,8 +235,8 @@ def myapps(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    if user.user_type!="GENERAL":
-        if user.user_type=="ADMIN":
+    if user.user_type != "GENERAL":
+        if user.user_type == "ADMIN":
             return HttpResponseRedirect('/admin/')
         return HttpResponseRedirect('/manage/')
     apps = App.objects.all()
@@ -293,8 +294,8 @@ def manage(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    if user.user_type!="MANAGER":
-        if user.user_type=="GENERAL":
+    if user.user_type != "MANAGER":
+        if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
         return HttpResponseRedirect('/admin/')
     # Sorts all groups & all users in alphabetical order.
@@ -412,10 +413,10 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    if user.user_type!="ADMIN":
-        if user.user_type=="GENERAL":
+    if user.user_type != "ADMIN":
+        if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
-        return HttpResponseRedirect('/manage/')    
+        return HttpResponseRedirect('/manage/')
     all_users = User.objects.all()
 
     user_summary = [(member, member.user_apps_set.all())
