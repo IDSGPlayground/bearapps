@@ -355,7 +355,7 @@ def manage(request):
                                     name=request.POST['group'])
             new_chartstring.save()
 
-        request.method = None
+        return HttpResponseRedirect('manage')
 
     chart_history = {chartstring: chartstring.user_apps_set.all() for chartstring in Chartstring.objects.all()}
 
@@ -379,20 +379,12 @@ def manage(request):
             else:
                 users_of_app[user_app.app] = [(member, status, chartstrings,)]
 
+    chartstrings = sorted(Chartstring.objects.filter(manager=user),
+                        key=lambda chartstring: chartstring.nickname.lower())
 
-    all_chartstrings, all_members = {}, {}
-
-    for group in groups:
-        chartstrings = group.chartstring_set.all()
-        chartstrings = sorted(chartstrings,
-                            key=lambda chartstring: chartstring.nickname)
-        all_chartstrings[group] = [(group.name, chartstrings,)]
-        print all_chartstrings
-
-        members = [member for member in all_users
-                    if group in member.groups.all()]
-
-        all_members[group] = [(group.name, members,)]
+    members_by_group = {group: [member for member in
+                        User.objects.filter(groups=group)
+                        if member != user] for group in groups}
 
     messages = get_Notifications(user)
 
@@ -400,8 +392,8 @@ def manage(request):
         'username': request.session['user'],
         'groups': groups,
         'users_of_app': users_of_app,
-        'all_members': all_members,
-        'all_chartstrings': all_chartstrings,
+        'members_by_group': members_by_group,
+        'chartstrings': chartstrings,
         'chart_history': chart_history,
         'messages': messages,
         'notifications': len(messages),

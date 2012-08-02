@@ -69,15 +69,13 @@
 		    </div>
 		    <div class="tab-pane" id="groups">
 		      <h2 class="manage-tab">MY GROUPS</h2>
-		      {% for group, group_info in all_members.items %}
-		      	{% for group_name, members in group_info %}
-		      		<h3>{{ group_name }}</h3>
-			      <ul>
+		      {% for group, members in members_by_group.items %}
+		      	<h3>{{ group.name }}</h3>
+			    <ul>
 			      	{% for member in members %}
 			      	<li><a href="#{{ member.SID }}" data-toggle="modal">{{ member.name }} (SID: {{ member.SID }})</a></li>
 			      	{% endfor %}
-			      </ul>
-		      	{% endfor %}
+			   	</ul>
 		      {% endfor %}
 		    </div>
 		   	<div class="tab-pane" id="chartstrings">
@@ -85,12 +83,8 @@
 		      <button type="button" class="btn btn-primary" data-toggle="modal" href="#new" value="Add New Chartstring">Add New Chartstring</button>
 		      </br><hr>
 		      <ul>
-		      	{% for group, chartstring_info in all_chartstrings.items %}
-		      		{% for group_name, chartstrings in chartstring_info %}
-		      			{% for chartstring in chartstrings %}
-		      				<li><a href="#{{ chartstring.chartstring }}" data-toggle="modal">{{ chartstring.nickname }}</a>: {{ chartstring.chartstring }}</li>
-		      			{% endfor %}
-		      		{% endfor %}
+		      	{% for chartstring in chartstrings %}
+		      	<li><a href="#{{ chartstring.chartstring }}" data-toggle="modal">{{ chartstring.nickname }}</a>: {{ chartstring.chartstring }}</li>
 		      	{% endfor %}
 		      </ul>
 		    </div>
@@ -129,36 +123,32 @@
     </div>
  </div>
 
-{% for group, group_info in all_members.items %}
-	{% for group_name, members in group_info %}
-		{% for member in members %}
-		 <div class="modal fade hide manage" id="{{ member.SID }}">
-		    <div class="modal-header">
-		    	<h3>{{ member.name }}</h3>
-		    	<button type="button" class="close" data-dismiss="modal">×</button>
-		  	</div>
-		  	<div class="modal-body">
-		  		<h4>Requests</h4>
-
-		  		<h4>Licenses</h4>
-		  		<table class="table table-striped">
-		  			<tbody>
-				  		{% for chartstring, chartstring_info in chart_history.items %}
-				  			{% for item in chartstring_info %}
-				  				{% if item.user.name == member.name %}
-				  				<tr>
-								<td>{{ item.app.app_name }}</td>
-								<td>{{ item.date }}</td>
-								<td>${{ item.app.price }}</td>
-								</tr>
-								{% endif %}
-							{% endfor %}
+{% for group, members in members_by_group.items %}
+	{% for member in members %}
+	 <div class="modal fade hide manage" id="{{ member.SID }}">
+	    <div class="modal-header">
+	    	<h3>{{ member.name }}</h3>
+	    	<button type="button" class="close" data-dismiss="modal">×</button>
+	  	</div>
+	  	<div class="modal-body">
+	  		<h4>License History</h4>
+	  		<table class="table table-striped">
+	  			<tbody>
+			  		{% for chartstring, chartstring_info in chart_history.items %}
+			  			{% for item in chartstring_info %}
+			  				{% if item.user.name == member.name %}
+			  				<tr>
+							<td>{{ item.app.app_name }}</td>
+							<td>{{ item.date }}</td>
+							<td>${{ item.app.price }}</td>
+							</tr>
+							{% endif %}
 						{% endfor %}
-					</tbody>
-				</table>
-		    </div>
-		 </div>
-		{% endfor %}
+					{% endfor %}
+				</tbody>
+			</table>
+	    </div>
+	 </div>
 	{% endfor %}
 {% endfor %}
 
