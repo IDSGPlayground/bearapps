@@ -60,9 +60,11 @@
 				</a>
 				<ul class="dropdown-menu">
 					{% if notifications > 0 %}
+					<div>
 					{% for message in messages %}
-						<li><a href="#">{{ message }}</a></li>
+						<li id="{{ message.pk }}"><a onclick="$('#{{ message.pk }}').fadeOut().hide();" onmouseover="this.style.cursor='pointer'; $('#{{ message.pk }}').css('background', 'rgba(15,150,255,0.65)');" onmouseout="$('#{{ message.pk }}').css('background-color', 'white');">{{ message }} </a></li>
 					{% endfor %}
+					</div>
 					{% else %}
 						<li><a href="#">No New Notifications</a></li>
 					{% endif %}

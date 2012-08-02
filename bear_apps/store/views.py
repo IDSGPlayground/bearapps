@@ -8,6 +8,7 @@ from store.models import User, User_Apps, App, Chartstring, Group
 from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 def home(request):
@@ -66,7 +67,7 @@ def register(request):
             groups = []
             for i in range(1, group_count + 1):
                 groups.append(request.POST['groups-' + str(i)])
-        except ObjectDoesNotExist:
+        except (MultiValueDictKeyError, ObjectDoesNotExist):
             con['empty_fields'] = True
             con.update(csrf(request))
             return render_to_response('register.html', con)
