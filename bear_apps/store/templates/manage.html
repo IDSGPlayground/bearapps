@@ -23,8 +23,8 @@
 		      {% for app, user in users_of_app.items %}
 		      	<h3>{{ app.app_name }}</h3>
 		        <h4>Requested</h4>
-		      	{% for user_info, requested, downloadable, chartstrings in user %}
-			      	{% if requested %} 
+		      	{% for user_info, status, chartstrings in user %}
+			      	{% if status == "REQUESTED" %} 
 				      		<li>{{ user_info.name }}</li>
 							<form name="approve" method="post" action="/manage/">
 								{% csrf_token %}
@@ -50,13 +50,13 @@
 		      	{% endfor %}
 		      	</br>
 		      	<h4>Licensed</h4>
-		      	{% for u, requested, downloadable, c in user %}
-			      	{% if downloadable %}
-				      	<li>{{ u.name }}</li>
+		      	{% for user_info, status, chartstrings in user %}
+			      	{% if status == "APPROVED" %}
+				      	<li>{{ user_info.name }}</li>
 				      	<form name="revoke" method="post" action="/manage/">
 								{% csrf_token %}
 								<input type="hidden" name="app" value="{{ app.href_name }}"></input>
-								<input type="hidden" name="user" value="{{ u.SID }}"></input>
+								<input type="hidden" name="user" value="{{ user_info.SID }}"></input>
 								<input type="submit"
 								       value="Revoke License"
 								       name="revoke"

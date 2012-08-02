@@ -357,39 +357,28 @@ def manage(request):
 
         request.method = None
 
+    chart_history = {chartstring: chartstring.user_apps_set.all() for chartstring in Chartstring.objects.all()}
+
+    members = [member for member in all_users
+        if (len(set(member.groups.all()).intersection(set(groups))) > 0)]
+
     users_of_app = {}
-    chart_history = {}
-    for chartstring in Chartstring.objects.all():
-        chart_history[chartstring] = chartstring.user_apps_set.all()
+    for member in members:
+        chartstrings = [chartstring for chartstring
+                        in Chartstring.objects.all()
+                        if (chartstring.group in user.groups.all())
+                        and (chartstring.group in member.groups.all())]
+        user_apps = [user_app for user_app
+                    in member.user_apps_set.all()
+                    if user_app.group in user.groups.all()]
+        for user_app in user_apps:
+            status = user_app.status
+            if user_app.app in users_of_app:
+                users_of_app[user_app.app].append(
+                    (member, status, chartstrings))
+            else:
+                users_of_app[user_app.app] = [(member, status, chartstrings,)]
 
-    for app in App.objects.all():
-        # Generates a list of members in all groups associated with the user.
-
-        members = [member for member in all_users
-            if (len(set(member.groups.all()).intersection(set(groups))) > 0)]
-
-        users_of_app[app] = []
-        for member in members:
-            try:
-                if (member.user_apps_set.get(app=app).group
-                    in user.groups.all()):
-                    requested, downloadable = False, False
-                    status = User_Apps.objects.get(app=app, user=member).status
-
-                    if status == 'REQUESTED':
-                        requested = True
-                    elif status == 'APPROVED':
-                        downloadable = True
-
-                    chartstrings = []
-                    for group in user.groups.all():
-                        for chartstring in group.chartstring_set.all():
-                            chartstrings.append(chartstring)
-
-                    users_of_app[app].append(
-                        (member, requested, downloadable, chartstrings,))
-            except ObjectDoesNotExist:
-                pass
 
     all_chartstrings, all_members = {}, {}
 
