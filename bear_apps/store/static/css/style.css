@@ -1919,7 +1919,7 @@ legend + .control-group {
 }
 
 table {
-  max-width: 100%;
+  max-width: 1000px;
   background-color: transparent;
   border-collapse: collapse;
   border-spacing: 0;
@@ -1927,6 +1927,7 @@ table {
 
 .table {
   width: 100%;
+  max-width: 1000px;
   margin-bottom: 18px;
 }
 

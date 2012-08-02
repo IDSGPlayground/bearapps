@@ -34,8 +34,6 @@ def home(request):
                 sid = User.objects.get(name=user).SID
                 request.session['sid'] = sid
                 return HttpResponseRedirect('/browse/')
-            # else:
-            #     return render_to_response('index.html', c)
         except ObjectDoesNotExist:
             # Redirects to registration page if username does not exist.
             return HttpResponseRedirect('/register/')
