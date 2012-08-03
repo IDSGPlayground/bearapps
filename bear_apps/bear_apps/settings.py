@@ -9,6 +9,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+DAJAXICE_MEDIA_PREFIX="dajaxice"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -87,7 +89,7 @@ SECRET_KEY = '3k%p@0g^%150ox6qe#_3q%s-_2=tv=e^_s429#yq78ow^r(7_s'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,6 +101,10 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth')
 
 ROOT_URLCONF = 'bear_apps.urls'
 
@@ -124,6 +130,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'store',
+    'dajaxice',
 )
 
 # A sample logging configuration. The only tangible logging
