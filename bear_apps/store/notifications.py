@@ -43,3 +43,14 @@ def add_Notification(user, code, info):
     notification = Notification(user=user, message=message, viewed=False)
     notification.user = user
     notification.save()
+
+
+def delete_Notifications(user):
+    """ Deletes ALL messages for a user.
+    """
+    messages = get_Notifications(user)
+
+    for message in messages:
+        message.delete()
+    user.notifications = 0
+    user.save()
