@@ -217,10 +217,11 @@ def browse(request):
             'groups': sorted(user.groups.all(), key=lambda group: group.name),
         })
 
+    """
     for message in messages:
         message.delete()
     user.notifications = 0
-    user.save()
+    user.save()"""
 
     # Update context with Security token for html form
     con.update(csrf(request))

@@ -26,6 +26,7 @@
                   <tr>
                     <th>Chartstring</th>
                     <th>Username</th>
+                    <th>Group</th>
                     <th>Description</th>
 		                <th>Date Approved</th>
                     <th>Price</th>
@@ -40,6 +41,7 @@
                       <tr>
                         <td>{{ app.chartstring }}</td>
                         <td>{{ user_info.name }}</td>
+                        <td>{{ app.group.name }}</td>
                         <td>{{ app.app.app_name }}</td>
 	                      <td>{{ app.date }}</td>
                         <td>${{ app.app.price }}</td>

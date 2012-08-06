@@ -1,3 +1,4 @@
+{% load dajaxice_templatetags %}
 <html>
 <head>
     <meta charset="UTF-8">
@@ -11,7 +12,6 @@
     <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
     <link rel="Shortcut Icon" href="../static/img/favicon.ico">
-
 </head>
 
 <body>
@@ -51,19 +51,22 @@
 
 			<div class="btn-group pull-right">
 				{% if notifications > 0 %}
-				<a class="btn btn-danger dropdown-toggle" alt="You have {{notifications}} notifications" data-toggle="dropdown" href="#">
+				<a class="btn btn-danger dropdown-toggle" alt="You have {{notifications}} notifications" data-toggle="dropdown"  id="notify_color" href="#">
 				{% else %}
-				<a class="btn btn-primary dropdown-toggle" alt="You have no notifications" data-toggle="dropdown" href="#">
+				<a class="btn btn-primary dropdown-toggle" alt="You have no notifications" data-toggle="dropdown" id="notify_color" href="#">
 				{% endif %}
-				<i class="icon-bell icon-white"></i> {{ notifications }}
+				<i class="icon-bell icon-white"></i><span id="notif_number"> {{ notifications }}</span>
 				<span class="caret"></span>
 				</a>
-				<ul class="dropdown-menu">
+				<ul class="dropdown-menu" id="mylist">
 					{% if notifications > 0 %}
-					<div>
+					<div id="allmessages">
 					{% for message in messages %}
-						<li id="{{ message.pk }}"><a onclick="$('#{{ message.pk }}').fadeOut().hide();" onmouseover="this.style.cursor='pointer'; $('#{{ message.pk }}').css('background', 'rgba(15,150,255,0.65)');" onmouseout="$('#{{ message.pk }}').css('background-color', 'white');">{{ message }} </a></li>
+						<li id="{{ message.pk }}"><a>{{ message }}</a></li>
 					{% endfor %}
+					</div>
+					<div>
+						<li id="clear_notifications"><a onclick="Dajaxice.store.message_update(my_js_callback);" onmouseover="this.style.cursor='hand'"><center><b>Clear All Notifications?</b></center></a></li>
 					</div>
 					{% else %}
 						<li><a href="#">No New Notifications</a></li>
@@ -91,6 +94,18 @@
 ================================================== -->
 <script src="../static/js/jquery.js"></script>
 {% block javascript %}{% endblock %}
+{% dajaxice_js_import %}
+<script>
+  function my_js_callback(data){
+  	$('#allmessages').fadeOut().hide();
+  	$('#clear_notifications').hide();
+  	document.getElementById('notif_number').innerHTML = ' 0';
+  	document.getElementById("notify_color").className = 'btn btn-primary dropdown-toggle';
+  	var emptynotify = '<li><a href="#">No New Notifications.</a></li>'
+  	document.getElementById('mylist').innerHTML = emptynotify;
+    alert(data.message);
+  }
+</script>
 <script src="../static/js/bootstrap-transition.js"></script>
 <script src="../static/js/bootstrap-alert.js"></script>
 <script src="../static/js/bootstrap-modal.js"></script>
