@@ -368,25 +368,18 @@ def manage(request):
 
     chart_history = {chartstring: chartstring.user_apps_set.all() for chartstring in Chartstring.objects.all()}
 
-    members = [member for member in all_users
-        if (len(set(member.groups.all()).intersection(set(groups))) > 0)]
+    members = filter(lambda member: len(set(member.groups.all()).intersection(set(groups))) > 0, all_users)
 
     users_of_app = {}
     for member in members:
-        chartstrings = [chartstring for chartstring
-                        in Chartstring.objects.all()
-                        if (chartstring.group in user.groups.all())
-                        and (chartstring.group in member.groups.all())]
-        user_apps = [user_app for user_app
-                    in member.user_apps_set.all()
-                    if user_app.group in user.groups.all()]
+        chartstrings = filter(lambda chartstring: chartstring.group in user.groups.all() and chartstring.group in member.groups.all(), Chartstring.objects.all())
+        user_apps = filter(lambda user_app: user_app.group in user.groups.all(), member.user_apps_set.all())
+
         for user_app in user_apps:
-            status = user_app.status
             if user_app.app in users_of_app:
-                users_of_app[user_app.app].append(
-                    (member, status, chartstrings))
+              users_of_app[user_app.app].append((member, user_app.status, chartstrings))
             else:
-                users_of_app[user_app.app] = [(member, status, chartstrings,)]
+              users_of_app[user_app.app] = [(member, user_app.status, chartstrings)]
 
     chartstrings = sorted(Chartstring.objects.filter(manager=user),
                         key=lambda chartstring: chartstring.nickname.lower())
