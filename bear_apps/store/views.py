@@ -9,7 +9,12 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
+import pycas
 
+CAS_SERVER = "https://auth.berkeley.edu/cas/login"
+SERVICE_URL = "127.0.0.1:8000"
+status, id, cookie = pycas.login(CAS_SERVER, SERVICE_URL)
+# HttpResponseRedirect(cookie)
 
 def home(request):
     """ Defines the login page for BearApps.
@@ -17,6 +22,7 @@ def home(request):
         An invalid password redirects to this page with a blank password field.
         An invalid username redirects the user to /register.
     """
+
     logout = False
 
     # Deletes session if logged in previously.
