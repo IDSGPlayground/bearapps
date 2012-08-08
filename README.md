@@ -10,7 +10,10 @@ Table of Contents:
 ==========================================================================
 SECTION I. DOWNLOADING THE APPLICATION
 
-To download the files necessary to run BearApps, use github. Browse to:
+Welcome to BearApps! BearApps is an Django base application that provides
+an easy and centralized way for UC Berkeley students to download software, 
+specifically MatLab. To download the files necessary to run BearApps, use 
+github. Browse to:
 
 	https://github.com/IDSGPlayground/bearapps
 
@@ -113,6 +116,78 @@ should be redirected to:
         localhost:8000/browse
 
 Here, you will see the apps available for you to download, which should be
-Matlab and Matlab + Toolbox. 
+Matlab and Matlab + Toolbox. You can click on any of the tiles to bring down
+a dropdown menu that contains the information about the app and the button to
+request it. After you click the request button, it will be grayed out.
+
+If you entered in the credentials of a professor or RSO, you should be 
+redirected to:
+	
+	localhost:8000/manage
+
+Here, you will see the current licenses owned and the requests made by 
+members of your group. You can revoke licenses, deny licenses, and approve 
+licenses by clicking the respective buttons. If you approve a license, 
+you must also select a chartstring. If you do not have a chartstring, 
+you can click the "Chartstrings" tab under "Manage Licenses". Once there, 
+you have the option of adding a new chartstring by clicking the "Add New 
+Chartstring" button. The "Groups" tab shows all the groups that the user
+belongs to and the member in each group.
+
+If you entered the credentials of an admin, you should be redirected to:
+
+	localhost:8000/admin
+
+Here, you will see a table of all the purchases made by all the users. 
+You can sort by chartstring, username, group, description, date approved,
+price, or RSO. There is also a separate table for the chartstrings, which 
+contains the name and chartstring for each. You can also sort this be name 
+and chartstring.
+
+==========================================================================
+SECTION IV. BROWSING AND FEATURES
+
+BearApps features a notification tab on the upper right-hand corner of the 
+screen. Undergradute and Graduate users will recieve message regarding the 
+state of their requested app. If the manager approves the user's requested 
+app, the user will receive a notification indicating so. Managers also receive 
+notifications about requests for software made by members in their groups. 
+Moreover, these notifications also remain with the user until he or she has 
+clicked the "CLEAR ALL NOTIFICATIONS" button in the norifications box.
+
+Another useful feature is the "My Apps" tab the to top of the page for 
+Undergraduates and Gradutes. Here, the user will be able to see all the approved
+and downloadable apps.
+
+Also, we included dropdown box in the manage page that displays the past history 
+for each user and chartstring when clicked. The history includes the software 
+name, date approved, and the cost of the software. 
+
+We also implemented a registration sheet that is displayed if you enter in 
+a user name that does not exist in the database (or if you do not enter in 
+any user name and password combination), you will be redirected to a registration 
+page, where you can register a new user. Also, note that if you enter in a user 
+name and password combination that is incorrect, you will not be directed to the
+registration page.
+
+Finally, we also a table into the admin page that can sort itself based on 
+software name, user name, date, price, RSO, and date approved. The table can 
+be sorted by pressing the arrow icon to the right of each column. This makes 
+for a compact interface that does not need extra buttons of tabs to sort the table.
+
+==========================================================================
+SECTION V. USER TYPES AND USER SETTINGS
+
+Undergradute and Gradute: Have the ability to request and, once approved,
+download software. They belong to one or more groups that are managed by an
+RSO or professor. They may belong to several groups.
+
+RSO and Professor: Approve, deny, or revoke the licenses of the users within
+their groups. As with Graduates and Undergraduates, they may belong to several
+groups. RSOs and Professors also have the ability to enter in new chartstrings
+that are used to charge for software requested by the Graduates and Undergraduates
+
+Admin: Access to a complete table of purchases made by any user in BearApps. 
+He or she can organize and keep track of activity within the application.
 
 
