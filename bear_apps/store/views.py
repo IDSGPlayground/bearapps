@@ -447,11 +447,15 @@ def admin(request):
 
     chartstrings = Chartstring.objects.all()
 
+    messages = get_Notifications(user)
+
     con = Context({
         'username': user.name,
         'user_summary': user_summary,
         'chartstrings': chartstrings,
         'groups': groups,
+        'messages': messages,
+        'notifications': len(messages),
         })
     con.update(csrf(request))
     return render_to_response('admin.html', con)
