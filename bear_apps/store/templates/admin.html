@@ -12,15 +12,13 @@
 
     <div class="row-fluid">
         <div class="span12">
-          <!-- <ul id="manage-tabs" class="nav nav-tabs">
-            <li class="active"><a href="#summary" data-toggle="tab">Summary</a></li>
-            <li><a href="#groups" data-toggle="tab">By Group</a></li>
-            <li><a href="#chartstrings" data-toggle="tab">By Chartstring</a></li>
-          </ul> -->
-
+          <ul id="manage-tabs" class="nav nav-tabs">
+            <li class="active"><a href="#summary" data-toggle="tab">Transactions</a></li>
+            <li><a href="#chartstrings" data-toggle="tab">Chartstrings</a></li>
+          </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="summary">
-
+              <h2 class="manage-tab">ALL TRANSACTIONS</h2>
               <table class="table table-striped tablesorter" id="myTable" >
                 <thead>
                   <tr>
@@ -50,10 +48,19 @@
                       {% endif %}
                     {% endfor %}
                   {% endfor %}
-
                 </tbody>
               </table>
-
+            </div>
+            <div class="tab-pane" id="chartstrings">
+              <h2 class="manage-tab">CHARTSTRINGS</h2>
+              <hr>
+              <button type="button" 
+                      class="btn btn-primary" 
+                      data-toggle="modal" 
+                      href="#new" 
+                      value="Add New Chartstring">Add New Chartstring</button>
+              <br>
+              <hr>
               <table class="table table-striped tablesorter" id="chartTable">
                 <thead>
                   <tr>
@@ -71,12 +78,41 @@
                 </tbody>
               </table>
             </div>
-
           </div>   
 
         </div>
     </div>
 
+<div class="modal fade hide manage" id="new">
+ <div class="modal-header">
+      <h3>Add New Chartstring</h3>
+      <button type="button" class="close" data-dismiss="modal">×</button>
+    </div>
+    <div class="modal-body">
+  <form name="new" method="post" action="/admin/">
+    {% csrf_token %}
+    <label>Chartstring Name: </label>
+    <input type="text" name="nickname"></input>
+    <label>Group: </label>
+    <select name="group">
+      {% for group in groups %}
+      <option value="{{ group.name }}">{{ group.name }}</option>
+      {% endfor %}
+    </select>
+    <label>Chartstring</label>
+    <input type="text" name="chartstring"></input>
+    
+    <label> Budget: </label>
+    <input type="text" name="amount"></input>
+
+    </br></br>
+    <input type="submit"
+           value="Add Chartstring"
+           name="new"
+           class="btn btn-primary"></input>
+  </form>
+    </div>
+ </div>
 
 {% endblock %}
 {% block javascript %}
