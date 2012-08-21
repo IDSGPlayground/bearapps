@@ -376,8 +376,14 @@ def manage(request):
             else:
                 users_of_app[user_app.app] = [(member, user_app.status, chartstrings)]
 
-    chartstrings = sorted(Chartstring.objects.filter(manager=user),
+    temp_chartstrings = []
+
+    for group in groups:
+        temp_chartstrings = sorted(Chartstring.objects.filter(group=group),
                         key=lambda chartstring: chartstring.nickname.lower())
+
+        for chartstring in temp_chartstrings:
+            [chartstrings.append(chartstring) for chartstring in temp_chartstrings if not chartstrings.count(chartstring)]
 
     members_by_group = {group: [member for member in
                         User.objects.filter(groups=group)
@@ -409,23 +415,50 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
+
     if user.user_type != "ADMIN":
         if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
         return HttpResponseRedirect('/manage/')
+
+    #don't paste any code above here!
+    if request.method == 'POST':
+        if "new" in request.POST:
+            new_chartstring = Chartstring(
+                nickname=request.POST['nickname'],
+                chartstring=request.POST['chartstring'],
+                budget=request.POST['amount'],
+                remaining=request.POST['amount'],
+                manager=user)
+            new_chartstring.group = Group.objects.get(
+                                    name=request.POST['group'])
+            new_chartstring.save()
+
     all_users = User.objects.all()
+
+    groups = Group.objects.all()
+    user_groups = user.groups.all()
+    # If an admin isn't in every group, add them.
+    for group in groups:
+        if group not in user_groups:
+            user.groups.add(group)
 
     user_summary = [(member, member.user_apps_set.all())
                         for member in all_users if member != user]
 
     chartstrings = Chartstring.objects.all()
 
+    messages = get_Notifications(user)
+
     con = Context({
         'username': user.name,
         'user_summary': user_summary,
         'chartstrings': chartstrings,
+        'groups': groups,
+        'messages': messages,
+        'notifications': len(messages),
         })
-
+    con.update(csrf(request))
     return render_to_response('admin.html', con)
 
 
