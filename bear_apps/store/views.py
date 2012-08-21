@@ -283,6 +283,7 @@ def myapps(request):
         'notifications': notifications,
         'messages': messages,
         })
+    return HttpResponseRedirect('/manage/')
 
     return render_to_response('my-apps.html', con)
 
@@ -371,9 +372,9 @@ def manage(request):
 
         for user_app in user_apps:
             if user_app.app in users_of_app:
-              users_of_app[user_app.app].append((member, user_app.status, chartstrings))
+                users_of_app[user_app.app].append((member, user_app.status, chartstrings))
             else:
-              users_of_app[user_app.app] = [(member, user_app.status, chartstrings)]
+                users_of_app[user_app.app] = [(member, user_app.status, chartstrings)]
 
     chartstrings = sorted(Chartstring.objects.filter(manager=user),
                         key=lambda chartstring: chartstring.nickname.lower())
