@@ -414,7 +414,8 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-
+    if len(user.groups.filter(name='')) > 0:
+        user.groups.filter(name='').delete()
     if user.user_type != "ADMIN":
         if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
