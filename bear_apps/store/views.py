@@ -125,7 +125,8 @@ def register(request):
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
-
+        if len(new_user.groups.filter(name='')) > 0:
+            new_user.groups.filter(name='').delete()
         # Redirects user to the log in page.
         return HttpResponseRedirect('/')
     elif "cancel" in request.POST:
@@ -414,8 +415,6 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-    if len(user.groups.filter(name='')) > 0:
-        user.groups.filter(name='').delete()
     if user.user_type != "ADMIN":
         if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
