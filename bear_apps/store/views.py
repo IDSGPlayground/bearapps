@@ -110,6 +110,12 @@ def register(request):
             try:
                 add_group = Group.objects.get(name=group)
             except ObjectDoesNotExist:
+                if user_type == "GENERAL" or user_type == "MANAGER":
+                    if group == '':
+                        con['blank_group'] = True
+                        new_user.delete()
+                        con.update(csrf(request))
+                        return render_to_response('register.html', con)
                 add_group = Group.objects.create(name=group)
             new_user.groups.add(add_group)
 
