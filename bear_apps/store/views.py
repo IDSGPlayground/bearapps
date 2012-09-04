@@ -110,10 +110,17 @@ def register(request):
             try:
                 add_group = Group.objects.get(name=group)
             except ObjectDoesNotExist:
-                add_group = Group.objects.create(name=group)
-            new_user.groups.add(add_group)
+                if user_type == "GENERAL":
+                    if group == '':
+                        con['blank_group'] = True
+                        new_user.delete()
+                        con.update(csrf(request))
+                        return render_to_response('register.html', con)
+                if user_type == "MANAGER" and group != '':
+                    add_group = Group.objects.create(name=group)
+                    new_user.groups.add(add_group)
 
-            if new_user.user_type == "GENERAL":
+            if new_user.user_type == "GENERAL" and add_group != None:
                 managers = User.objects.filter(
                     groups=add_group,
                     user_type="MANAGER")
@@ -125,7 +132,8 @@ def register(request):
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
-
+        if len(new_user.groups.filter(name='')) > 0:
+            new_user.groups.filter(name='').delete()
         # Redirects user to the log in page.
         return HttpResponseRedirect('/')
     elif "cancel" in request.POST:
@@ -415,7 +423,6 @@ def admin(request):
         return HttpResponseRedirect('/')
 
     user = User.objects.get(name=request.session['user'])
-
     if user.user_type != "ADMIN":
         if user.user_type == "GENERAL":
             return HttpResponseRedirect('/browse/')
