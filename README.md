@@ -1,10 +1,11 @@
 BearApps Documentation
 ==========================================================================
 Table of Contents:
+
     i. Downloading the server application
-   ii. Setting up the application
-  iii. Getting started with BearApps
-   iv. Browsing and Features
+    ii. Setting up the application
+    iii. Getting started with BearApps
+    iv. Browsing and Features
     v. User types and user settings
 
 ==========================================================================
