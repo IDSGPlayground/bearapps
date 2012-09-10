@@ -16,37 +16,46 @@ an easy and centralized way for UC Berkeley students to download software,
 specifically MatLab. To download the files necessary to run BearApps, use 
 github. Browse to:
 
-	https://github.com/IDSGPlayground/bearapps
+        https://github.com/IDSGPlayground/bearapps
 
 and either fork the repository to your own account for downloading OR clone
 the repository directly onto your system using the command:
 
-	git clone https://github.com/IDSGPlayground/bearapps.git
+        git clone https://github.com/IDSGPlayground/bearapps.git
 
-This will retrieve the files in the current directory. You may need to
-install some additional packages to your system before you can proceed to
-set-up. These packages include:
-	git
-	virtualenvwrapper
-	virtualenv
-	django
+Before installing dependencies, make sure your python version is up to date.
+This project is based on python 2.7. To check, run the command:
+
+        python -V
+
+If your python version is less then 2.7, we reccommend updating to 2.7.
+ 
+Now, for dependencies. You may need to these additional packages to your 
+system before you can proceed to set-up:
+
+        git
+        virtualenvwrapper
+        virtualenv
+        django
 
 To run the application, you must first install the above dependencies. For
 git, the revision control system used for  this project, use:
 
         sudo apt-get install git
 
-For virtualenvwrapper and virtualenv, use:
+For virtualenvwrapper and virtualenv, which are used to create isolated Python 
+environments, use:
 
         pip install virtualenv
         pip install virtualenvwrapper
 
-Use virtualenvwrapper to create a virtual environment for python execution
+Use virtualenv to create a virtual environment for python execution
 if you haven't already. In order to do this, type the following command:
 
         python virtualenv.py (insert name of environment here)
 
-With the environment created, you can work in it by using the command:
+With the environment created, you can work in it by using this command (which 
+was provided by virtualenvwrapper):
 
         workon (insert name of created environment here)
  
@@ -63,7 +72,7 @@ If you're not already working on a virtual environment to protect system
 dependencies, do so.
 Next, begin by preparing the BearApps database by running this command:
 
-	python manage.py syncdb
+        python manage.py syncdb
 
 This creates db.sqlite in the bear_apps directory, which is where the
 application will store the database (based on SQLITE). It will ask you
@@ -71,12 +80,12 @@ to create a super user to manage the database -- go ahead and do this.
 Now, the database needs to be initialized with actual data. BearApps
 has a browser-based facility to add this. Run the server with this command:
 
-	python manage.py runserver
+        python manage.py runserver
 
 Django will run the server on the local host. Open a browser of your
 choice and browse to:
 
-	localhost:8000/backend
+        localhost:8000/backend
 
 You should see a log-in prompt. Use the credentials you input when you
 created the super user account during the syncdb process. If you enter the
@@ -109,7 +118,7 @@ logout of it if you want.
 
 Now you can add users to the database. Browse to the following:
 
-	localhost:8000/register
+        localhost:8000/register
 
 and create as many users as you want by inputting a name, a unique
 id number, and password. For each of these users, type the name of ONE
@@ -144,7 +153,7 @@ request it. After you click the request button, it will be grayed out.
 If you entered in the credentials of a professor or RSO, you should be 
 redirected to:
 	
-	localhost:8000/manage
+         localhost:8000/manage
 
 Here, you will see the current licenses owned and the requests made by 
 members of your group. You can revoke licenses, deny licenses, and approve 
@@ -157,7 +166,7 @@ belongs to and the member in each group.
 
 If you entered the credentials of an admin, you should be redirected to:
 
-	localhost:8000/admin
+        localhost:8000/admin
 
 Here, you will see a table of all the purchases made by all the users. 
 You can sort by chartstring, username, group, description, date approved,
