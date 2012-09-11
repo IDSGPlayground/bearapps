@@ -131,7 +131,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'store',
     'dajaxice',
-    'lettuce.django',
+    #'lettuce.django',
 )
 
 # A sample logging configuration. The only tangible logging
