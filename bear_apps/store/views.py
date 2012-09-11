@@ -395,6 +395,7 @@ def manage(request):
                 users_of_app[user_app.app] = [(member, user_app.status, chartstrings)]
 
     temp_chartstrings = []
+    chartstrings = []
 
     for group in groups:
         temp_chartstrings = sorted(Chartstring.objects.filter(group=group),
