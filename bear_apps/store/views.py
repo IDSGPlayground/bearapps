@@ -400,7 +400,6 @@ def manage(request):
     for group in groups:
         temp_chartstrings = sorted(Chartstring.objects.filter(group=group),
                         key=lambda chartstring: chartstring.nickname.lower())
-
         for chartstring in temp_chartstrings:
             [chartstrings.append(chartstring) for chartstring in temp_chartstrings if not chartstrings.count(chartstring)]
 
