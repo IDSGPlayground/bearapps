@@ -301,7 +301,7 @@ def myapps(request):
         'notifications': notifications,
         'messages': messages,
         })
-    return HttpResponseRedirect('/manage/')
+    # return HttpResponseRedirect('/manage/')
 
     return render_to_response('my-apps.html', con)
 
