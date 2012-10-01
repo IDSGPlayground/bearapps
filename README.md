@@ -30,6 +30,7 @@ git, the revision control system used for  this project, use:
 For virtualenvwrapper and virtualenv, which are used to create isolated Python 
 environments, use:
 
+	apt-get install python-pip
         pip install virtualenv
         pip install virtualenvwrapper
 
