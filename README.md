@@ -15,7 +15,7 @@ Welcome to BearApps! BearApps is an Django based application that provides
 an easy and centralized way for UC Berkeley students to download software, 
 specifically MatLab.
 
-Make sure your python version is up to date. This project is based on python 
+1. Make sure your python version is up to date. This project is based on python 
 2.7. To check, run the command:
 
     python -V
@@ -24,36 +24,24 @@ If your python version is less then 2.7, we reccommend updating to 2.7.
 
     how do I update python?
     
-You will need pip for some of the installs:
+2. You will need pip for some of the installs:
 
     sudo apt-get install python-pip
 
-Install git, the revision control system used for this project:
+3. If needed, install git, the revision control system used for this project:
 
     sudo apt-get install git
+    
+Make a git repository in your home directory, to house ALL your git repositories:
 
-For virtualenvwrapper and virtualenv, which are used to create isolated Python 
-environments, use:
-
-    sudo pip install virtualenv
-    sudo pip install virtualenvwrapper
-
-Use virtualenv to create a virtual environment for python execution
-if you haven't already. In order to do this, type the following command:
-
-    python virtualenv.py (insert name of environment here)
-
-With the environment created, you can work in it by using this command (which 
-was provided by virtualenvwrapper):
-
-    workon (insert name of created environment here)
+    mkdir ~/GITREPONAME
  
-Django is necessary to run the application as it's based on the Django
+4. Django is necessary to run the application as it's based on the Django
 framework. To install Django enter in the command:
 
     pip install django
         
-Fially, to download the files necessary to run BearApps, use github. Browse to:
+5. Fially, to download the files necessary to run BearApps, use github. Browse to:
 
     https://github.com/IDSGPlayground/bearapps
 
