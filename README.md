@@ -72,7 +72,7 @@ has a browser-based facility to add this. Run the server with this command:
 Django will run the server on the local host. Open a browser of your
 choice and browse to:
 
-        localhost:8000/backend
+        127.0.0.1:8000/backend
 
 You should see a log-in prompt. Use the credentials you input when you
 created the super user account during the syncdb process. If you enter the
@@ -105,7 +105,7 @@ logout of it if you want.
 
 Now you can add users to the database. Browse to the following:
 
-        localhost:8000/register
+        127.0.0.1:8000/register
 
 and create as many users as you want by inputting a name, a unique
 id number, and password. For each of these users, type the name of ONE
@@ -122,7 +122,7 @@ SECTION III. GETTING STARTED WITH BEARAPPS
 
 To enter BearApps, return to the log-in page of the application by typing:
     
-        localhost:8000
+        127.0.0.1:8000
 
 Input the username and password of one of the users created in the register
 page.
@@ -130,7 +130,7 @@ page.
 If you entered in the credentials of a Graduate or Undergraduate, you
 should be redirected to:
 
-        localhost:8000/browse
+        127.0.0.1:8000/browse
 
 Here, you will see the apps available for you to download, which should be
 Matlab and Matlab + Toolbox. You can click on any of the tiles to bring down
@@ -140,7 +140,7 @@ request it. After you click the request button, it will be grayed out.
 If you entered in the credentials of a professor or RSO, you should be 
 redirected to:
 	
-        localhost:8000/manage
+        127.0.0.1:8000/manage
 
 Here, you will see the current licenses owned and the requests made by 
 members of your group. You can revoke licenses, deny licenses, and approve 
@@ -153,7 +153,7 @@ belongs to and the member in each group.
 
 If you entered the credentials of an admin, you should be redirected to:
 
-        localhost:8000/admin
+        127.0.0.1:8000/admin
 
 Here, you will see a table of all the purchases made by all the users. 
 You can sort by chartstring, username, group, description, date approved,
