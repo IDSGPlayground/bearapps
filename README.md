@@ -18,45 +18,47 @@ specifically MatLab.
 Make sure your python version is up to date. This project is based on python 
 2.7. To check, run the command:
 
-        python -V
+    python -V
 
 If your python version is less then 2.7, we reccommend updating to 2.7.
+
+
 
 To run the application, you must first install the below dependencies. For
 git, the revision control system used for  this project, use:
 
-        sudo apt-get install git
+    sudo apt-get install git
 
 For virtualenvwrapper and virtualenv, which are used to create isolated Python 
 environments, use:
 
-        apt-get install python-pip
-        pip install virtualenv
-        pip install virtualenvwrapper
+    apt-get install python-pip
+    pip install virtualenv
+    pip install virtualenvwrapper
 
 Use virtualenv to create a virtual environment for python execution
 if you haven't already. In order to do this, type the following command:
 
-        python virtualenv.py (insert name of environment here)
+    python virtualenv.py (insert name of environment here)
 
 With the environment created, you can work in it by using this command (which 
 was provided by virtualenvwrapper):
 
-        workon (insert name of created environment here)
+    workon (insert name of created environment here)
  
 Django is necessary to run the application as it's based on the Django
 framework. To install Django enter in the command:
 
-        pip install django
+    pip install django
         
 Fially, to download the files necessary to run BearApps, use github. Browse to:
 
-        https://github.com/IDSGPlayground/bearapps
+    https://github.com/IDSGPlayground/bearapps
 
 and either fork the repository to your own account for downloading OR clone
 the repository directly onto your system using the command:
 
-        git clone https://github.com/IDSGPlayground/bearapps.git
+    git clone https://github.com/IDSGPlayground/bearapps.git
 
 ==========================================================================
 SECTION II. SETTING UP THE APPLICATION
@@ -66,7 +68,7 @@ If you're not already working on a virtual environment to protect system
 dependencies, do so.
 Next, begin by preparing the BearApps database by running this command:
 
-        python manage.py syncdb
+    python manage.py syncdb
 
 This creates db.sqlite in the bear_apps directory, which is where the
 application will store the database (based on SQLITE). It will ask you
@@ -74,12 +76,12 @@ to create a super user to manage the database -- go ahead and do this.
 Now, the database needs to be initialized with actual data. BearApps
 has a browser-based facility to add this. Run the server with this command:
 
-        python manage.py runserver
+    python manage.py runserver
 
 Django will run the server on the local host. Open a browser of your
 choice and browse to:
 
-        localhost:8000/backend
+    localhost:8000/backend
 
 You should see a log-in prompt. Use the credentials you input when you
 created the super user account during the syncdb process. If you enter the
@@ -112,7 +114,7 @@ logout of it if you want.
 
 Now you can add users to the database. Browse to the following:
 
-        localhost:8000/register
+    localhost:8000/register
 
 and create as many users as you want by inputting a name, a unique
 id number, and password. For each of these users, type the name of ONE
@@ -129,7 +131,7 @@ SECTION III. GETTING STARTED WITH BEARAPPS
 
 To enter BearApps, return to the log-in page of the application by typing:
     
-        localhost:8000
+    localhost:8000
 
 Input the username and password of one of the users created in the register
 page.
@@ -137,7 +139,7 @@ page.
 If you entered in the credentials of a Graduate or Undergraduate, you
 should be redirected to:
 
-        localhost:8000/browse
+    localhost:8000/browse
 
 Here, you will see the apps available for you to download, which should be
 Matlab and Matlab + Toolbox. You can click on any of the tiles to bring down
@@ -147,7 +149,7 @@ request it. After you click the request button, it will be grayed out.
 If you entered in the credentials of a professor or RSO, you should be 
 redirected to:
 	
-         localhost:8000/manage
+    localhost:8000/manage
 
 Here, you will see the current licenses owned and the requests made by 
 members of your group. You can revoke licenses, deny licenses, and approve 
@@ -160,7 +162,7 @@ belongs to and the member in each group.
 
 If you entered the credentials of an admin, you should be redirected to:
 
-        localhost:8000/admin
+    localhost:8000/admin
 
 Here, you will see a table of all the purchases made by all the users. 
 You can sort by chartstring, username, group, description, date approved,
