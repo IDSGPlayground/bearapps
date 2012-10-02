@@ -115,7 +115,12 @@ id number, and password.
 
 For each of these users, type the name of ONE
 of the groups (the only one, if you only created one in the previous step)
-and choose that. Select the 'Graduate' radio button for ALL of these users.
+and choose that.
+
+Select the 'Graduate' radio button for ALL of these users.
+
+        Is there something wrong with the radio buttons that you must use Graduate?
+
 Next, create a manager. Using localhost:8000/register, input another set
 of user credentials (including the same group), but this time select the
 'RSO' radio button. Finally, create an administrator. Use the same page and
