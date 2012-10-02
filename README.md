@@ -18,7 +18,7 @@ specifically MatLab.
 1. Make sure your python version is up to date. This project is based on python 
 2.7. To check, run the command:
 
-    python -V
+        python -V
 
 If your python version is less then 2.7, we reccommend updating to 2.7.
 
