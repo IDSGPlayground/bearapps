@@ -324,6 +324,8 @@ def manage(request):
     all_users = sorted(User.objects.all(), key=lambda user: user.name)
     all_users.remove(user)
 
+    # groups contains all of the manager's groups
+    # all_users contains all of the users in the manager's groups excluding the manager
     if request.method == 'POST':
         if "approve" in request.POST:
             app = request.POST['app']
