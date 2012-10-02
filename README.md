@@ -95,10 +95,11 @@ Repeat this process once more with the following information:
 	Price:		300
 	*again, fill in gibberish for the remaining fields.
 
-Now return to the main Django administration pane. Under Store, select
-'Groups'. On the new page, click 'Add group' at the top right. Input
-any name for the group you please. You may add multiple groups. Click
-'Save' at the bottom right of the list after adding each group.
+Now return to the main Django administration pane by clicking home in the top left.
+Under Store, select 'Groups'.
+On the new page, click 'Add group' at the top right.
+Input any name for the group you please. You may add multiple groups.
+Click 'Save' at the bottom right of the list after adding each group.
 Return to the main Django administration pane again. This completes the
 set-up process for the administration pane. You may leave this page or
 logout of it if you want.
@@ -108,7 +109,11 @@ Now you can add users to the database. Browse to the following:
         127.0.0.1:8000/register
 
 and create as many users as you want by inputting a name, a unique
-id number, and password. For each of these users, type the name of ONE
+id number, and password. 
+
+        each time I saved a user, I was logged out and had to log back in
+
+For each of these users, type the name of ONE
 of the groups (the only one, if you only created one in the previous step)
 and choose that. Select the 'Graduate' radio button for ALL of these users.
 Next, create a manager. Using localhost:8000/register, input another set
