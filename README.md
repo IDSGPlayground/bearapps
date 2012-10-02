@@ -55,8 +55,8 @@ the repository directly onto your new git repo using the commands:
 SECTION II. SETTING UP THE APPLICATION
 
 To begin set-up, cd into the directory where you cloned the git repository.
-If you're not already working on a virtual environment to protect system
-dependencies, do so.
+Confirm you have manage.py
+
 Next, begin by preparing the BearApps database by running this command:
 
         python manage.py syncdb
