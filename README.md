@@ -23,8 +23,11 @@ Make sure your python version is up to date. This project is based on python
 If your python version is less then 2.7, we reccommend updating to 2.7.
 
     how do I update python?
+    
+You will need pip for some of the installs
 
-To run the application, you must first install the below dependencies. For
+    sudo apt-get install python-pip
+
 git, the revision control system used for  this project, use:
 
     sudo apt-get install git
@@ -32,9 +35,8 @@ git, the revision control system used for  this project, use:
 For virtualenvwrapper and virtualenv, which are used to create isolated Python 
 environments, use:
 
-    apt-get install python-pip
-    pip install virtualenv
-    pip install virtualenvwrapper
+    sudo pip install virtualenv
+    sudo pip install virtualenvwrapper
 
 Use virtualenv to create a virtual environment for python execution
 if you haven't already. In order to do this, type the following command:
