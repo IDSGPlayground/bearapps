@@ -13,32 +13,16 @@ SECTION I. DOWNLOADING THE APPLICATION
 
 Welcome to BearApps! BearApps is an Django based application that provides
 an easy and centralized way for UC Berkeley students to download software, 
-specifically MatLab. To download the files necessary to run BearApps, use 
-github. Browse to:
+specifically MatLab.
 
-        https://github.com/IDSGPlayground/bearapps
-
-and either fork the repository to your own account for downloading OR clone
-the repository directly onto your system using the command:
-
-        git clone https://github.com/IDSGPlayground/bearapps.git
-
-Before installing dependencies, make sure your python version is up to date.
-This project is based on python 2.7. To check, run the command:
+Make sure your python version is up to date. This project is based on python 
+2.7. To check, run the command:
 
         python -V
 
 If your python version is less then 2.7, we reccommend updating to 2.7.
- 
-Now, for dependencies. You may need to these additional packages to your 
-system before you can proceed to set-up:
 
-        git
-        virtualenvwrapper
-        virtualenv
-        django
-
-To run the application, you must first install the above dependencies. For
+To run the application, you must first install the below dependencies. For
 git, the revision control system used for  this project, use:
 
         sudo apt-get install git
@@ -46,6 +30,7 @@ git, the revision control system used for  this project, use:
 For virtualenvwrapper and virtualenv, which are used to create isolated Python 
 environments, use:
 
+        apt-get install python-pip
         pip install virtualenv
         pip install virtualenvwrapper
 
@@ -59,10 +44,19 @@ was provided by virtualenvwrapper):
 
         workon (insert name of created environment here)
  
-Fially, Django is necessary to run the application as it's based on the Django
+Django is necessary to run the application as it's based on the Django
 framework. To install Django enter in the command:
 
         pip install django
+        
+Fially, to download the files necessary to run BearApps, use github. Browse to:
+
+        https://github.com/IDSGPlayground/bearapps
+
+and either fork the repository to your own account for downloading OR clone
+the repository directly onto your system using the command:
+
+        git clone https://github.com/IDSGPlayground/bearapps.git
 
 ==========================================================================
 SECTION II. SETTING UP THE APPLICATION
