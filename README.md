@@ -45,9 +45,10 @@ Finally, to download the files necessary to run BearApps, use github. Browse to:
 
         https://github.com/IDSGPlayground/bearapps
 
-and either fork the repository to your own account for downloading OR clone
-the repository directly onto your system using the command:
+and either fork the repository to your own account for editing on line OR clone
+the repository directly onto your new git repo using the commands:
 
+        cd ~/GITREPONAME
         git clone https://github.com/IDSGPlayground/bearapps.git
 
 ==========================================================================
