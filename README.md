@@ -120,6 +120,10 @@ and choose that.
 Select the 'Graduate' radio button for ALL of these users.
 
         Is there something wrong with the radio buttons that you must use Graduate?
+        What is the distinction between group & status?
+        Can the group be a basic pull down?
+        We have staff who are not Admins nor RSOs
+        We have faculty who are not Professors
 
 Next, create a manager. Using localhost:8000/register, input another set
 of user credentials (including the same group), but this time select the
