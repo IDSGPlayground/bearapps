@@ -22,7 +22,7 @@ Make sure your python version is up to date. This project is based on python
 
 If your python version is less then 2.7, we reccommend updating to 2.7.
 
-
+    how do I update python?
 
 To run the application, you must first install the below dependencies. For
 git, the revision control system used for  this project, use:
