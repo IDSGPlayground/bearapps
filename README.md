@@ -24,11 +24,11 @@ If your python version is less then 2.7, we reccommend updating to 2.7.
 
     how do I update python?
     
-You will need pip for some of the installs
+You will need pip for some of the installs:
 
     sudo apt-get install python-pip
 
-git, the revision control system used for  this project, use:
+Install git, the revision control system used for this project:
 
     sudo apt-get install git
 
