@@ -34,7 +34,12 @@ def home(request):
                 request.session['user'] = user
                 sid = User.objects.get(name=user).SID
                 request.session['sid'] = sid
-                return HttpResponseRedirect('/browse/')
+                if User.objects.get(name=user).user_type == 'GENERAL':
+                    return HttpResponseRedirect('/browse/')
+                elif User.objects.get(name=user).user_type == 'ADMIN':
+                    return HttpResponseRedirect('/admin/')
+                else:
+                    return HttpResponseRedirect('/manage/')
         except ObjectDoesNotExist:
             # Redirects to registration page if username does not exist.
             return HttpResponseRedirect('/register/')
@@ -91,7 +96,8 @@ def register(request):
 
         # Creates admin functionality if professor or rso is selected.
         user_type = 'GENERAL'
-        if (status == 'professor') or (status == 'rso'):
+        # if (status == 'professor') or (status == 'rso'):
+        if (status == 'chartstring'):
             user_type = 'MANAGER'
         elif (status == 'admin'):
             user_type = 'ADMIN'
@@ -159,8 +165,8 @@ def browse(request):
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
-    if User.objects.get(name=request.session['user']).user_type == 'MANAGER':
-        return HttpResponseRedirect('/manage/')
+    # if User.objects.get(name=request.session['user']).user_type == 'MANAGER':
+    #     return HttpResponseRedirect('/manage/')
 
     elif User.objects.get(name=request.session['user']).user_type == 'ADMIN':
         return HttpResponseRedirect('/admin/')
@@ -227,6 +233,7 @@ def browse(request):
     # Context and set-up
     con = Context({
             'username': request.session['user'],
+            'usertype': user.user_type,
             'sid': request.session['sid'],
             'app_display': app_display,
             'app_info': app_info,
@@ -258,7 +265,7 @@ def myapps(request):
     if user.user_type != "GENERAL":
         if user.user_type == "ADMIN":
             return HttpResponseRedirect('/admin/')
-        return HttpResponseRedirect('/manage/')
+        # return HttpResponseRedirect('/manage/')
     apps = App.objects.all()
     app_states = []
     temp_app = []
@@ -295,6 +302,7 @@ def myapps(request):
 
     con = Context({
         'username': request.session['user'],
+        'usertype': user.user_type,
         'app_display': app_display,
         'app_info': app_info,
         'no_apps': no_apps,
@@ -322,7 +330,7 @@ def manage(request):
     # Sorts all groups & all users in alphabetical order.
     groups = sorted(user.groups.all(), key=lambda group: group.name)
     all_users = sorted(User.objects.all(), key=lambda user: user.name)
-    all_users.remove(user)
+    # all_users.remove(user)
 
     if request.method == 'POST':
         if "approve" in request.POST:

@@ -2,8 +2,15 @@
 {% load dict_lookup %}
 
 {% block nav %}
-<li class="active"><a href="../my-apps/">My Apps</a></li>
-<li><a href="../browse/">Browse Apps</a></li>
+{% if usertype == "GENERAL" %} 
+  <li><a href="../browse/">Browse Apps</a></li>
+  <li class="active"><a href="../my-apps/">My Apps</a></li>
+{% endif %}
+{% if usertype == "MANAGER" %}
+  <li><a href="../manage/">Manage Licenses</a></li>
+  <li><a href="../browse/">Browse Apps</a></li>
+  <li class="active"><a href="../my-apps/">My Apps</a></li>
+{% endif %}
 {% endblock %}
 
 {% block title %}
