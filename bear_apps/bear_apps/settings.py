@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'store',
     'dajaxice',
+    'tastypie',
     #'lettuce.django',
 )
 
