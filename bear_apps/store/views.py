@@ -386,6 +386,16 @@ def manage(request):
             new_chartstring.group = Group.objects.get(
                                     name=request.POST['group'])
             new_chartstring.save()
+        elif "newgroup" in request.POST:
+            try:
+                new_group = Group(name=request.POST['groupname'])
+                new_group.save()
+                user.groups.add(new_group)
+                user.save()
+            except:
+                new_group = Group.objects.get(name=request.POST['groupname'])
+                user.groups.add(new_group)
+                user.save()
 
         return HttpResponseRedirect('manage')
 

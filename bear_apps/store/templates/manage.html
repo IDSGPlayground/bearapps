@@ -110,6 +110,8 @@
 		    
 		    <div class="tab-pane" id="groups">
 		      <h2 class="manage-tab">MY GROUPS</h2>
+		      <button type="button" class="btn btn-primary" data-toggle="modal" href="#newgroup" value="Add New Group">Add New Group</button>
+		      <br/><hr>
 		      {% for group, members in members_by_group.items %}
 		      	<h3>{{ group.name }}</h3>
 			    <ul>
@@ -160,6 +162,25 @@
 		<input type="submit"
 		       value="Add Chartstring"
 		       name="new"
+		       class="btn btn-primary"></input>
+	</form>
+    </div>
+ </div>
+
+ <div class="modal fade hide manage" id="newgroup">
+ <div class="modal-header">
+    	<h3>Add New Group</h3>
+    	<button type="button" class="close" data-dismiss="modal">×</button>
+  	</div>
+  	<div class="modal-body">
+	<form name="new" method="post" action="/manage/">
+		{% csrf_token %}
+		<label>Group Name: </label>
+		<input type="text" name="groupname"></input>
+		<br/><br/>
+		<input type="submit"
+		       value="Add Group"
+		       name="newgroup"
 		       class="btn btn-primary"></input>
 	</form>
     </div>
