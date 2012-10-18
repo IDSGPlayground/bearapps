@@ -9,7 +9,7 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
-
+import zmq
 
 def home(request):
     """ Defines the login page for BearApps.
@@ -319,6 +319,11 @@ def manage(request):
         directed to this view to manage their user requests and
         chartstrings/budgets.
     """
+    # Setup sockets to notify license servers
+    context = zmq.Context()
+    socket = context.socket(zmq.PUB)
+    socket.connect("tcp://127.0.0.1:23272")
+
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
 
@@ -356,6 +361,9 @@ def manage(request):
                             info={'app': app_object},
                             code='approve')
 
+            # Notify any subscribed servers of database change.
+            socket.send_unicode(request.POST['app'])
+
         elif "revoke" in request.POST:
             app = request.POST['app']
             user_requested = User.objects.get(SID=request.POST['user'])
@@ -367,6 +375,10 @@ def manage(request):
             add_Notification(user=user_requested,
                             info={'app': app_object},
                             code='revoke')
+
+            # Notify any subscribed servers of database change.
+            socket.send_unicode(request.POST['app'])
+
         elif "reject" in request.POST:
             app = request.POST['app']
             app_object = App.objects.get(href_name=app)
@@ -376,6 +388,7 @@ def manage(request):
             add_Notification(user=user_requested,
                             info={'app': app_object},
                             code='reject')
+
         elif "new" in request.POST:
             new_chartstring = Chartstring(
                 nickname=request.POST['nickname'],
