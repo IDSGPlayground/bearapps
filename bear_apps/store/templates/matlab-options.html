@@ -8,10 +8,12 @@
 
 {% block content %}
 
-<ul>
-{% for toolbox in toolboxes %}
-<li> {{ toolbox }} </li>
-{% endfor %}
-</ul>
+<div class="well hero-unit">
+    <ul class="triple">
+    {% for toolbox in toolboxes %}
+    <li> {{ toolbox }} </li>
+    {% endfor %}
+    </ul>
+</div>
 
 {% endblock %}
