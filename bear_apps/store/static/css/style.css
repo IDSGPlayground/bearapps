@@ -11,8 +11,7 @@ li{
   display:inline;
 }
 
-.active-tool { color: black;}
-.inactive-tool { color: #C0C0C0;}
+.inactive { color: #C0C0C0;}
 
 .triple li  { width: 33.333%; }
 
