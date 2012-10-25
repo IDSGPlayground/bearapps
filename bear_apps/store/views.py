@@ -519,7 +519,7 @@ def options(request):
         return HttpResponseRedirect('/')
     user = User.objects.get(name=request.session['user'])
 
-    toolboxes = open("store/static/data/toolboxes.txt").read()
+    toolboxes = eval(open("store/static/data/toolboxes.txt").read())
     messages = get_Notifications(user) 
 
     con = Context({
@@ -528,7 +528,7 @@ def options(request):
         'messages': messages,
         'notifications': len(messages),
     })
-    
+
     return render_to_response('matlab-options.html', con)
 
 

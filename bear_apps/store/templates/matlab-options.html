@@ -1,1 +1,17 @@
 {% extends "base.html" %}
+
+{% block nav %}
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for toolbox in toolboxes %}
+<li> {{ toolbox }} </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

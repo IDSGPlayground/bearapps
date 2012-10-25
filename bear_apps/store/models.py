@@ -17,8 +17,6 @@ user_types = (
     ('MANAGER', 'MANAGER')
 )
 
-toolboxes = open("store/static/data/toolboxes.txt").read() 
-
 class User(models.Model):
     """ Model to describe all users of bearapps, contains the
         user's name, SID, password, group(s) the user is associated
