@@ -9,7 +9,7 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
-import zmq
+# import zmq
 
 def home(request):
     """ Defines the login page for BearApps.
@@ -320,9 +320,9 @@ def manage(request):
         chartstrings/budgets.
     """
     # Setup sockets to notify license servers
-    context = zmq.Context()
-    socket = context.socket(zmq.PUB)
-    socket.connect("tcp://127.0.0.1:23272")
+    # context = zmq.Context()
+    # socket = context.socket(zmq.PUB)
+    # socket.connect("tcp://127.0.0.1:23272")
 
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
@@ -510,6 +510,26 @@ def admin(request):
         })
     con.update(csrf(request))
     return render_to_response('admin.html', con)
+
+
+def options(request):
+    """ Displays the different package options for matlab. 
+    """
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
+    user = User.objects.get(name=request.session['user'])
+
+    toolboxes = open("store/static/data/toolboxes.txt").read()
+    messages = get_Notifications(user) 
+
+    con = Context({
+        'username': user,
+        'toolboxes': toolboxes,
+        'messages': messages,
+        'notifications': len(messages),
+    })
+    
+    return render_to_response('matlab-options.html', con)
 
 
 class RequestForm(forms.Form):
