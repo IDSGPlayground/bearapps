@@ -9,10 +9,17 @@
 {% block content %}
 
 <div class="well hero-unit">
+    <h3 style="font-family: 'Lato', 'Ubuntu'">Choose a MatLab package</h3>
+    </br>
+
     <ul class="triple">
-    {% for toolbox in toolboxes %}
-    <li> {{ toolbox }} </li>
-    {% endfor %}
+        {% for toolbox, package in toolboxes %}
+        {% if package == 2 %}
+        <li class="inactive-tool"> {{ toolbox }} </li>
+        {% else %}
+        <li class="active-tool"> {{ toolbox }} </li>
+        {% endif %}
+        {% endfor %}
     </ul>
 </div>
 
