@@ -9,7 +9,7 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
-# import zmq
+import zmq
 
 def home(request):
     """ Defines the login page for BearApps.
@@ -320,9 +320,9 @@ def manage(request):
         chartstrings/budgets.
     """
     # Setup sockets to notify license servers
-    # context = zmq.Context()
-    # socket = context.socket(zmq.PUB)
-    # socket.connect("tcp://127.0.0.1:23272")
+    context = zmq.Context()
+    socket = context.socket(zmq.PUB)
+    socket.connect("tcp://127.0.0.1:23272")
 
     if 'user' not in request.session:
         return HttpResponseRedirect('/')
