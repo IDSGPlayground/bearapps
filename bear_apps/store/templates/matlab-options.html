@@ -22,10 +22,10 @@
     <ul class="triple">
         {% for toolbox, package in toolboxes %}
             <div id="tools-display">
-                {% if package == 0 %}
-                <li class="active-tool"> {{ toolbox }} </li>
+                {% if package != 0 %}
+                    <li class="package{{ package }} inactive"> {{ toolbox }} </li>
                 {% else %}
-                <li class="inactive-tool"> {{ toolbox }} </li>
+                    <li class="package{{ package }}"> {{ toolbox }} </li>
                 {% endif %}
             </div>
         {% endfor %}
@@ -38,13 +38,27 @@
 <script>
 $("input:radio[name='package']").change(function(){
     var option = $('input:radio[name=package]:checked').val();
-    console.log(option);
     if (option == "matlab") {
-        $('#tools-display').html("{% if package == 0 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1 inactive');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2 inactive');
+        });
     } else if (option == "core") {
-        $('#tools-display').html("{% if package == 0 or package == 1 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
-    } else {
-        $('#option').html("{% if package == 0 or package == 1 or package == 2 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2 inactive');
+        });
+    } else if (option == "advanced") {
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2');
+        });
     }
 });
 </script>
