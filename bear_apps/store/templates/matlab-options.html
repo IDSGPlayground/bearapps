@@ -12,15 +12,40 @@
     <h3 style="font-family: 'Lato', 'Ubuntu'">Choose a MatLab package</h3>
     </br>
 
+    <div class="radio-buttons">
+        <input type="radio" name="package" value="matlab" checked> MatLab Only</input></br>
+        <input type="radio" name="package" value="core"> MatLab + Core Toolboxes</input></br>
+        <input type="radio" name="package" value="advanced"> MatLab + Core + Advanced Toolboxes</input></br>
+    </div>
+    </br>
+
     <ul class="triple">
         {% for toolbox, package in toolboxes %}
-        {% if package == 2 %}
-        <li class="inactive-tool"> {{ toolbox }} </li>
-        {% else %}
-        <li class="active-tool"> {{ toolbox }} </li>
-        {% endif %}
+            <div id="tools-display">
+                {% if package == 0 %}
+                <li class="active-tool"> {{ toolbox }} </li>
+                {% else %}
+                <li class="inactive-tool"> {{ toolbox }} </li>
+                {% endif %}
+            </div>
         {% endfor %}
     </ul>
 </div>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+$("input:radio[name='package']").change(function(){
+    var option = $('input:radio[name=package]:checked').val();
+    console.log(option);
+    if (option == "matlab") {
+        $('#tools-display').html("{% if package == 0 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
+    } else if (option == "core") {
+        $('#tools-display').html("{% if package == 0 or package == 1 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
+    } else {
+        $('#option').html("{% if package == 0 or package == 1 or package == 2 %}<li class='active-tool'> {{ toolbox }} </li>{% else %}<li class='inactive-tool'> {{ toolbox }} </li>{% endif %}");
+    }
+});
+</script>
 {% endblock %}
