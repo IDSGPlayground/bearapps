@@ -1,19 +1,18 @@
-/* options */
-ul{
+/* MatLab Options */
+ul.triple {
   width:90%;
   overflow:hidden;
 }
 
-li{
-  font-family: "Lato", "Ubuntu";
+.triple li {
+  font-family: "Lato", "Ubuntu", sans-serif;
   line-height:1.5em;
   float:left;
   display:inline;
+  width: 33.333%;
 }
 
 .inactive { color: #C0C0C0;}
-
-.triple li  { width: 33.333%; }
 
 /* tables */
 table.tablesorter thead tr .header {
