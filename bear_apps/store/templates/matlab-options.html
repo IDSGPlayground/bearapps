@@ -21,18 +21,13 @@
 
     <ul class="triple">
         {% for toolbox, package in toolboxes %}
-            <div id="tools-display">
-                {% if package != 0 %}
-                    <li class="package{{ package }} inactive"> {{ toolbox }} </li>
-                {% else %}
-                    <li class="package{{ package }}"> {{ toolbox }} </li>
-                {% endif %}
-            </div>
+            {% if package != 0 %}
+                <li class="package{{ package }} inactive"> {{ toolbox }} </li>
+            {% else %}
+                <li class="package{{ package }}"> {{ toolbox }} </li>
+            {% endif %}
         {% endfor %}
     </ul>
-
-    <div class="info">
-    </div>
 
 </div>
 
