@@ -1,11 +1,11 @@
-/* MatLab Options */
+/* options */
 ul.triple {
-  width:90%;
+  width: 90%;
   overflow:hidden;
 }
 
 .triple li {
-  font-family: "Lato", "Ubuntu", sans-serif;
+  font-family: "Lato", "Ubuntu";
   line-height:1.5em;
   float:left;
   display:inline;
