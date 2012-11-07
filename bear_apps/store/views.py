@@ -9,7 +9,7 @@ from notifications import add_Notification, get_Notifications
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
-import zmq
+#import zmq
 
 def home(request):
     """ Defines the login page for BearApps.
