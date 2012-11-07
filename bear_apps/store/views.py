@@ -10,6 +10,7 @@ from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 import zmq
+import ldap
 
 def home(request):
     """ Defines the login page for BearApps.
@@ -29,8 +30,23 @@ def home(request):
     if request.method == 'POST':
         try:
             user = request.POST['user']
-            password = User.objects.get(name=user).password
-            if password == request.POST['password']:
+            rosterid = User.objects.get(name=user).rosterid
+            con = ldap.initialize("ldaps://ldap.eecs.berkeley.edu")
+            try:
+                con.simple_bind_s(rosterid, request.POST['password'])
+            except ldap.INVALID_CREDENTIALS:
+                pass
+#                if password == request.POST['password']:
+#                    request.session['user'] = user
+#                    sid = User.objects.get(name=user).SID
+#                    request.session['sid'] = sid
+#                   if User.objects.get(name=user).user_type == 'GENERAL':
+#                        return HttpResponseRedirect('/browse/')
+#                    elif User.objects.get(name=user).user_type == 'ADMIN':
+#                        return HttpResponseRedirect('/admin/')
+#                    else:
+#                        return HttpResponseRedirect('/manage/')
+            else:
                 request.session['user'] = user
                 sid = User.objects.get(name=user).SID
                 request.session['sid'] = sid
@@ -42,7 +58,27 @@ def home(request):
                     return HttpResponseRedirect('/manage/')
         except ObjectDoesNotExist:
             # Redirects to registration page if username does not exist.
-            return HttpResponseRedirect('/register/')
+            # Need to read stuff from LDAP now.
+            # return HttpResponseRedirect('/register/')
+            con = ldap.initialize("ldaps://ldap.eecs.berkeley.edu")
+            dn = con.search_s("ou=People, o=eecs.berkeley.edu, dc=eecs,\
+                          dc=berkeley,dc=edu", ldap.SCOPE_SUBTREE, "uid=%s"
+                          % request.POST['user'], ['eecsDWRosterID'])
+            try:
+                con.simple_bind_s(dn[0][0], request.POST['password'])
+                new_user = User.objects.create(
+                    name=request.POST['user'],
+                    rosterid=dn[0][0],
+                    SID=dn[0][1]['eecsDWRosterID'][0],
+                    password='password',
+                    user_type='GENERAL',
+                )
+                request.session['user'] = request.POST['user']
+                sid = User.objects.get(name=user).SID
+                request.session['sid'] = sid
+                return HttpResponseRedirect('/classselect/')
+            except ldap.INVALID_CREDENTIALS:
+                pass
 
     con = Context({
         'logout': logout,
@@ -51,6 +87,80 @@ def home(request):
     con.update(csrf(request))
     return render_to_response('index.html', con)
 
+def classselect(request):
+    """ Defines the registration view for first-time users.
+        Note: the user will not be registered if they enter
+        a username that already exists in our database.
+    """
+    con = Context()
+
+    user = request.session['user']
+
+    if "chooseclass" in request.POST:
+        # Try clause checks if all fields are filled out.
+        try:
+            nickname=request.POST['chartstringname']
+            chartstring = request.POST['chartstring']
+            groupname = request.POST['groupname']
+            if chartstring != '':
+                userobj = User.objects.get(name=user)
+                userobj.user_type = 'MANAGER'
+		userobj.save()
+                new_chartstring = Chartstring(
+                    nickname=request.POST['chartstringname'],
+                    chartstring=request.POST['chartstring'],
+                    budget=request.POST['chartstringamount'],
+                    remaining=request.POST['chartstringamount'],
+                    manager=userobj)
+                if groupname != '':
+                    try:
+                        add_group = Group.objects.get(name=groupname)
+                    except ObjectDoesNotExist:
+                        add_group = Group.objects.create(name=groupname)
+                else:
+                    try:
+                        add_group = Group.objects.get(name=nickname)
+                    except ObjectDoesNotExist:
+                        add_group = Group.objects.create(name=nickname)
+                userobj.groups.add(add_group)
+                new_chartstring.group = add_group
+                new_chartstring.save()
+            else:
+                if groupname != '':
+                    try:
+                        userobj = User.objects.get(name=user)
+                        add_group = Group.objects.get(name=groupname)
+                        userobj.groups.add(add_group)
+                    except ObjectDoesNotExist:
+                        con['does_not_exist'] = True
+                        con.update(csrf(request))
+                        return render_to_response('classselect.html', con)
+                    else:
+                        managers = User.objects.filter(
+                            groups=add_group,
+                            user_type="MANAGER")
+                        for manager in managers:
+                            add_Notification(
+                                user=manager,
+                                code="new_user",
+                                info={'group': add_group, 'requestor': userobj})
+        except (MultiValueDictKeyError, ObjectDoesNotExist):
+            con['empty_fields'] = True
+            con.update(csrf(request))
+            return render_to_response('classselect.html', con)
+	# Resets request.method, so that POST data is no longer stored.
+        request.method = None
+
+        if User.objects.get(name=user).user_type == 'GENERAL':
+            return HttpResponseRedirect('/browse/')
+        elif User.objects.get(name=user).user_type == 'ADMIN':
+            return HttpResponseRedirect('/admin/')
+        else:
+            return HttpResponseRedirect('/manage/')
+    elif "cancel" in request.POST:
+        return HttpResponseRedirect('/')
+    con.update(csrf(request))
+    return render_to_response('classselect.html', con)
 
 def register(request):
     """ Defines the registration view for first-time users.
@@ -188,18 +298,21 @@ def browse(request):
                 app=app_object,
                 status='AVAILABLE')
 
-        new_app.status = 'REQUESTED'
-        new_app.group = Group.objects.get(name=request.POST['mygroup'])
-        new_app.save()
+        if new_app.status == 'APPROVED':
+            return HttpResponseRedirect('/media/'+ app +'.zip')
+        else:
+            new_app.status = 'REQUESTED'
+            new_app.group = Group.objects.get(name=request.POST['mygroup'])
+            new_app.save()
 
-        managers = User.objects.filter(
-                    groups=new_app.group,
-                    user_type="MANAGER")
-        for manager in managers:
-            add_Notification(
-                user=manager,
-                code="request",
-                info={'app': app_object, 'requestor': user})
+            managers = User.objects.filter(
+                        groups=new_app.group,
+                        user_type="MANAGER")
+            for manager in managers:
+                add_Notification(
+                    user=manager,
+                    code="request",
+                    info={'app': app_object, 'requestor': user})
 
         # Resets request.method, so that POST data is no longer stored.
         request.method = None
