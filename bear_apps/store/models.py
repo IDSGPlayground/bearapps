@@ -25,6 +25,7 @@ class User(models.Model):
     """
 
     name = models.CharField(max_length=200, unique=True)
+    rosterid = models.CharField(max_length=200, unique=True)
     password = models.CharField(max_length=200)
     SID = models.IntegerField(unique=True)
     user_type = models.CharField(max_length=10, choices=user_types)

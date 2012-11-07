@@ -1,0 +1,248 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BearApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BearApps">
+    <meta name="author" content="EECS IDSG">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap-responsive.css" />
+    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+    <link rel="Shortcut Icon" href="../static/img/favicon.ico">
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="../">BearApps</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid content">
+    <div class="row-fluid span12 well hero-unit">
+        <h1>REGISTRATION</h1>
+
+        </br>
+        <div class="row-fluid">
+          {% if empty_fields or blank_group %}
+          <div class="alert alert-error span6">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Not all fields are complete.</strong>
+            Please complete all fields.
+          </div>
+          {% endif %}
+          {% if does_not_exist %}
+          <div class="alert alert-error span6">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>The groups you specified do not exist.</strong>
+            Please complete all fields.
+          </div>
+          {% endif %}
+        </div>
+{% if select_class %}
+            Are you a regular user or a chartstring holder?
+            <div class="form-actions">
+                <button type="submit" name="classru" class="btn btn-primary">Regular User</button>
+                <button type="submit" name="classch" class="btn btn-primary">Chartstring Holder</button>
+            </div>
+{% endif %}
+{% if select_chartstring %}	
+	Do you have a chartstring to enter or a group to join?
+	<br />
+	(If no group name is entered, the chartstring will be added to a group named after the chartstring's name.)
+        <form method="POST" class="register-form" action="/classselect/">
+          {% csrf_token %}
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="chartstringname">Chartstring Name</label>
+              <div class="controls">
+                <input type="text" class="input" id="chartstringname" name="chartstringname">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="chartstring">Chartstring </label>
+              <div class="controls">
+                <input type="text" class="input" id="chartstring" name="chartstring">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="chartstringamount">Chartstring Amount</label>
+              <div class="controls">
+                <input type="text" class="input" id="chartstringamount" name="chartstringamount">
+              </div>
+            </div>
+            <br />
+            <div class="control-group">
+              <label class="control-label" for="groupname">Group Name (optional)</label>
+              <div class="controls">
+                <input type="text" class="input" id="groupname" name="groupname">
+              </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" name="chartstring" class="btn btn-primary">Add Chartstring</button>
+                <button type="submit" name="cancel" class="btn">Cancel</button>
+            </div>
+          </fieldset>
+        </form>
+{% endif %}
+<!--
+          <fieldset>
+            {% if not user_taken %}
+            <div class="control-group">
+              <label class="control-label" for="username">Username </label>
+              <div class="controls">
+                <input type="text" class="input" id="username" name="username">
+              </div>
+            </div>
+
+            {% else %}
+            <div class="control-group error">
+              <label class="control-label" for="username">Username </label>
+              <div class="controls">
+                <input type="text" class="inputError" id="username" name="username">
+                <span class="help-inline">Sorry, this username is already taken</span>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if not sid_taken %}
+            <div class="control-group">
+              <label class="control-label" for="SID">SID </label>
+              <div class="controls">
+                <input type="text" class="input" id="SID" name="SID">
+              </div>
+            </div>
+
+            {% else %}
+            <div class="control-group error">
+              <label class="control-label" for="SID">SID </label>
+              <div class="controls">
+                <input type="text" class="inputError" id="SID" name="SID">
+                <span class="help-inline">Sorry, this SID is already taken</span>
+              </div>
+            </div>
+            {% endif %}
+
+            {% if not not_match %}
+            <div class="control-group">
+              <label class="control-label" for="password">Password </label>
+              <div class="controls">
+                <input type="password" class="input" id="password" name="password">
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="password">Verify Password </label>
+              <div class="controls">
+                <input type="password" class="input" id="verify-password" name="verify-password">
+              </div>
+            </div>
+            {% endif %}
+
+            {% if not_match %}
+            <div class="control-group error">
+              <label class="control-label" for="password">Password </label>
+              <div class="controls">
+                <input type="password" class="inputError" id="password" name="password">
+              </div>
+            </div>
+
+            <div class="control-group error">
+              <label class="control-label" for="password">Verify Password </label>
+              <div class="controls">
+                <input type="password" class="inputError" id="verify-password" name="verify-password">
+                <span class="help-inline">Passwords do not match. Please try again.</span>
+              </div>
+            </div>
+            {% endif %}
+
+            <div class="control-group">
+              <label class="control-label" for="groups">Select Groups </label>
+              <div class="controls">
+                <div id="adding-groups"></div>
+                <a href="#" id="add-group"><i class="icon-plus" style="margin-left: 10px;"></i> Join Another Group</a>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label" for="status">Status </label>
+              <div class="controls">
+-->
+                <!-- <input type="radio" name="status" value="undergrad"> Undergraduate</input><br /> -->
+                <!-- <input type="radio" name="status" value="grad"> Graduate</input><br /> -->
+<!--
+                <input type="radio" name="status" value="user"> User</input><br />
+                <input type="radio" name="status" value="professor"> Professor</input><br />
+                <input type="radio" name="status" value="rso"> RSO</input><br />
+                <input type="radio" name="status" value="chartstring"> Chartstring Owner</input><br />
+                <input type="radio" name="status" value="admin"> Admin</input><br />
+              </div>
+            </div>
+
+            <div id="group_count"></div>
+
+            <div class="form-actions">
+                <button type="submit" name="register" class="btn btn-primary">Register</button>
+                <button type="submit" name="cancel" class="btn">Cancel</button>
+            </div>
+          </fieldset>
+        </form>
+-->
+    </div>
+</div>
+
+
+</body>
+
+<!-- Le javascript
+================================================== 
+<script src="../static/js/jquery.js"></script>
+
+<script>
+var group_count = 1;
+groupCount(group_count);
+genGroups(group_count);
+
+$('#add-group').click(function(event){
+  event.preventDefault();
+  group_count += 1;
+  genGroups(group_count);
+  groupCount(group_count);
+});
+
+
+function genGroups(group_count){
+  $('#adding-groups').append('<input type="text" name="groups-' + group_count + '" data-provide="typeahead" placeholder="Add Group" data-items="4" data-source="[{% for group in groups %}&quot;{{ group.name }}&quot;, {% endfor %}&quot;&quot;]"></input></br>');
+}
+
+function groupCount(group_count){
+  $('#group_count').html('<input type="hidden" name="group_count" value="' + group_count + '"></input>')
+}
+
+</script>
+-->
+<script src="../static/js/bootstrap-transition.js"></script>
+<script src="../static/js/bootstrap-alert.js"></script>
+<script src="../static/js/bootstrap-modal.js"></script>
+<script src="../static/js/bootstrap-dropdown.js"></script>
+<script src="../static/js/bootstrap-scrollspy.js"></script>
+<script src="../static/js/bootstrap-tab.js"></script>
+<script src="../static/js/bootstrap-tooltip.js"></script>
+<script src="../static/js/bootstrap-popover.js"></script>
+<script src="../static/js/bootstrap-button.js"></script>
+<script src="../static/js/bootstrap-collapse.js"></script>
+<script src="../static/js/bootstrap-carousel.js"></script>
+<script src="../static/js/bootstrap-typeahead.js"></script>
+
+</html>
