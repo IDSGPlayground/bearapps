@@ -7,12 +7,14 @@ class GroupResource(ModelResource):
     class Meta:
         queryset = Group.objects.all()
         resource_name = 'groups'
+        fields = ['name']
 
 class UserResource(ModelResource):
     groups = fields.ManyToManyField(GroupResource, 'groups')
     class Meta:
         queryset = User.objects.all()
         resources_name = 'user'
+        excludes = ['password']
         # authorization = Authorization()
 
 
