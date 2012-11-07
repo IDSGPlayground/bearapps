@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from dajaxice.core import dajaxice_autodiscover
+from tastypie.api import Api
 from store.api import UserResource, AppResource, ChartResource, GroupResource
 
 dajaxice_autodiscover()
@@ -12,6 +13,12 @@ app_resource = AppResource()
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
+
+data_api = Api(api_name='data')
+data_api.register(UserResource())
+data_api.register(GroupResource())
+data_api.register(AppResource())
+data_api.register(ChartResource())
 
 urlpatterns = patterns('',
     # Examples:
@@ -29,9 +36,7 @@ urlpatterns = patterns('',
       url(r'^browse/', 'store.views.browse', name='browse'),
       url(r'^my-apps/', 'store.views.myapps', name='my-apps'),
       url(r'^manage/', 'store.views.manage', name='manage'),
+      url(r'^options/', 'store.views.options', name='options'),
       url(r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
-      url(r'^api/', include(user_resource.urls)),
-      url(r'^api/', include(app_resource.urls)),
-      url(r'^api/', include(group_resource.urls)),
-      url(r'^api/', include(chart_resource.urls)),
+      url(r'^api/', include(data_api.urls)),
 )

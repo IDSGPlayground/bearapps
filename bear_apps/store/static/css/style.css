@@ -1,3 +1,19 @@
+/* options */
+ul.triple {
+  width: 90%;
+  overflow:hidden;
+}
+
+.triple li {
+  font-family: "Lato", "Ubuntu";
+  line-height:1.5em;
+  float:left;
+  display:inline;
+  width: 33.333%;
+}
+
+.inactive { color: #C0C0C0;}
+
 /* tables */
 table.tablesorter thead tr .header {
   background-image: url(../img/bg.gif);

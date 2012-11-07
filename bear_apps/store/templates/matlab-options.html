@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block nav %}
+{% endblock %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+<div class="well hero-unit">
+    <h3 style="font-family: 'Lato', 'Ubuntu'">Please choose a MatLab package</h3>
+    </br>
+
+    <div class="radio-buttons">
+        <input type="radio" name="package" value="matlab" checked> MatLab Only</input></br>
+        <input type="radio" name="package" value="core"> MatLab + Core Toolboxes</input></br>
+        <input type="radio" name="package" value="advanced"> MatLab + Core + Advanced Toolboxes</input></br>
+    </div>
+    </br>
+
+    <ul class="triple">
+        {% for toolbox, package in toolboxes %}
+            {% if package != 0 %}
+                <li class="package{{ package }} inactive"> {{ toolbox }} </li>
+            {% else %}
+                <li class="package{{ package }}"> {{ toolbox }} </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+$("input:radio[name='package']").change(function(){
+    var option = $('input:radio[name=package]:checked').val();
+    if (option == "matlab") {
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1 inactive');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2 inactive');
+        });
+    } else if (option == "core") {
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2 inactive');
+        });
+    } else if (option == "advanced") {
+        $('.package1').each(function(){
+            $(this).attr('class', 'package1');
+        });
+        $('.package2').each(function(){
+            $(this).attr('class', 'package2');
+        });
+    }
+});
+</script>
+{% endblock %}

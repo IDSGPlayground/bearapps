@@ -625,6 +625,26 @@ def admin(request):
     return render_to_response('admin.html', con)
 
 
+def options(request):
+    """ Displays the different package options for matlab. 
+    """
+    if 'user' not in request.session:
+        return HttpResponseRedirect('/')
+    user = User.objects.get(name=request.session['user'])
+
+    toolboxes = eval(open("store/static/data/toolboxes.txt").read())
+    messages = get_Notifications(user) 
+
+    con = Context({
+        'username': user,
+        'toolboxes': toolboxes,
+        'messages': messages,
+        'notifications': len(messages),
+    })
+
+    return render_to_response('matlab-options.html', con)
+
+
 class RequestForm(forms.Form):
     """ RequestForm is used by Django to validate
         fields in application requests.

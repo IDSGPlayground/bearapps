@@ -17,7 +17,6 @@ user_types = (
     ('MANAGER', 'MANAGER')
 )
 
-
 class User(models.Model):
     """ Model to describe all users of bearapps, contains the
         user's name, SID, password, group(s) the user is associated
