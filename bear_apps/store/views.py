@@ -301,10 +301,52 @@ def browse(request):
         if new_app.status == 'APPROVED':
             return HttpResponseRedirect('/media/'+ app +'.zip')
         else:
+            mygroup=''
+            if 'mygroup' in request.POST:
+            #try:
+                mygroup=request.POST['mygroup']
+            #except MultiValueDictKeyError:
+            else:
+                if 'group' in request.POST:
+                    # Try to join a group
+                    try:
+                        mygroup = request.POST['name']
+                        add_group = Group.objects.get(name=mygroup)
+                    except ObjectDoesNotExist:
+                        # TDOD: Add failure notification (render_to_response?)
+                        return HttpResponseRedirect('/browse')
+                    else:
+                        managers = User.objects.filter(
+                            groups=add_group,
+                            user_type="MANAGER")
+                        for manager in managers:
+                            add_Notification(
+                                user=manager,
+                                code="new_user",
+                                info={'group': add_group, 'requestor': new_user})
+                elif 'chartstring' in request.POST:
+                    # Promote user and add chartstring
+                    user.user_type = 'MANAGER'
+                    user.save()
+                    new_chartstring = Chartstring(
+                        nickname=request.session['user']+"'s COA",
+                        chartstring=request.POST['name'],
+                        budget=0,
+                        remaining=0,
+                        manager=user)
+                    try:
+                        add_group = Group.objects.get(name=request.session['user']+"'s group")
+                    except ObjectDoesNotExist:
+                        add_group = Group.objects.create(name=request.session['user']+"'s group")
+                    user.groups.add(add_group)
+                    new_chartstring.group = add_group
+                    new_chartstring.save()
+                    mygroup = request.session['user']+"'s group"
+            #finally:
             new_app.status = 'REQUESTED'
-            new_app.group = Group.objects.get(name=request.POST['mygroup'])
+            new_app.group = Group.objects.get(name=mygroup)
             new_app.save()
-
+    
             managers = User.objects.filter(
                         groups=new_app.group,
                         user_type="MANAGER")

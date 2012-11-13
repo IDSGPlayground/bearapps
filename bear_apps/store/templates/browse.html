@@ -51,6 +51,30 @@
 {% block content %}
 {% for app, state in app_display.items %}
 {% with info=app_info|lookup:app %}
+{% if groups|length == 0 %}
+  <div class="modal fade hide" id="{{ app }}-pay">
+    <div class="modal-header">
+        {% csrf_token %}
+        <input type="hidden" name="app" value="{{ app }}">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3><img src="../static/img/matlab-icon-small.png" />{{ info.app_name }}</h3>
+  	</div>
+  	<div class="modal-body">
+            <div class="tab-content" id="{{ app }}-pay-content">
+                <form method="post" action="/browse/">
+                    <input type="hidden" name="app" value="{{ app }}">
+                    {% csrf_token %}
+		    <p>Would you like to enter a chartstring or request to join a group?</p>
+                    <p>Chartstring or group name: <input type="text" class="input" name="name" id="name"/></p>
+                    <button type="submit" name="cancel" class="btn" data-dismiss="modal">Cancel</button>
+		    <button type="submit" name="chartstring" class="btn">Enter Chartstring</button>
+		    <button type="submit" name="group" class="btn btn-primary">Request to Join Group</button>
+                </form>
+            </div>
+        </div>
+  </div>
+{% endif %}
+
   <div class="modal fade hide" id="{{ app }}">
     <div class="modal-header">
       {% if 'app-btn' in state %}
@@ -68,12 +92,23 @@
             {% endfor %}
         </select>
         {% endif %}
+        {% if groups|length > 0 %}
         <input type="submit"
                value={% if 'app-btn' in state %}"REQUEST"
 			         {% elif 'requested-btn' in state %}"ALREADY REQUESTED"
 					 {% elif 'downloadable-btn' in state %}"DOWNLOADABLE"
 					 {% endif %}
                class="request-btn" {% if 'requested-btn' in state %}DISABLED{% endif %}>
+        {% else %}
+        <input type="button"
+               value={% if 'app-btn' in state %}"REQUEST"
+			         {% elif 'requested-btn' in state %}"ALREADY REQUESTED"
+					 {% elif 'downloadable-btn' in state %}"DOWNLOADABLE"
+					 {% endif %}
+               class="request-btn" {% if 'requested-btn' in state %}DISABLED{% endif %}
+               data-dismiss="modal"
+               onclick="$('#{{ app }}-pay').modal('show')">
+        {% endif %}
       </form>
       	<button type="button" class="close" data-dismiss="modal">×</button>
       	<h3><img src="../static/img/matlab-icon-small.png" />{{ info.app_name }}</h3>
